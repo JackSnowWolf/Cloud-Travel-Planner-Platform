@@ -1,0 +1,25 @@
+{
+  "attractionId": "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2",
+  "attractionName": "Empire State Building",
+  "attractionDescription": "Empire State Building",
+  "attractionArea": "New York",
+  "attractionLocation": {
+    "lat": 40.748623358648544,
+    "lng": -73.98568049538392
+  },
+  "attractionType": "enumType1",
+  "score": 4.5,
+  "estimateViewTime": 3600,
+  "attractionImgs": [
+    {
+      "bucket": "attraction-image-bucket",
+      "createdTimestamp": "2020-11-12T12:40:02",
+      "objectKey": "empire-state-1.jpg"
+    },
+    {
+      "bucket": "attraction-image-bucket",
+      "createdTimestamp": "2020-11-12T12:40:02",
+      "objectKey": "empire-state-2.jpg"
+    }
+  ]
+}
