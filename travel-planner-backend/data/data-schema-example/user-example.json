@@ -1,0 +1,10 @@
+{
+  "userId": "user-fafaaae8-308b-11eb-9017-54e1ad16ceb2",
+  "userName": "Test User Name",
+  "userEmail": "example@gmail.com",
+  "pwd": "123456",
+  "editableSchedules": [
+    "sche-69b67976-308c-11eb-9017-54e1ad16ceb2",
+    "sche-7680ea38-308c-11eb-9037-54e1ad16ceb2"
+  ]
+}
