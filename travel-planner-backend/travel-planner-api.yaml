@@ -173,7 +173,6 @@ paths:
           schema:
             type: array
             items:
-              type: object
               $ref: '#/definitions/BasicSchedule'
         400:
           description: "Bad request."
@@ -191,14 +190,17 @@ paths:
         - "access-schedule"
       parameters:
         - in: query
-          name: travelDays
-          type: integer
-        - in: query
-          name: travelType
+          name: userId
           type: string
-          enum:
-            - leisure
-            - relax
+          description: user id to create is schedule
+        - in: query
+          name: targetArea
+          type: string
+          description: target city
+        - in: query
+          name: scheduleTitle
+          type: string
+          description: schedule title
       produces:
         - "application/json"
       responses:
@@ -505,6 +507,15 @@ paths:
           name: scheduleId
           type: string
           required: true
+        - in: query
+          name: travelDays
+          type: integer
+        - in: query
+          name: travelType
+          type: string
+          enum:
+            - leisure
+            - relax
       produces:
         - "application/json"
       responses:
@@ -627,6 +638,8 @@ definitions:
       scheduleTitle:
         type: string
       targetArea:
+        type: string
+      revisedTimeStamp:
         type: string
       scheduleType:
         type: string
