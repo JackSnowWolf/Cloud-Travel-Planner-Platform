@@ -666,21 +666,19 @@ definitions:
           scheduleType:
             type: string
           scheduleContent:
-            type: array
-            items:
+            type: object
+            properties:
               type: object
-              additionalProperties:
-                type: object
-                properties:
-                  attraction:
-                    type: object
-                    $ref: "#/definitions/Attraction"
-                  isSelected:
-                    type: boolean
-                  selectedNumber:
-                    type: integer
-                  isSelectedByMe:
-                    type: boolean
+              properties:
+                attraction:
+                  type: object
+                  $ref: "#/definitions/Attraction"
+                isSelected:
+                  type: boolean
+                selectedNumber:
+                  type: integer
+                isSelectedByMe:
+                  type: boolean
 
   EditingSchedule:
     description: "editing schedule schema"
