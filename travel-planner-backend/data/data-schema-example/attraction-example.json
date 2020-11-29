@@ -3,7 +3,7 @@
   "attractionName": "Empire State Building",
   "attractionDescription": "Empire State Building",
   "attractionArea": "New York",
-  "attractionLocation": {
+  "attractionLoc": {
     "lat": 40.748623358648544,
     "lng": -73.98568049538392
   },

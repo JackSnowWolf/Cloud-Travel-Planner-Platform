@@ -1,0 +1,800 @@
+swagger: '2.0'
+info:
+  title: Cloud Travel Planner Platform
+  description: 'Online Cloud Travel Planner Platform, built during the Cloud and Big Data course at Columbia University.'
+  version: 1.0.0
+schemes:
+  - https
+
+tags:
+  - name: "user"
+    description: "Operations about user"
+  - name: "attraction"
+    description: "Operations about attractions"
+  - name: "access-schedule"
+    description: "Operations to access whole schedule"
+  - name: "preselect-schedule"
+    description: "Operations to preselect attractions into schedule"
+  - name: "edit-schedule"
+    description: "Operations to revise schedule in EDITING phase"
+  - name: "finalize-schedule"
+
+
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /login:
+    get:
+      summary: login in
+      description: login in travel planner platform
+      operationId: login
+      tags:
+        - "user"
+      parameters:
+        - in: query
+          name: userId
+          type: string
+        - in: query
+          name: pwd
+          type: string
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation."
+          schema:
+            $ref: '#/definitions/Response'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+  /register:
+    post:
+      summary: register
+      description: register a new user
+      operationId: register
+      tags:
+        - "user"
+      parameters:
+        - in: body
+          name: request
+          schema:
+            type: object
+            properties:
+              userName:
+                type: string
+              pwd:
+                type: string
+              userEmail:
+                type: string
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation."
+          schema:
+            $ref: '#/definitions/Response'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+  /invite/{userId}:
+    get:
+      summary: invite user
+      description: invite a new user to edit current schedule
+      operationId: inviteUser
+      tags:
+        - "user"
+      parameters:
+        - in: path
+          required: true
+          name: userId
+          type: string
+        - in: query
+          name: scheduleId
+          type: string
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation."
+          schema:
+            $ref: '#/definitions/Response'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+  /accept/{scheduleId}:
+    get:
+      summary: accept inviation
+      description: accept
+      operationId: acceptInviation
+      tags:
+        - "user"
+      parameters:
+        - in: path
+          name: scheduleId
+          type: string
+          required: true
+        - in: query
+          name: editorId
+          type: string
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation."
+          schema:
+            $ref: '#/definitions/Response'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+  /schedule:
+    get:
+      summary: get schedule list
+      description: Get all editable schedule list for current user
+      operationId: getScheduleList
+      tags:
+        - "access-schedule"
+      parameters:
+        - in: query
+          name: pageSize
+          type: integer
+          description: page size
+        - in: query
+          name: pageNo
+          type: integer
+          description: page number
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation."
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BasicSchedule'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: create a new schedule
+      description: create a new schedule
+      operationId: createSchedule
+      tags:
+        - "access-schedule"
+      parameters:
+        - in: query
+          name: userId
+          type: string
+          description: user id to create is schedule
+        - in: query
+          name: targetArea
+          type: string
+          description: target city
+        - in: query
+          name: scheduleTitle
+          type: string
+          description: schedule title
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successful operation."
+          schema:
+            $ref: '#/definitions/PreselectSchedule'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+  /schedule/{scheduleId}:
+    get:
+      summary: View schedule for owner and editors
+      description: View schedule for owner and editors
+      operationId: getSchedule
+      tags:
+        - "access-schedule"
+      parameters:
+        - in: path
+          required: true
+          name: scheduleId
+          type: string
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "schedule item"
+          schema:
+            $ref: "#/definitions/BasicSchedule"
+        304:
+          description: "Not modified"
+          schema:
+            $ref: "#/definitions/Response"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: delete schedule
+      description: only owner can delete schedule
+      operationId: deleteSchedule
+      tags:
+        - "access-schedule"
+      parameters:
+        - in: path
+          required: true
+          name: scheduleId
+          type: string
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation successfully"
+          schema:
+            $ref: "#/definitions/Response"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+
+    post:
+      summary: update EDITING schedule
+      description: update only for EDITING scheule with whole schedule
+      operationId: postEditingSchedule
+      tags:
+        - "edit-schedule"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: path
+          required: true
+          name: scheduleId
+          type: string
+        - in: body
+          name: request body
+          schema:
+            $ref: "#/definitions/EditingSchedule"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "schedule item"
+          schema:
+            $ref: "#/definitions/Response"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+    patch:
+      summary: revise EDITING schedule
+      description: update only for EDITING scheule with partial schedule
+      operationId: patchEditingSchedule
+      tags:
+        - "edit-schedule"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: path
+          required: true
+          name: scheduleId
+          type: string
+        - in: body
+          name: request body
+          schema:
+            $ref: "#/definitions/EditingSchedule"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation Successfully"
+          schema:
+            $ref: "#/definitions/Response"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+  /schedule/{scheduleId}/view:
+    get:
+      summary: view completed schedule
+      description: view complete schedule as html or pdf, with potentical public access
+      operationId: getScheduleView
+      tags:
+        - "access-schedule"
+      parameters:
+        - in: path
+          name: scheduleId
+          type: string
+          required: true
+        - in: query
+          name: fileType
+          type: string
+          enum:
+            - pdf
+        - in: query
+          name: accessKey
+          type: string
+      produces:
+        - "application/pdf"
+      responses:
+        200:
+          description: "Operation Successfully"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+
+  /schedule/{scheduleId}/attraction/{attractionId}:
+    get:
+      summary: Get attraction status
+      description: Get attraction status in current schedule
+      operationId: getPreselectScheduleInfo
+      tags:
+        - "preselect-schedule"
+      parameters:
+        - in: path
+          name: scheduleId
+          type: string
+          required: true
+        - in: path
+          name: attractionId
+          type: string
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation Successfully"
+          schema:
+            allOf:
+              - $ref: '#/definitions/Attraction'
+              - type: object
+                properties:
+                  isSelected:
+                    type: boolean
+                  selectedNumber:
+                    type: integer
+                  isSelectedByMe:
+                    type: boolean
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: select attraction
+      description: select attraction as a must-visiting place by owner
+      operationId: selectAttractionInPreselectSchedule
+      tags:
+        - "preselect-schedule"
+      parameters:
+        - in: path
+          name: scheduleId
+          type: string
+          required: true
+        - in: path
+          name: attractionId
+          type: string
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation Successfully"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: add one like to attraction
+      description: add one like attraction in preselect schedule
+      operationId: likeAttractionInPreselectSchedule
+      tags:
+        - "preselect-schedule"
+      parameters:
+        - in: path
+          name: scheduleId
+          type: string
+          required: true
+        - in: path
+          name: attractionId
+          type: string
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation Successfully"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: withdraw one like to attraction
+      description: withdraw one like attraction in preselect schedule
+      operationId: unlikeAttractionInPreselectSchedule
+      tags:
+        - "preselect-schedule"
+      parameters:
+        - in: path
+          name: scheduleId
+          type: string
+          required: true
+        - in: path
+          name: attractionId
+          type: string
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation Successfully"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+  /schedule/{scheduleId}/submit:
+    get:
+      summary: Submit schedule from PRESELECT to EDITING
+      description: Submit schedule from PRESELECT to EDITING based auto recommendation
+      tags:
+        - "preselect-schedule"
+      parameters:
+        - in: path
+          name: scheduleId
+          type: string
+          required: true
+        - in: query
+          name: travelDays
+          type: integer
+        - in: query
+          name: travelType
+          type: string
+          enum:
+            - leisure
+            - relax
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation Successfully"
+          schema:
+            $ref: '#/definitions/Response'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+  /schedule/{scheduleId}/finish:
+    get:
+      summary: Finalize schedule
+      description: Finalize schedule from EDITING to COMPLETED
+      tags:
+        - "finalize-schedule"
+      parameters:
+        - in: path
+          name: scheduleId
+          type: string
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation Successfully"
+          schema:
+            $ref: '#/definitions/Response'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+
+  /attraction/{attractionId}:
+    get:
+      summary: get attraction info
+      description: get attraction information and image url
+      tags:
+        - "attraction"
+      parameters:
+        - in: path
+          name: attractionId
+          type: string
+          required: true
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Operation Successfully"
+          schema:
+            $ref: '#/definitions/Attraction'
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+
+  /attraction/{attractionId}/image/{imageName}:
+    get:
+      summary: get attraction image
+      description: get one attraction image
+      tags:
+        - "attraction"
+      parameters:
+        - in: path
+          name: attractionId
+          type: string
+          required: true
+        - in: path
+          name: imageName
+          type: string
+          required: true
+      produces:
+        - "image/png"
+        - "image/jpg"
+        - "image/jpeg"
+      responses:
+        200:
+          description: "Operation Successfully"
+        400:
+          description: "Bad request."
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: "Not Authorized."
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  SearchResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          allOf:
+            - $ref: '#/definitions/Attraction'
+
+  BasicSchedule:
+    description: "general schedule schema"
+    type: object
+    required:
+      - scheduleId
+      - scheduleType
+    properties:
+      scheduleId:
+        type: string
+      scheduleTitle:
+        type: string
+      targetArea:
+        type: string
+      revisedTimeStamp:
+        type: string
+      scheduleType:
+        type: string
+        enum:
+          - PRESELECTED
+          - EDITING
+          - COMPLETED
+
+
+  PreselectSchedule:
+    description: "preselect schedule schema"
+    allOf:
+      - $ref: "#/definitions/BasicSchedule"
+      - type: object
+        properties:
+          scheduleType:
+            type: string
+            enum:
+              - PRESELECT
+      - type: object
+        required:
+          - scheduleContent
+        properties:
+          scheduleType:
+            type: string
+          scheduleContent:
+            type: object
+            properties:
+              type: object
+              properties:
+                attraction:
+                  type: object
+                  $ref: "#/definitions/Attraction"
+                isSelected:
+                  type: boolean
+                selectedNumber:
+                  type: integer
+                isSelectedByMe:
+                  type: boolean
+
+  EditingSchedule:
+    description: "editing schedule schema"
+    allOf:
+      - $ref: "#/definitions/BasicSchedule"
+      - type: object
+        properties:
+          scheduleType:
+            type: string
+            enum:
+              - EDITING
+      - type: object
+        required:
+          - scheduleContent
+        properties:
+          scheduleContent:
+            type: array
+            items:
+              type: object
+              properties:
+                metaData:
+                  type: string
+                dayScheduleContents:
+                  type: array
+                  items:
+                    type: object
+                    $ref: "#/definitions/Attraction"
+
+  CompletedSchedule:
+    description: "completed schedule schema"
+    allOf:
+      - $ref: "#/definitions/BasicSchedule"
+      - type: object
+        properties:
+          scheduleType:
+            type: string
+            enum:
+              - COMPLETED
+      - type: object
+        required:
+          - scheduleContent
+        properties:
+          scheduleContent:
+            type: array
+            items:
+              type: object
+              properties:
+                metaData:
+                  type: string
+                dayScheduleContents:
+                  type: array
+                  items:
+                    $ref: "#/definitions/Attraction"
+  User:
+    type: object
+    properties:
+      userId:
+        type: string
+      userName:
+        type: string
+      userEmail:
+        type: string
+    required:
+      - "userId"
+      - "userName"
+  Attraction:
+    description: "attraction related information"
+    type: object
+    properties:
+      attractionId:
+        type: string
+      attractionName:
+        type: string
+      attractionImages:
+        type: array
+        items:
+          description: "image url"
+          type: string
+      attractionDescription:
+        type: string
+      attractionArea:
+        type: string
+      attractionLoc:
+        type: object
+        properties:
+          lat:
+            type: number
+          lng:
+            type: number
+      attractionType:
+        type: string
+      score:
+        type: number
+        minimum: 0.0
+        maximum: 5.0
+      estimateViewTime:
+        type: integer
+        format: int32
+    required:
+      - "attractionId"
+      - "attractionName"
+
+  Response:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      msg:
+        type: string
+
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      msg:
+        type: string
