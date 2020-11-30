@@ -49,7 +49,22 @@ export default {
     methods:{
       createNew(e) {
       e.preventDefault();
-      this.$router.push("/createnew");
+      console.log("test");
+      this.$msgbox.prompt('Please input your planner name', 'Tip', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+      }).then(({ value }) => {
+        this.$msg({
+          type: 'success',
+          message: 'You are redirecting to your next :' + value + 'plan'
+        })
+        this.$router.push("/createnew");
+      }).catch(() => {
+        this.$msg({
+          type: 'info',
+          message: 'Canceled to start a new plan'
+        });       
+      });
     },
       joinOne(e) {
       e.preventDefault();

@@ -13,10 +13,14 @@
     "aws-amplify-vue": "^2.1.3",
     "core-js": "^3.6.5",
     "element-ui": "^2.14.1",
+    "material-icons": "^0.3.1",
     "router": "^1.3.5",
     "vue": "^2.6.11",
+    "vue-infinite-scroll": "^2.0.2",
     "vue-router": "^3.4.9",
     "vue2-google-maps": "^0.10.7",
+    "vuedraggable": "^2.24.3",
+    "vuesax": "^3.12.2",
     "vuex": "^3.6.0"
   },
   "devDependencies": {
@@ -36,6 +40,8 @@
     "eslint-plugin-vue": "^6.2.2",
     "prettier": "^1.19.1",
     "sass-loader": "^10.1.0",
+    "stylus": "^0.54.8",
+    "stylus-loader": "^4.3.0",
     "vue-loader": "^15.9.5",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.44.2",

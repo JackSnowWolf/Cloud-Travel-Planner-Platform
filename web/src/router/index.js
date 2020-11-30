@@ -30,7 +30,19 @@ const routes = [
     name: "createnew",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Preselect.vue")
-    }
+    },
+    {
+      path: "/planedit",
+      name: "planedit",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "../views/PlanEdit.vue")
+    },
+    {
+      path: "/review",
+      name: "review",
+      component: () =>
+        import(/* webpackChunkName: "about" */ "../views/ReviewPage.vue")
+      }
 ];
 
 const router = new VueRouter({
