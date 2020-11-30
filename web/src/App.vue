@@ -1,12 +1,22 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div v-if="($route.name === 'Login') || ($route.name === 'About')" id="nav">
+      <router-link to="/">Login</router-link> |
+      <router-link to="/about">About</router-link>｜
+      <router-link to="/home">Home</router-link>
     </div>
+    <!-- <div v-else>
+    </div> -->
     <router-view />
   </div>
 </template>
+<script>
+// import MainNav from "./components/Navbars/MainNav"
+export default {
+  // components:{MainNav}
+  
+}
+</script>
 
 <style>
 #app {
