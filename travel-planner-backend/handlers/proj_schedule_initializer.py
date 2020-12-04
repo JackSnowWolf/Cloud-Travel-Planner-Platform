@@ -146,6 +146,14 @@ def create_schedule(user_id, target_area="", schedule_title=""):
 
 
 def lambda_handler(event, context):
+    response = {
+        'statusCode': 200,
+        'headers': {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE,PATCH",
+            "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+        }
+    }
     try:
         if event["httpMethod"].upper() == "GET":
             logger.info("event={}".format(json.dumps(event)))
@@ -158,13 +166,14 @@ def lambda_handler(event, context):
             else:
                 page_no = event["queryStringParameters"]["pageNo"]
             if "userId" not in event["queryStringParameters"]:
-                return {
+                response.update({
                     'statusCode': 400,
                     'body': json.dumps({
                         "code": 400,
                         "msg": "missing user id"
                     })
-                }
+                })
+                return response
             else:
                 user_id = event["queryStringParameters"]["userId"]
             return get_schedule_list(user_id, page_size=page_size, page_no=page_no)
@@ -190,13 +199,14 @@ def lambda_handler(event, context):
                 schedule_title = event["queryStringParameters"]["scheduleTitle"]
             return create_schedule(schedule_title=schedule_title, user_id=user_id, target_area=target_area)
     except Exception as e:
-        return {
+        response.update({
             'statusCode': 400,
             'body': json.dumps({
                 "code": 400,
                 "msg": "missing required parameters!"
             })
-        }
+        })
+        return response
 
 
 if __name__ == '__main__':
