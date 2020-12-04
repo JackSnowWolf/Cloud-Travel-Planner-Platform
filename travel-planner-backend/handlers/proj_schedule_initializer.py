@@ -1,6 +1,7 @@
 import json
 import logging
 import uuid
+import time
 
 import boto3
 
@@ -131,6 +132,7 @@ def create_schedule(user_id, target_area="", schedule_title=""):
         "ownerId": user_info["userId"],
         "editorIds": [],
         "scheduleType": "PRESELECT",
+        "revisedTimeStamp": str(int(time.time())),
         "scheduleContent": dict()
     }
     succ, response = create_schedule_in_db(schedule)
@@ -198,6 +200,14 @@ def lambda_handler(event, context):
             else:
                 schedule_title = event["queryStringParameters"]["scheduleTitle"]
             return create_schedule(schedule_title=schedule_title, user_id=user_id, target_area=target_area)
+        response.update({
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "http method not supported"
+            })
+        })
+        return response
     except Exception as e:
         response.update({
             'statusCode': 400,
