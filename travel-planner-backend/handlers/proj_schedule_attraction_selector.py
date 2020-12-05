@@ -1,5 +1,6 @@
 import json
 import logging
+from decimal import Decimal
 
 import boto3
 
@@ -8,6 +9,13 @@ logger.setLevel(logging.DEBUG)
 
 user_table = boto3.resource('dynamodb').Table('userTable')
 schedule_table = boto3.resource('dynamodb').Table('scheduleTable')
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, Decimal):
+            return float(o)
+        return super(DecimalEncoder, self).default(o)
 
 
 def get_target_schedule(schedule_id):
@@ -19,8 +27,8 @@ def get_target_schedule(schedule_id):
         )
 
         if "Item" in response and len(response["Item"]) != 0:
-            logger.debug(json.dumps(response, indent=2))
-            if response["Item"]["scheduleType"].upper() != "PRESELECT":
+            logger.debug(json.dumps(response["Item"], indent=2, cls=DecimalEncoder))
+            if response["Item"]["scheduleType"].upper() == "PRESELECT":
                 return True, response
         return False, {
             'statusCode': 400,
@@ -30,6 +38,7 @@ def get_target_schedule(schedule_id):
             })
         }
     except Exception as e:
+        logger.error(e)
         return False, {
             'statusCode': 400,
             'body': json.dumps({
@@ -99,7 +108,7 @@ def get_attraction_info_in_schedule(user_id, schedule_id, attraction_id):
     if not succ:
         return response
     target_schedule = response["Item"]
-    if user_id not in target_schedule["editorIds"]:
+    if user_id not in target_schedule["editorIds"] and user_id != target_schedule["ownerId"]:
         return {
             'statusCode': 403,
             'body': json.dumps({
@@ -110,7 +119,7 @@ def get_attraction_info_in_schedule(user_id, schedule_id, attraction_id):
     if "scheduleContent" in target_schedule and attraction_id in target_schedule["scheduleContent"]:
         return {
             'statusCode': 200,
-            'body': json.dumps(target_schedule["scheduleContent"][attraction_id])
+            'body': json.dumps(target_schedule["scheduleContent"][attraction_id], cls=DecimalEncoder)
         }
     return {
         'statusCode': 400,
@@ -179,7 +188,7 @@ def add_like_to_attraction(user_id, schedule_id, attraction_id, is_selected=None
             'statusCode': 400,
             'body': json.dumps({
                 "code": 400,
-                "msg": "missing attraction"
+                "msg": "Missing attraction"
             })
         }
     attraction_info = target_schedule["scheduleContent"][attraction_id]
