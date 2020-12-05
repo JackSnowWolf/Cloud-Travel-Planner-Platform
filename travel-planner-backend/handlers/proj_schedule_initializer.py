@@ -1,7 +1,7 @@
 import json
 import logging
-import uuid
 import time
+import uuid
 
 import boto3
 
@@ -140,10 +140,7 @@ def create_schedule(user_id, target_area="", schedule_title=""):
         return response
     return {
         'statusCode': 200,
-        'body': json.dumps({
-            "code": 200,
-            "msg": json.dumps(schedule)
-        })
+        'body': json.dumps(schedule)
     }
 
 
@@ -153,7 +150,7 @@ def lambda_handler(event, context):
         'headers': {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE,PATCH",
-            "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+            "Access-Control-Allow-Headers": "Content-Type,Access-Control-Allow-Headers,Authorization,X-Requested-With"
         }
     }
     try:
@@ -209,6 +206,7 @@ def lambda_handler(event, context):
         })
         return response
     except Exception as e:
+        logger.error(e)
         response.update({
             'statusCode': 400,
             'body': json.dumps({
@@ -217,50 +215,3 @@ def lambda_handler(event, context):
             })
         })
         return response
-
-
-if __name__ == '__main__':
-    # get_test_event = {
-    #     "resource": "/schedule/",
-    #     "path": "/schedule/",
-    #     "httpMethod": "GET",
-    #     "queryStringParameters": {
-    #         "pageSize": 20,
-    #         "pageNo": 0,
-    #         "userId": "test-editor"
-    #     },
-    #     "multiValueQueryStringParameters": {
-    #         "pageSize": [
-    #             20
-    #         ],
-    #         "pageNo": [
-    #             0
-    #         ],
-    #         "userId": [
-    #             "userId"
-    #         ]
-    #     },
-    #     "pathParameters": {}
-    # }
-    # handler_response = lambda_handler(get_test_event, None)
-    # print(json.dumps(handler_response, indent=2))
-    post_test_event = {
-        "resource": "/schedule/",
-        "path": "/schedule/",
-        "httpMethod": "POST",
-        "queryStringParameters": {
-            "targetArea": "New York",
-            "userId": "test-editor"
-        },
-        "multiValueQueryStringParameters": {
-            "targetArea": [
-                "New York"
-            ],
-            "userId": [
-                "test-editor"
-            ],
-        },
-        "pathParameters": {}
-    }
-    handler_response = lambda_handler(post_test_event, None)
-    print(json.dumps(handler_response, indent=2))
