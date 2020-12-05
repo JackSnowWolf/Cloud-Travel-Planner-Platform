@@ -110,12 +110,11 @@ def delete_target_schedule(schedule_id):
 
 
 def get_schedule(user_id, schedule_id):
-    succ, response = get_target_user(user_id)
+    succ, response = get_target_schedule(schedule_id)
     if not succ:
         return response
-    user_info = response["Item"]
-    if "editableSchedules" not in user_info or len(
-            user_info["editableSchedules"]) == 0 or schedule_id not in user_info["editableSchedules"]:
+    target_schedule = response["Item"]
+    if user_id not in target_schedule["editorIds"] and user_id != target_schedule["ownerId"]:
         return {
             'statusCode': 403,
             'body': json.dumps({
@@ -123,21 +122,18 @@ def get_schedule(user_id, schedule_id):
                 "msg": "Permission Denied!"
             })
         }
-    succ, response = get_target_schedule(schedule_id)
-    if not succ:
-        return response
-    return response["Item"]
+    return {
+        'statusCode': 200,
+        'body': json.dumps(target_schedule)
+    }
 
 
 def delete_schedule(user_id, schedule_id):
-    succ, response = get_target_user(user_id)
+    succ, response = get_target_schedule(schedule_id)
     if not succ:
         return response
-    user_info = response["Item"]
-    try:
-        user_info["editableSchedules"].remove(schedule_id)
-    except Exception as e:
-        logger.error(e)
+    target_schedule = response["Item"]
+    if user_id != target_schedule["ownerId"]:
         return {
             'statusCode': 403,
             'body': json.dumps({
@@ -146,7 +142,7 @@ def delete_schedule(user_id, schedule_id):
             })
         }
     delete_target_schedule(schedule_id)
-    update_user_info(user_info)
+    # TODO: update user info
     return {
         'statusCode': 200,
         'body': json.dumps({
@@ -157,12 +153,11 @@ def delete_schedule(user_id, schedule_id):
 
 
 def post_schedule(user_id, schedule_id, schedule_content):
-    succ, response = get_target_user(user_id)
+    succ, response = get_target_schedule(schedule_id)
     if not succ:
         return response
-    user_info = response["Item"]
-    if "editableSchedules" not in user_info or len(
-            user_info["editableSchedules"]) == 0 or schedule_id not in user_info["editableSchedules"]:
+    target_schedule = response["Item"]
+    if user_id not in target_schedule["editorIds"] and user_id != target_schedule["ownerId"]:
         return {
             'statusCode': 403,
             'body': json.dumps({
@@ -170,10 +165,6 @@ def post_schedule(user_id, schedule_id, schedule_content):
                 "msg": "Permission Denied!"
             })
         }
-    succ, response = get_target_schedule(schedule_id)
-    if not succ:
-        return response
-    target_schedule = response["Item"]
     if target_schedule["scheduleType"].upper() != "EDITING":
         return {
             'statusCode': 403,
