@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 import uuid
 
 import boto3
@@ -131,6 +132,7 @@ def create_schedule(user_id, target_area="", schedule_title=""):
         "ownerId": user_info["userId"],
         "editorIds": [],
         "scheduleType": "PRESELECT",
+        "revisedTimeStamp": str(int(time.time())),
         "scheduleContent": dict()
     }
     succ, response = create_schedule_in_db(schedule)
@@ -138,14 +140,19 @@ def create_schedule(user_id, target_area="", schedule_title=""):
         return response
     return {
         'statusCode': 200,
-        'body': json.dumps({
-            "code": 200,
-            "msg": json.dumps(schedule)
-        })
+        'body': json.dumps(schedule)
     }
 
 
 def lambda_handler(event, context):
+    response = {
+        'statusCode': 200,
+        'headers': {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT,DELETE,PATCH",
+            "Access-Control-Allow-Headers": "Content-Type,Access-Control-Allow-Headers,Authorization,X-Requested-With"
+        }
+    }
     try:
         if event["httpMethod"].upper() == "GET":
             logger.info("event={}".format(json.dumps(event)))
@@ -158,17 +165,18 @@ def lambda_handler(event, context):
             else:
                 page_no = event["queryStringParameters"]["pageNo"]
             if "userId" not in event["queryStringParameters"]:
-                return {
+                response.update({
                     'statusCode': 400,
                     'body': json.dumps({
                         "code": 400,
                         "msg": "missing user id"
                     })
-                }
+                })
+                return response
             else:
                 user_id = event["queryStringParameters"]["userId"]
-            return get_schedule_list(user_id, page_size=page_size, page_no=page_no)
-        if event["httpMethod"].upper() == "POST":
+            response.update(get_schedule_list(user_id, page_size=page_size, page_no=page_no))
+        elif event["httpMethod"].upper() == "POST":
             logger.info("event={}".format(json.dumps(event)))
             if "userId" not in event["queryStringParameters"]:
                 return {
@@ -188,59 +196,23 @@ def lambda_handler(event, context):
                 schedule_title = ""
             else:
                 schedule_title = event["queryStringParameters"]["scheduleTitle"]
-            return create_schedule(schedule_title=schedule_title, user_id=user_id, target_area=target_area)
+            response.update(create_schedule(schedule_title=schedule_title, user_id=user_id, target_area=target_area))
+        else:
+            response.update({
+                'statusCode': 400,
+                'body': json.dumps({
+                    "code": 400,
+                    "msg": "http method not supported"
+                })
+            })
+        return response
     except Exception as e:
-        return {
+        logger.error(e)
+        response.update({
             'statusCode': 400,
             'body': json.dumps({
                 "code": 400,
                 "msg": "missing required parameters!"
             })
-        }
-
-
-if __name__ == '__main__':
-    # get_test_event = {
-    #     "resource": "/schedule/",
-    #     "path": "/schedule/",
-    #     "httpMethod": "GET",
-    #     "queryStringParameters": {
-    #         "pageSize": 20,
-    #         "pageNo": 0,
-    #         "userId": "test-editor"
-    #     },
-    #     "multiValueQueryStringParameters": {
-    #         "pageSize": [
-    #             20
-    #         ],
-    #         "pageNo": [
-    #             0
-    #         ],
-    #         "userId": [
-    #             "userId"
-    #         ]
-    #     },
-    #     "pathParameters": {}
-    # }
-    # handler_response = lambda_handler(get_test_event, None)
-    # print(json.dumps(handler_response, indent=2))
-    post_test_event = {
-        "resource": "/schedule/",
-        "path": "/schedule/",
-        "httpMethod": "POST",
-        "queryStringParameters": {
-            "targetArea": "New York",
-            "userId": "test-editor"
-        },
-        "multiValueQueryStringParameters": {
-            "targetArea": [
-                "New York"
-            ],
-            "userId": [
-                "test-editor"
-            ],
-        },
-        "pathParameters": {}
-    }
-    handler_response = lambda_handler(post_test_event, None)
-    print(json.dumps(handler_response, indent=2))
+        })
+        return response
