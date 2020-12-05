@@ -217,7 +217,7 @@ def lambda_handler(event, context):
             return response
         else:
             user_id = event["queryStringParameters"]["userId"]
-        if "scheduleId" not in event["pathStringParameters"]:
+        if "scheduleId" not in event["pathParameters"]:
             response.update({
                 'statusCode': 400,
                 'body': json.dumps({
@@ -227,7 +227,7 @@ def lambda_handler(event, context):
             })
             return response
         else:
-            schedule_id = event["pathStringParameters"]["scheduleId"]
+            schedule_id = event["pathParameters"]["scheduleId"]
         if event["httpMethod"].upper() == "GET":
             response.update(get_schedule(user_id, schedule_id))
             return response

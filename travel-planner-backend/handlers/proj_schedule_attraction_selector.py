@@ -281,7 +281,7 @@ def lambda_handler(event, context):
             return response
         else:
             user_id = event["queryStringParameters"]["userId"]
-        if "scheduleId" not in event["pathStringParameters"]:
+        if "scheduleId" not in event["pathParameters"]:
             response.update({
                 'statusCode': 400,
                 'body': json.dumps({
@@ -291,8 +291,8 @@ def lambda_handler(event, context):
             })
             return response
         else:
-            schedule_id = event["pathStringParameters"]["scheduleId"]
-        if "attractionId" not in event["pathStringParameters"]:
+            schedule_id = event["pathParameters"]["scheduleId"]
+        if "attractionId" not in event["pathParameters"]:
             response.update({
                 'statusCode': 400,
                 'body': json.dumps({
@@ -302,7 +302,7 @@ def lambda_handler(event, context):
             })
             return response
         else:
-            attraction_id = event["pathStringParameters"]["attractionId"]
+            attraction_id = event["pathParameters"]["attractionId"]
         if "isSelected" in event["queryStringParameters"]:
             is_selected = event["queryStringParameters"]["isSelected"]
         else:
