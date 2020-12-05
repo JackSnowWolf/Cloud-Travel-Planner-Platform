@@ -175,8 +175,8 @@ def lambda_handler(event, context):
                 return response
             else:
                 user_id = event["queryStringParameters"]["userId"]
-            return get_schedule_list(user_id, page_size=page_size, page_no=page_no)
-        if event["httpMethod"].upper() == "POST":
+            response.update(get_schedule_list(user_id, page_size=page_size, page_no=page_no))
+        elif event["httpMethod"].upper() == "POST":
             logger.info("event={}".format(json.dumps(event)))
             if "userId" not in event["queryStringParameters"]:
                 return {
@@ -196,14 +196,15 @@ def lambda_handler(event, context):
                 schedule_title = ""
             else:
                 schedule_title = event["queryStringParameters"]["scheduleTitle"]
-            return create_schedule(schedule_title=schedule_title, user_id=user_id, target_area=target_area)
-        response.update({
-            'statusCode': 400,
-            'body': json.dumps({
-                "code": 400,
-                "msg": "http method not supported"
+            response.update(create_schedule(schedule_title=schedule_title, user_id=user_id, target_area=target_area))
+        else:
+            response.update({
+                'statusCode': 400,
+                'body': json.dumps({
+                    "code": 400,
+                    "msg": "http method not supported"
+                })
             })
-        })
         return response
     except Exception as e:
         logger.error(e)
