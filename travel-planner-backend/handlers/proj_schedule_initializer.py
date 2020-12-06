@@ -159,11 +159,11 @@ def lambda_handler(event, context):
             if "pageSize" not in event["queryStringParameters"]:
                 page_size = 20
             else:
-                page_size = event["queryStringParameters"]["pageSize"]
+                page_size = int(event["queryStringParameters"]["pageSize"])
             if "pageNo" not in event["queryStringParameters"]:
                 page_no = 0
             else:
-                page_no = event["queryStringParameters"]["pageNo"]
+                page_no = int(event["queryStringParameters"]["pageNo"])
             if "userId" not in event["queryStringParameters"]:
                 response.update({
                     'statusCode': 400,
