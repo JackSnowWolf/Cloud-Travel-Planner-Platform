@@ -15,7 +15,7 @@ class AttractionSearcherCase(unittest.TestCase):
         logger.info("test get attraction searcher")
         get_test_event = {
             "resource": "/attraction/_search",
-            "path": "attraction/_search",
+            "path": "/attraction/_search",
             "httpMethod": "GET",
             "queryStringParameters": {
                 "q": "NewYork"
