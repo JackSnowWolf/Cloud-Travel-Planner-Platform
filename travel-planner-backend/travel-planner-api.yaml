@@ -722,7 +722,7 @@ definitions:
         type: string
       attractionName:
         type: string
-      attractionImgUrl:
+      attractionImgUrls:
         type: array
         items:
           description: "image url"
