@@ -62,7 +62,7 @@ def finalize_schedule(user_id, schedule_id):
             'statusCode': 400,
             'body': json.dumps({
                 "code": 400,
-                "msg": "Can not submit schedule with non-PRESELECT type"
+                "msg": "Can not finalize schedule with non-EDITING type"
             })
         }
 

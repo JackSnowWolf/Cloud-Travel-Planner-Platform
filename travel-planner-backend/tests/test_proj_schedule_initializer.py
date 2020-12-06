@@ -19,16 +19,16 @@ class ScheduleInitializerTestCase(unittest.TestCase):
             "path": "/schedule/",
             "httpMethod": "GET",
             "queryStringParameters": {
-                "pageSize": 20,
-                "pageNo": 0,
+                "pageSize": "20",
+                "pageNo": "0",
                 "userId": "test-editor"
             },
             "multiValueQueryStringParameters": {
                 "pageSize": [
-                    20
+                    "20"
                 ],
                 "pageNo": [
-                    0
+                    "0"
                 ],
                 "userId": [
                     "test-editor"
