@@ -590,6 +590,8 @@ definitions:
   SearchResponse:
     type: object
     properties:
+      total:
+        type: integer
       results:
         type: array
         items:

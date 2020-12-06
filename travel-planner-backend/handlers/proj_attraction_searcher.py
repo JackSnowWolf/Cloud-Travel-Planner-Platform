@@ -113,7 +113,7 @@ def search_attractions(query, page_size=10, page_no=0):
     return {
         'statusCode': 200,
         'body': json.dumps({"total": total,
-                            "data": attraction_info_list_response},
+                            "results": attraction_info_list_response},
                            cls=DecimalEncoder)
     }
 
