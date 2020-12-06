@@ -1,0 +1,22 @@
+{
+  "objectKey": "attr-2",
+  "attractionName": "Empire-State-Building",
+  "attractionType": "enumType2",
+  "attractionArea": "New York",
+  "attractionDescription": "This is the symbol of Money and power",
+  "score": 4.8,
+  "estimateViewTime": 3600,
+  "attractionLoc": {
+    "lat": 40.74852,
+    "lng": -73.98635
+  },
+  "labels": [
+    "NewYork",
+    "culture",
+    "money"
+  ],
+  "imgsName": [
+    "Empire-State-Building-1.jpeg",
+    "Empire-State-Building-2.jpeg"
+  ]
+}
