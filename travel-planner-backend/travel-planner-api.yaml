@@ -585,36 +585,6 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
-  /attraction/{attractionId}/image/{imageName}:
-    get:
-      summary: get attraction image
-      description: get one attraction image
-      tags:
-        - "attraction"
-      parameters:
-        - in: path
-          name: attractionId
-          type: string
-          required: true
-        - in: path
-          name: imageName
-          type: string
-          required: true
-      produces:
-        - "image/png"
-        - "image/jpg"
-        - "image/jpeg"
-      responses:
-        200:
-          description: "Operation Successfully"
-        400:
-          description: "Bad request."
-          schema:
-            $ref: '#/definitions/Error'
-        403:
-          description: "Not Authorized."
-          schema:
-            $ref: '#/definitions/Error'
 
 definitions:
   SearchResponse:
@@ -752,7 +722,7 @@ definitions:
         type: string
       attractionName:
         type: string
-      attractionImages:
+      attractionImgUrl:
         type: array
         items:
           description: "image url"
