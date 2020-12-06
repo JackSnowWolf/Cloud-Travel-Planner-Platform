@@ -1,0 +1,23 @@
+{
+  "objectKey": "attr-4",
+  "attractionName": "Columbia-University",
+  "attractionType": "enumType2",
+  "attractionArea": "New York",
+  "attractionDescription": "This is the symbol of USA High Education",
+  "score": 5,
+  "estimateViewTime": 3600,
+  "attractionLoc": {
+    "lat": 40.80783,
+    "lng": ":-73.96286"
+  },
+  "labels": [
+    "NewYork",
+    "culture",
+    "education",
+    "science"
+  ],
+  "imgsName": [
+    "Columbia-University-1.jpeg",
+    "Columbia-University-2.jpeg"
+  ]
+}

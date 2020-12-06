@@ -584,29 +584,29 @@ paths:
           description: "Not Authorized."
           schema:
             $ref: '#/definitions/Error'
-
-  /attraction/{attractionId}/image/{imageName}:
+  /attraction/_search:
     get:
-      summary: get attraction image
-      description: get one attraction image
+      summary: search attraction info
+      description: search attraction information and image url
       tags:
         - "attraction"
       parameters:
-        - in: path
-          name: attractionId
+        - in: query
+          name: q
           type: string
-          required: true
-        - in: path
-          name: imageName
-          type: string
-          required: true
+        - in: query
+          name: pageNo
+          type: integer
+        - in: query
+          name: pageSize
+          type: integer
       produces:
-        - "image/png"
-        - "image/jpg"
-        - "image/jpeg"
+        - "application/json"
       responses:
         200:
           description: "Operation Successfully"
+          schema:
+            $ref: '#/definitions/AttractionSearchResponse'
         400:
           description: "Bad request."
           schema:
@@ -617,9 +617,11 @@ paths:
             $ref: '#/definitions/Error'
 
 definitions:
-  SearchResponse:
+  AttractionSearchResponse:
     type: object
     properties:
+      total:
+        type: integer
       results:
         type: array
         items:
@@ -668,17 +670,14 @@ definitions:
           scheduleContent:
             type: object
             properties:
-              type: object
-              properties:
-                attraction:
-                  type: object
-                  $ref: "#/definitions/Attraction"
-                isSelected:
-                  type: boolean
-                selectedNumber:
-                  type: integer
-                isSelectedByMe:
-                  type: boolean
+              attraction:
+                $ref: "#/definitions/Attraction"
+              isSelected:
+                type: boolean
+              selectedNumber:
+                type: integer
+              isSelectedByMe:
+                type: boolean
 
   EditingSchedule:
     description: "editing schedule schema"
@@ -752,7 +751,7 @@ definitions:
         type: string
       attractionName:
         type: string
-      attractionImages:
+      attractionImgUrls:
         type: array
         items:
           description: "image url"

@@ -1,0 +1,6 @@
+*.jpeg
+*.png
+*.jpg
+
+!Columbia-University-*.jpeg
+!Empire-State-Building-*.jpeg
