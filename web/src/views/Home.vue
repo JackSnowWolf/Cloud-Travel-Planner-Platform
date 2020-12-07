@@ -32,7 +32,7 @@
             width="200"
             trigger="hover"
             content="Descirption Descirption Descirption">
-            <el-button @click="joinOne" type="primary" icon="el-icon-edit" slot="reference">Join One Trip Plan</el-button>
+            <el-button @click="continueOne" type="primary" icon="el-icon-edit" slot="reference">Continue Your Trip Plan</el-button>
           </el-popover>
           </div>
         </div>
@@ -43,14 +43,20 @@
 </template>
 <script >
 import MainNav from "../components/Navbars/MainNav"
-import { Auth } from 'aws-amplify';
+// import { Auth } from 'aws-amplify';
+var apigClientFactory = require('aws-api-gateway-client').default;
 export default {
     name:"home",
     components:{MainNav},
+    data(){
+      return{
+        userId:'test-editor'
+      }
+    },
     methods:{
       createNew(e) {
       e.preventDefault();
-      console.log("test");
+      // console.log("test");
       this.$msgbox.prompt('Please input your planner name', 'Tip', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
@@ -59,8 +65,14 @@ export default {
           type: 'success',
           message: 'You are redirecting to your next :' + value + 'plan'
         })
-        console.log(Auth.currentSession())
-        this.$router.push("/createnew");
+        this.postNewSchedule(value).then((resp => {
+          if(resp){
+            console.log("async",resp)
+            this.$router.push("/createnew");
+          }
+        }))
+        // console.log(Auth.currentSession())
+        // this.$router.push("/createnew");
       }).catch(() => {
         this.$msg({
           type: 'info',
@@ -68,10 +80,56 @@ export default {
         });       
       });
     },
-      joinOne(e) {
+      continueOne(e) {
       e.preventDefault();
-      this.$router.push("/editor");
+      this.$router.push("/schedulelist");
     },
+      async postNewSchedule(name){
+        console.log(name)
+        var config = {invokeUrl:'https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1'}
+            var apigClient = apigClientFactory.newClient(config);
+            var pathParams = {
+                // attractionId:'attr-0001',
+            }
+            var pathTemplate = '/schedule/'
+            var method = "POST";
+            var additionalParams = {
+        //If there are query parameters or headers that need to be sent with the request you can add them here
+            headers: {
+                
+                // param0: '',
+                // param1: ''
+            },
+            queryParams: {
+                // pageSize:'4',
+                // pageNo:'0',
+                scheduleTitle:name,
+                targetAre: "/“New York/*",
+                userId:this.userId
+            }
+        };
+            var body = {
+                //This is where you define the body of the request
+            };
+            let isSuccess = false;
+            await apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+                .then((response =>{
+                    if(response.status === 200){
+                        // if response
+                        console.log("post resp",response)
+                        // this.scheduleTable = response.data
+                        // console.log( this.scheduleTable)
+                        isSuccess = true
+                        // dayScheduleContents = response.data.scheduleContent.dayScheduleContents
+                        //This is where you would put a success callback
+                    }
+                })).catch(err =>{
+                    console.log(err)
+                })
+            if(isSuccess){
+                return isSuccess}
+            else{return false}
+      },
     }
 
 

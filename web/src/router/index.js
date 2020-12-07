@@ -42,7 +42,25 @@ const routes = [
       name: "review",
       component: () =>
         import(/* webpackChunkName: "about" */ "../views/ReviewPage.vue")
+      },
+      {
+        path: "/schedulelist",
+        name: "schedulelist",
+        component: () =>
+          import(/* webpackChunkName: "about" */ "../views/ScheduleListPage")
+      },
+      {
+        path: "/schedulelist",
+        name: "schedulelist",
+        component: () =>
+          import(/* webpackChunkName: "about" */ "../views/ScheduleListPage")
+      },
+      {
+        path: "/schedulelist/:scheduleId",
+        name: "scheduleId",  
+        component: () => import("../views/ScheduleSingle.vue"),
       }
+
 ];
 
 const router = new VueRouter({

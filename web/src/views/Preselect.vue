@@ -43,7 +43,7 @@
 import LocationTable from "../components/CreatePage/LocationTable"
 import LocationList from "../components/CreatePage/LocationList"
 import Slider from "../components/Navbars/Slider"
-var apigClientFactory = require('aws-api-gateway-client').default
+// var apigClientFactory = require('aws-api-gateway-client').default
 export default {
     name:"preselect",
     components:{
@@ -53,6 +53,7 @@ export default {
     data(){
         return{
             add_attraction:{},
+            userId:'test-editor'
         }
     },
     methods:{
@@ -61,38 +62,7 @@ export default {
             console.log(this.add_attraction)
         }
     },
-    mounted(){
-        var config = {invokeUrl:'https://glyw06i834.execute-api.us-east-1.amazonaws.com/beta'}
-        var apigClient = apigClientFactory.newClient(config);
-        var pathParams = {
-            attractionId:'attr-0001',
-        }
-        var pathTemplate = '/attraction/{attractionId}'
-        var method = "GET";
-        var additionalParams = {
-    //If there are query parameters or headers that need to be sent with the request you can add them here
-        headers: {
-            // param0: '',
-            // param1: ''
-        },
-        queryParams: {
-            // param0: '',
-            // param1: ''
-        }
-    };
-        var body = {
-            //This is where you define the body of the request
-        };
-
-        apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-            .then(function(result){
-                console.log(result)
-                //This is where you would put a success callback
-            }).catch( function(result){
-                console.log(result)
-                //This is where you would put an error callback
-            });
-    }
+    mounted(){}
 }
 </script>
 <style scoped>
