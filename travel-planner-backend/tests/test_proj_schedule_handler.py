@@ -5,17 +5,35 @@ import unittest
 
 from handlers.proj_schedule_handler import lambda_handler
 from handlers.proj_schedule_handler import logger
+from handlers.proj_schedule_handler import update_schedule
 
 logging.basicConfig(format='%(asctime)s %(filename)s [line:%(lineno)d] [PID:%(process)d] %(levelname)s: %(message)s',
                     stream=sys.stdout)
 
 
 class ScheduleHandlerTestCase(unittest.TestCase):
-    def test_get_schedule_handler(self):
-        logger.info("test get schedule handler")
+    def test_get_schedule_handler_for_preselect_schedule(self):
+        logger.info("test get preselect schedule handler")
+        update_schedule({
+            "targetArea": "New York",
+            "scheduleId": "preselect-schedule",
+            "revisedTimeStamp": "1606467266",
+            "scheduleContent": {"attr-0001": {
+                "isSelected": False,
+                "selectedNumber": 0,
+                "selectedUsers": []
+            }},
+            "scheduleType": "PRESELECT",
+            "editorIds": [
+                "test-editor"
+            ],
+            "ownerId": "test-owner",
+            "scheduleTitle": "Example Schedule"
+        })
+
         get_test_event = {
             "resource": "/schedule/{scheduleId}",
-            "path": "/schedule/editing-schedule",
+            "path": "/schedule/preselect-schedule",
             "httpMethod": "GET",
             "queryStringParameters": {
                 "userId": "test-editor"
@@ -26,7 +44,50 @@ class ScheduleHandlerTestCase(unittest.TestCase):
                 ]
             },
             "pathParameters": {
-                "scheduleId": "editing-schedule"
+                "scheduleId": "preselect-schedule"
+            }
+        }
+        handler_response = lambda_handler(get_test_event, None)
+        logger.debug(json.dumps(handler_response, indent=2))
+        logger.debug(json.dumps(json.loads(handler_response["body"]), indent=2))
+        self.assertEqual(handler_response["statusCode"], 200)
+        logger.info("Completed!")
+
+    def test_get_schedule_handler_for_editing_schedule(self):
+        logger.info("test get schedule handler")
+        update_schedule({
+            "scheduleId": "editing-schedule-for-get-schedule-test",
+            "scheduleTitle": "Example Schedule",
+            "revisedTimeStamp": "1606467266",
+            "targetArea": "New York",
+            "ownerId": "test-owner",
+            "editorIds": [
+                "test-editor"
+            ],
+            "scheduleType": "EDITING",
+            "scheduleContent": {
+                "metaData": "dummy",
+                "dayScheduleContents": [
+                    [
+                        "attr-0001"
+                    ]
+                ]
+            }
+        })
+        get_test_event = {
+            "resource": "/schedule/{scheduleId}",
+            "path": "/schedule/editing-schedule-for-get-schedule-test",
+            "httpMethod": "GET",
+            "queryStringParameters": {
+                "userId": "test-editor"
+            },
+            "multiValueQueryStringParameters": {
+                "userId": [
+                    "test-editor"
+                ]
+            },
+            "pathParameters": {
+                "scheduleId": "editing-schedule-for-get-schedule-test"
             }
         }
         handler_response = lambda_handler(get_test_event, None)
