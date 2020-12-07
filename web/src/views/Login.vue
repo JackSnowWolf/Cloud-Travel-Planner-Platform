@@ -10,6 +10,7 @@
 <script>
 // @ is an alias to /src
 import { AmplifyEventBus } from 'aws-amplify-vue';
+import { Auth } from 'aws-amplify';
 
 export default {
   mounted() {
@@ -17,6 +18,7 @@ export default {
       window.sessionStorage.setItem("authState",info)
       console.log("auth", window.sessionStorage.getItem("authState"));
       if (info === "signedIn") {
+        console.log(Auth.currentSession())
         this.$router.push("about");
       }
     });

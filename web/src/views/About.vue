@@ -15,6 +15,7 @@
 </template>
 <script>
 import { components } from "aws-amplify-vue";
+import travel_planner_api from "../travel-planner-api.yaml";  
 const ListTodoQuery = `query ListTodos {
     listTodos {
       items {
@@ -31,6 +32,7 @@ export default {
   },
   computed: {
     listTodosQuery() {
+      console.log(travel_planner_api)
       return this.$Amplify.graphqlOperation(ListTodoQuery);
     }
   }

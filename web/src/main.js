@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import axios from 'axios'
 import Amplify, * as AmplifyModules from 'aws-amplify'
 import { Auth } from 'aws-amplify';
 import { AmplifyPlugin } from 'aws-amplify-vue'
@@ -9,6 +10,8 @@ import { AmplifyEventBus } from 'aws-amplify-vue';
 import awsconfig from './aws-exports'
 import 'element-ui/lib/theme-chalk/index.css';
 import 'material-icons/iconfont/material-icons.css';
+
+
 
 import { Button, Select, Menu, MenuItem, Submenu,
   Header,Container,Aside,Main,Popover,Footer,
@@ -25,11 +28,11 @@ import { vsButton, vsSelect, vsPopup, vsCard,vsRow, vsCol, vsIcon,
   vsSideBar, vsDivider, vsSpacer} from 'vuesax';
 import 'vuesax/dist/vuesax.css';
 
+import * as VueGoogleMaps from 'vue2-google-maps';
 import infiniteScroll from "vue-infinite-scroll";
 Vue.use(infiniteScroll);
 
-import * as VueGoogleMaps from 'vue2-google-maps';
-
+Vue.prototype.$axios = axios //全局注册，使用方法为:this.$axios          
 Vue.component(Button.name, Button);
 Vue.component(Select.name, Select);
 Vue.use(Menu).use(MenuItem).use(Submenu);
@@ -43,12 +46,10 @@ Vue.use(Col).use(Row).use(RadioButton).use(RadioGroup).use(MenuItemGroup)
 Vue.use(vsButton).use(vsSpacer)
 Vue.use(vsSelect).use(vsSideBar).use(vsDivider)
 Vue.use(vsPopup).use(vsCard).use(vsRow).use(vsCol).use(vsIcon)
-
-
-
 Amplify.configure(awsconfig)
 // >>New - Configuring Auth Module
 Auth.configure(awsconfig);
+
 Vue.use(AmplifyPlugin, AmplifyModules)
 Vue.use(AmplifyEventBus)
 
@@ -56,7 +57,7 @@ Vue.config.productionTip = false;
 
 Vue.use(VueGoogleMaps, {
   load: {
-    key: '',
+    key: 'AIzaSyCJY8RqCzMtqYEjQMimzTPOF7UPzh_s04g',
     libraries: 'places', 
     region: 'US',
     language:'en-US',// This is required if you use the Autocomplete plugin

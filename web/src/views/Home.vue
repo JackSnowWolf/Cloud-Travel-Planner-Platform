@@ -43,6 +43,7 @@
 </template>
 <script >
 import MainNav from "../components/Navbars/MainNav"
+import { Auth } from 'aws-amplify';
 export default {
     name:"home",
     components:{MainNav},
@@ -58,6 +59,7 @@ export default {
           type: 'success',
           message: 'You are redirecting to your next :' + value + 'plan'
         })
+        console.log(Auth.currentSession())
         this.$router.push("/createnew");
       }).catch(() => {
         this.$msg({
