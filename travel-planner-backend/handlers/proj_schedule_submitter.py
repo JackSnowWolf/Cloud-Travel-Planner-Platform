@@ -8,7 +8,7 @@ logger.setLevel(logging.DEBUG)
 
 user_table = boto3.resource('dynamodb').Table('userTable')
 schedule_table = boto3.resource('dynamodb').Table('scheduleTable')
-
+attraction_table=boto3.resource('dynamodb').Table('attractionTable')
 
 def get_target_schedule(schedule_id):
     try:
@@ -19,7 +19,7 @@ def get_target_schedule(schedule_id):
         )
 
         if "Item" in response and len(response["Item"]) != 0:
-            logger.debug(json.dumps(response, indent=2))
+            # logger.debug(json.dumps(response, indent=2))
             return True, response
         return False, {
             'statusCode': 400,
@@ -51,12 +51,11 @@ def update_schedule(schedule):
             })
         }
 
-
 def sumbit_schedule(user_id, schedule_id):
-    succ, response = get_target_schedule(schedule_id)
+    succ, response_schedule = get_target_schedule(schedule_id)
     if not succ:
-        return response
-    target_schedule = response["Item"]
+        return response_schedule
+    target_schedule = response_schedule["Item"]
     if target_schedule["scheduleType"].upper() != "PRESELECT":
         return {
             'statusCode': 400,
@@ -76,7 +75,53 @@ def sumbit_schedule(user_id, schedule_id):
 
     # TODO: arrange schedule
 
-    return {}
+    schedule_content={
+        "metaData": "dummy"
+    }
+    dayschedule_contents=[]
+    preselect_attr_list=list(target_schedule["scheduleContent"].keys())
+    preselect_attr_first=str(preselect_attr_list[0])
+    response_list=attraction_table.scan(ProjectionExpression="attractionId,score")
+    attr_score_item_list=response_list["Items"]
+    attr_score_item_list.sort(key=lambda a:-a["score"])
+    pop_attr_list=list(map(lambda a:str(a["attractionId"]),attr_score_item_list))
+
+    pop_attr_list.insert(0,preselect_attr_first)
+
+    # By default: 2 day and 6 attractions max
+    if len(pop_attr_list)<=0:
+        return {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "No attraction"
+            })
+        }
+    elif len(pop_attr_list)<=3:
+        dayschedule_contents.append(pop_attr_list)
+    elif len(pop_attr_list)<=6:
+        dayschedule_contents.append(pop_attr_list[0:3])
+        dayschedule_contents.append(pop_attr_list[3:])
+    else:
+        dayschedule_contents.append(pop_attr_list[0:3])
+        dayschedule_contents.append(pop_attr_list[3:6])
+
+    schedule_content.update({
+        "dayScheduleContents": dayschedule_contents
+    })
+    target_schedule.update({
+        "scheduleType": "EDITING",
+        "scheduleContent": schedule_content
+    })
+    # print(target_schedule)
+    update_schedule(target_schedule)
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            "code": 200,
+            "msg": "Submit successfully"
+        })
+    }
 
 
 def lambda_handler(event, context):
