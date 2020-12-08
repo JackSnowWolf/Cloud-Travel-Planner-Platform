@@ -31,7 +31,7 @@ const routes = [
     component: () => import("../views/Customlize.vue"),
   },
   {
-    path: "/createnew",
+    path: "/createnew/:scheduleId",
     name: "createnew",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Preselect.vue")
