@@ -62,7 +62,6 @@ export default {
             else{return false}
             },
         getAttractionData(){
-
             this.initData().then((dayScheduleContents =>{
                 if(dayScheduleContents){
                     var index;

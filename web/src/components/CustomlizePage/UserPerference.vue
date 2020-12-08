@@ -12,6 +12,7 @@
 </template>
 <script>
   export default {
+    name:"TargetAreaPerference",
     data() {
       return {
         cities: [{
@@ -34,6 +35,12 @@
           label: 'Guangzhou'
         }],
         value: ''
+      }
+    },
+    watch:{
+      value(newVal){
+        //   console.log("newval",newVal)
+          this.$emit("pickArea",newVal)
       }
     }
   }

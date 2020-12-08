@@ -12,9 +12,10 @@
           <h2 class="subtitle">
             Start yout trip right now!
           </h2>
-          <!-- <span class="doodle-bg" style="transform:rotateX(2.6435deg) rotateY(-4.9344deg) translateZ(-200px)">
-                <img class="no_moon" img src="https://i.loli.net/2020/11/30/RTndCaxA3PL9JUi.jpg" />
-          </span> -->
+          <div class="createbn">
+            <UserPerference
+             v-on:pickArea="pickArea"/>
+          </div>
           <div class="createbn">
             <el-popover
             placement="top-start"
@@ -38,9 +39,6 @@
         </div>
       </section>
     </el-main>
-    <el-footer>
-      <UserPerference />
-    </el-footer>
   </el-container>
 </el-container>
 </template>
@@ -56,10 +54,16 @@ export default {
       UserPerference},
     data(){
       return{
-        userId:'test-editor'
+        userId:'test-editor',
+        targetArea:"",
+        newSchedule:"",
       }
     },
     methods:{
+      pickArea(val){
+        this.targetArea = val
+        // console.log("area",val)
+      },
       createNew(e) {
       e.preventDefault();
       // console.log("test");
@@ -73,8 +77,8 @@ export default {
         })
         this.postNewSchedule(value).then((resp => {
           if(resp){
-            console.log("async",resp)
-            this.$router.push("/createnew");
+            console.log("async",resp.scheduleId)
+            this.$router.push("/createnew/" + resp.scheduleId);
           }
         }))
         // console.log(Auth.currentSession())
@@ -110,7 +114,7 @@ export default {
                 // pageSize:'4',
                 // pageNo:'0',
                 scheduleTitle:name,
-                targetArea: "New York",
+                targetArea: this.targetArea,
                 userId:this.userId
             }
         };
@@ -123,6 +127,7 @@ export default {
                     if(response.status === 200){
                         // if response
                         console.log("post resp",response)
+                        this.newSchedule = response.data
                         // this.scheduleTable = response.data
                         // console.log( this.scheduleTable)
                         isSuccess = true
@@ -133,7 +138,7 @@ export default {
                     console.log(err)
                 })
             if(isSuccess){
-                return isSuccess}
+                return this.newSchedule}
             else{return false}
       },
     }

@@ -83,8 +83,7 @@ export default {
             var method = "GET";
             var additionalParams = {
         //If there are query parameters or headers that need to be sent with the request you can add them here
-            headers: {
-                
+            headers: {              
                 // param0: '',
                 // param1: ''
             },

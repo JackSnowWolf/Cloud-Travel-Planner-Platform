@@ -7,6 +7,14 @@
       prop="scheduleTitle">
     </el-table-column>
     <el-table-column
+      label="scheduleId"
+      prop="scheduleId">
+    </el-table-column>
+    <el-table-column
+      label="scheduleType"
+      prop="scheduleType">
+    </el-table-column>
+    <el-table-column
       label="targetArea"
       prop="targetArea">
     </el-table-column>
@@ -46,7 +54,40 @@ export default {
         this.$router.push("/schedulelist/" + row.scheduleId);
       },
       handleDelete(index, row) {
-        console.log(index, row);
+        console.log("delete",index, row.scheduleId);
+        var deleteId = row.scheduleId
+        var config = {invokeUrl:'https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1'}
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+            scheduleId: deleteId,
+        }
+        var pathTemplate = '/schedule/{scheduleId}'
+        var method = "DELETE";
+        var additionalParams = {
+    //If there are query parameters or headers that need to be sent with the request you can add them here
+        headers: {
+            // param0: '',
+            // param1: ''
+        },
+        queryParams: {
+            userId:this.userId
+        }
+    };
+        var body = {
+            //This is where you define the body of the request
+        };
+
+        apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response =>{
+                if(response.status === 200){
+                    // if response
+                    console.log(response)
+                    this.tabledata = response.data
+                    //This is where you would put a success callback
+                }
+            }))
+
+
       }
     },
     mounted(){
@@ -64,7 +105,7 @@ export default {
             // param1: ''
         },
         queryParams: {
-            pageSize:'4',
+            pageSize:'10',
             pageNo:'0',
             userId:this.userId
         }
