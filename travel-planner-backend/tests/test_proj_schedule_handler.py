@@ -68,9 +68,13 @@ class ScheduleHandlerTestCase(unittest.TestCase):
             "scheduleContent": {
                 "metaData": "dummy",
                 "dayScheduleContents": [
-                    [
-                        "attr-0001"
-                    ]
+                    {
+                        "NumDate": "day1",
+                        "Details": [
+                            "attr-11111111-308c-11eb-9017-54e1ad16ceb2",
+                            "attr-19f83044-36f6-11eb-875e-a683e780ed71"
+                        ]
+                    }
                 ]
             }
         })
@@ -111,27 +115,26 @@ class ScheduleHandlerTestCase(unittest.TestCase):
                 ]
             },
             "pathParameters": {
-                "scheduleId": "editing-schedule"
+                "scheduleId": "editing-schedule-03"
             },
             "body": json.dumps({
-                "targetArea": "New York",
-                "scheduleId": "editing-schedule",
-                "revisedTimeStamp": "1606467266",
-                "scheduleContent": {
                     "metaData": "dummy",
                     "dayScheduleContents": [
-                        [
-                            "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2",
-                            "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2"
-                        ],
-                        ["attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2"]
+                        {
+                            "NumDate": "day1",
+                            "Details": [
+                                "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2",
+                                "attr-2f6c194e-3094-11eb-9017-54e1ad16ceb2"
+                            ]
+                        },
+                        {
+                            "NumDate": "day2",
+                            "Details": [
+                                "attr-3f6c194e-3094-11eb-9017-54e1ad16ceb2"
+                            ]
+                        }
                     ]
-                },
-                "scheduleType": "EDITING",
-                "editorIds": [],
-                "ownerId": "user-fafaaae8-308b-11eb-9017-54e1ad16ceb2",
-                "scheduleTitle": "Example Schedule"
-            }
+                }
             )
         }
         handler_response = lambda_handler(post_test_event, None)
@@ -152,11 +155,19 @@ class ScheduleHandlerTestCase(unittest.TestCase):
             "scheduleContent": {
                 "metaData": "dummy",
                 "dayScheduleContents": [
-                    [
-                        "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2",
-                        "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2"
-                    ],
-                    ["attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2"]
+                    {
+                        "NumDate": "day1",
+                        "Details": [
+                            "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2",
+                            "attr-2f6c194e-3094-11eb-9017-54e1ad16ceb2"
+                        ]
+                    },
+                    {
+                        "NumDate": "day2",
+                        "Details": [
+                            "attr-3f6c194e-3094-11eb-9017-54e1ad16ceb2"
+                        ]
+                    }
                 ]
             },
             "scheduleType": "COMPLETE",

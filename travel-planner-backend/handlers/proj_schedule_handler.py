@@ -229,7 +229,10 @@ def get_preselect_schedule(target_schedule):
 
 
 def get_complete_schedule(target_schedule):
-    attraction_id_list = reduce(iconcat, target_schedule["scheduleContent"]["dayScheduleContents"])
+    list_of_attrlist=[]
+    for dayContent in target_schedule["scheduleContent"]["dayScheduleContents"]:
+        list_of_attrlist.append(dayContent["Details"])
+    attraction_id_list = reduce(iconcat, list_of_attrlist)
     succ, response = batch_get_attraction(set(attraction_id_list))
     if not succ:
         return False, response
@@ -239,9 +242,9 @@ def get_complete_schedule(target_schedule):
                                             attraction_extracted_info_list)),
                                    attraction_info_list))
     for ind, day_schedule_content in enumerate(target_schedule["scheduleContent"]["dayScheduleContents"]):
-        target_schedule["scheduleContent"]["dayScheduleContents"][ind] = list(map(lambda attraction_id:
+        target_schedule["scheduleContent"]["dayScheduleContents"][ind]["Details"] = list(map(lambda attraction_id:
                                                                                   attraction_info_map[attraction_id],
-                                                                                  day_schedule_content))
+                                                                                  day_schedule_content["Details"]))
     return True, target_schedule
 
 
