@@ -128,14 +128,11 @@ class ScheduleHandlerTestCase(unittest.TestCase):
                     ]
                 },
                 "scheduleType": "EDITING",
-                "editorIds": [
-                    "test-editor"
-                ],
+                "editorIds": [],
                 "ownerId": "user-fafaaae8-308b-11eb-9017-54e1ad16ceb2",
                 "scheduleTitle": "Example Schedule"
             }
             )
-
         }
         handler_response = lambda_handler(post_test_event, None)
         logger.debug(json.dumps(handler_response, indent=2))
@@ -163,13 +160,14 @@ class ScheduleHandlerTestCase(unittest.TestCase):
                 ]
             },
             "scheduleType": "COMPLETE",
-            "editorIds": [
-                "test-editor"
-            ],
+            "editorIds": [],
             "ownerId": "test-owner",
             "scheduleTitle": "Example Schedule"
         }
         )
+        from handlers.proj_schedule_initializer import update_user_info_editable_schedules
+        update_user_info_editable_schedules(
+            {"userId": "test-owner", "editableSchedules": ["test-delete-schedule-sample"]})
 
         delete_test_event = {
             "resource": "/schedule/{scheduleId}",
