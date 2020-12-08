@@ -17,23 +17,9 @@
         <!-- {{this.add_attraction}} -->
         <LocationTable 
         :attractionAdd="add_attraction"
+        :scheduleId="scheduleId"
+        :userId="userId"
         class="table"/>
-        <!-- <div class = "map">
-        <GmapMap
-        :center="{lat: 40, lng: -74}"
-        :zoom="7"
-        style="width: 500px; height: 500px"
-        >
-        <GmapMarker
-        :key="index"
-        v-for="(m, index) in markers"
-        :position="m.position"
-        :clickable="true"
-        :draggable="true"
-        @click="center=m.position"
-        />
-        </GmapMap>
-      </div> -->
     </el-main>
   </el-container>
 </el-container>
@@ -43,7 +29,7 @@
 import LocationTable from "../components/CreatePage/LocationTable"
 import LocationList from "../components/CreatePage/LocationList"
 import Slider from "../components/Navbars/Slider"
-// var apigClientFactory = require('aws-api-gateway-client').default
+var apigClientFactory = require('aws-api-gateway-client').default
 export default {
     name:"preselect",
     components:{
@@ -53,16 +39,65 @@ export default {
     data(){
         return{
             add_attraction:{},
-            userId:'test-editor'
+            userId:'test-editor',
+            scheduleId:""
         }
     },
     methods:{
+        setScheduleId(){
+            this.scheduleId = this.$route.params.scheduleId;
+        },
         getAddedItem(t){
             this.add_attraction = t
             console.log(this.add_attraction)
+            this.putIntoScheduleContent(t)
+        },
+        async putIntoScheduleContent(addItem){
+            var config = {invokeUrl:'https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1'}
+            var apigClient = apigClientFactory.newClient(config);
+            var pathParams = {
+                 scheduleId: this.scheduleId,
+                 attractionId:addItem.attractionId
+            }
+            // console.log(this.scheduleId,addItem.attractionId)
+            var pathTemplate = '/schedule/{scheduleId}/attraction/{attractionId}'
+            var method = "PUT";
+            var additionalParams = {
+        //If there are query parameters or headers that need to be sent with the request you can add them here
+            headers: {           
+                // param0: '',
+                // param1: ''
+            },
+            queryParams: {
+                userId:this.userId
+            }
+        };
+            var body = {
+                //This is where you define the body of the request
+            };
+            let isSuccess = false;
+            await apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+                .then((response =>{
+                    if(response.status === 200){
+                        // if response
+                        console.log("post resp",response)
+                        isSuccess = true
+                        //This is where you would put a success callback
+                    }
+                })).catch(err =>{
+                    console.log(err)
+                })
+            if(isSuccess){
+                return isSuccess}
+            else{return false}
         }
     },
-    mounted(){}
+    created(){
+        this.setScheduleId()
+    },
+    // mounted(){
+
+    // }
 }
 </script>
 <style scoped>

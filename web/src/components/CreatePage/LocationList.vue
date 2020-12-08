@@ -10,9 +10,11 @@
     :attraction="attraction"
     :key="attraction.attractionId">
     <LocationSingleCard 
-         :attraction="attraction"
-         />
-          </div>
+      :attraction="attraction"
+      :addAttraction="addAttraction"
+      v-on:itemAdded="getItemAdded"
+      />
+    </div>
     <!-- </el-table-column> -->
       <!-- </div> -->
       <!-- <div
@@ -96,9 +98,9 @@ export default {
       }
 
   },
-    mounted: function () {
-      this.getLocationList();
-  }, 
+  //   mounted: function () {
+  //     this.getLocationList();
+  // }, 
 };
 </script>
 <style scoped>

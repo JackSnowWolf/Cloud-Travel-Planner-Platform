@@ -5,27 +5,26 @@
 <!-- <el-card class="box-card"  style="width: 90%"> -->
 <div>
 <el-table
-    ref="multipleTable"
     :data="tableData"
+    span-method="tableSpanMethod"
     style="width: 100%"
     @selection-change="handleSelectionChange">
+  <!-- <li v-for="(value,key) in tableData" :key="key">
+     {{value}}
+  </li> -->
     <el-table-column
       type="selection"
       width="55">
     </el-table-column>
     <el-table-column
-      label="index"
-      width="120">
-      <template slot-scope="scope">{{ scope.row.attractionName }}</template>
-    </el-table-column>
-    <el-table-column
       property="attractionName"
       label="Name"
-      width="120">
+      width="200">
     </el-table-column>
     <el-table-column
-      property="attractionName"
-      label="Address"
+      property="attractionId"
+      label="attractionId"
+      width="200"
       show-overflow-tooltip>
     </el-table-column>
   </el-table>
@@ -41,13 +40,17 @@
 </template>
 
 <script>
+var apigClientFactory = require('aws-api-gateway-client').default
   export default {
     props:{
       attractionAdd:Object,
+      userId:String,
     },
     data() {
       return {
         tableData: [],
+        scheduleId:"",
+        attracationIdList:[],
         // tableData: [{
         //   location: '2016-05-03',
         //   name: 'Tom',
@@ -81,6 +84,52 @@
       }
     },
     methods: {
+      setScheduleId(){
+            this.scheduleId = this.$route.params.scheduleId;
+        },
+      async initDataTable(){
+        console.log("init Preselect table",this.scheduleId,this.userId)
+        this.tableData = []
+        this.attracationIdList = []
+        var config = {invokeUrl:'https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1'}
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+              scheduleId: this.scheduleId,
+        }
+        // console.log(this.scheduleId,addItem.attractionId)
+        var pathTemplate = '/schedule/{scheduleId}'
+        var method = "GET";
+        var additionalParams = {
+    //If there are query parameters or headers that need to be sent with the request you can add them here
+        headers: {           
+            // param0: '',
+            // param1: ''
+        },
+        queryParams: {
+            userId:this.userId
+        }
+    };
+        var body = {
+            //This is where you define the body of the request
+        };
+        await apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response =>{
+                if(response.status === 200){
+                    // if response
+                    console.log("Get resp",response.data.scheduleContent)
+                    var object = response.data.scheduleContent;
+                    for(var attracationId in object){
+                      console.log(attracationId,object[attracationId])
+                      this.attracationIdList.push(attracationId)
+                      this.tableData.push(object[attracationId])
+                    }
+                    // this.tableData.push(response.data.scheduleContent)
+                    // this.tableData = response.data.scheduleContent
+                }
+            })).catch(err =>{
+                console.log(err)
+            })      
+      },
       toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
@@ -92,7 +141,8 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        // console.log("selection",this.multipleSelection)
+        console.log("selection",this.multipleSelection)
+
       },
       handleSumbit(e){
         e.preventDefault();
@@ -103,7 +153,8 @@
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          this.$router.push("/planedit")
+          this.submitSelection(this.multipleSelection)
+          // this.$router.push("/planedit")
           this.$msg({
           type: 'success',
           message: 'You are redirecting to your next step' 
@@ -115,12 +166,61 @@
         });       
       }); 
         }
+      },
+      async submitSelection(selection){
+        for (var i=0,len=selection.length; i<len; i++)
+          { 
+            var submitid = selection[i].attractionId
+            console.log(selection[i].attractionId)
+            var config = {invokeUrl:'https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1'}
+            var apigClient = apigClientFactory.newClient(config);
+            var pathParams = {
+                scheduleId: this.scheduleId,
+                attractionId: submitid,
+            }
+            // console.log(this.scheduleId,addItem.attractionId)
+            var pathTemplate = '/schedule/{scheduleId}/attraction/{attractionId}'
+            var method = "POST";
+            var additionalParams = {
+        //If there are query parameters or headers that need to be sent with the request you can add them here
+            headers: {           
+                // param0: '',
+                // param1: ''
+            },
+            queryParams: {
+                userId:this.userId
+            }
+        };
+            var body = {
+                //This is where you define the body of the request
+            };
+            await apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+                .then((response =>{
+                    if(response.status === 200){
+                        // if response
+                        console.log("post!")
+                        // this.tableData.push(response.data.scheduleContent)
+                        // this.tableData = response.data.scheduleContent
+                    }
+                })).catch(err =>{
+                    console.log(err)
+                })      
+
+
+          }   
       }
     },
     watch:{
       attractionAdd(newAttraction){
-        this.tableData.push(newAttraction)
-      }
+        console.log(newAttraction)
+        this.initDataTable()
+      },
+    },
+    created(){
+        this.setScheduleId()
+    },
+    mounted(){
+      this.initDataTable()
     }
   }
 </script>
