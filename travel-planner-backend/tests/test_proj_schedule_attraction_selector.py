@@ -81,7 +81,7 @@ class ScheduleAttractionSelectorTestCase(unittest.TestCase):
         self.assertEqual(handler_response["statusCode"], 200)
         logger.info("Completed!")
 
-    def test_post_schedule_attraction_selector(self):
+    def test_post_schedule_attraction_selector_add_like(self):
         logger.info("test put schedule attraction selector handler")
         post_test_event = {
             "resource": "/schedule/{scheduleId}/attraction/{attractionId}",
@@ -89,11 +89,46 @@ class ScheduleAttractionSelectorTestCase(unittest.TestCase):
             "httpMethod": "POST",
             "queryStringParameters": {
                 "userId": "test-editor",
+                "like": "true"
 
             },
             "multiValueQueryStringParameters": {
                 "userId": [
                     "test-editor"
+                ],
+                "like": [
+                    "true"
+                ]
+            },
+            "pathParameters": {
+                "scheduleId": "preselect-schedule-example-for-selector",
+                "attractionId": "attr-0001"
+            }
+        }
+
+        handler_response = lambda_handler(post_test_event, None)
+        logger.debug(json.dumps(handler_response, indent=2))
+        logger.debug(json.dumps(json.loads(handler_response["body"]), indent=2))
+        self.assertEqual(handler_response["statusCode"], 200)
+        logger.info("Completed!")
+
+    def test_post_schedule_attraction_selector_remove_like(self):
+        logger.info("test put schedule attraction selector handler")
+        post_test_event = {
+            "resource": "/schedule/{scheduleId}/attraction/{attractionId}",
+            "path": "/schedule/preselect-schedule-example-for-selector/attraction/attr-0001",
+            "httpMethod": "POST",
+            "queryStringParameters": {
+                "userId": "test-editor",
+                "like": "false"
+
+            },
+            "multiValueQueryStringParameters": {
+                "userId": [
+                    "test-editor"
+                ],
+                "like": [
+                    "false"
                 ]
             },
             "pathParameters": {

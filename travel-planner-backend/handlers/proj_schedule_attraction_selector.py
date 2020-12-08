@@ -135,7 +135,7 @@ def put_attraction_into_schedule(user_id, schedule_id, attraction_id, is_selecte
     if not succ:
         return response
     target_schedule = response["Item"]
-    if user_id not in target_schedule["editorIds"]:
+    if user_id not in target_schedule["editorIds"] and user_id != target_schedule["ownerId"]:
         return {
             'statusCode': 403,
             'body': json.dumps({
@@ -175,7 +175,7 @@ def add_like_to_attraction(user_id, schedule_id, attraction_id, is_selected=None
     if not succ:
         return response
     target_schedule = response["Item"]
-    if user_id not in target_schedule["editorIds"]:
+    if user_id not in target_schedule["editorIds"] and user_id != target_schedule["ownerId"]:
         return {
             'statusCode': 403,
             'body': json.dumps({
@@ -224,7 +224,7 @@ def remove_like_to_attraction(user_id, schedule_id, attraction_id, is_selected=N
     if not succ:
         return response
     target_schedule = response["Item"]
-    if user_id not in target_schedule["editorIds"]:
+    if user_id not in target_schedule["editorIds"] and user_id != target_schedule["ownerId"]:
         return {
             'statusCode': 403,
             'body': json.dumps({
@@ -263,6 +263,40 @@ def remove_like_to_attraction(user_id, schedule_id, attraction_id, is_selected=N
             'body': json.dumps({
                 "code": 200,
                 "msg": "remove like to attraction successfully!"
+            })
+        }
+    return response
+
+
+def delete_attraction(user_id, schedule_id, attraction_id):
+    succ, response = get_target_schedule(schedule_id)
+    if not succ:
+        return response
+    target_schedule = response["Item"]
+    if user_id not in target_schedule["editorIds"] and user_id != target_schedule["ownerId"]:
+        return {
+            'statusCode': 403,
+            'body': json.dumps({
+                "code": 403,
+                "msg": "Permission Denied"
+            })
+        }
+    if attraction_id not in target_schedule["scheduleContent"]:
+        return {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "Missing attraction"
+            })
+        }
+    del target_schedule["scheduleContent"][attraction_id]
+    succ, response = update_schedule(target_schedule)
+    if succ:
+        return {
+            'statusCode': 200,
+            'body': json.dumps({
+                "code": 200,
+                "msg": "remove attraction successfully!"
             })
         }
     return response
@@ -321,9 +355,25 @@ def lambda_handler(event, context):
         elif event["httpMethod"].upper() == "PUT":
             response.update(put_attraction_into_schedule(user_id, schedule_id, attraction_id, is_selected))
         elif event["httpMethod"].upper() == "POST":
-            response.update(add_like_to_attraction(user_id, schedule_id, attraction_id, is_selected))
+            if "like" not in event["queryStringParameters"]:
+                response.update({
+                    'statusCode': 400,
+                    'body': json.dumps({
+                        "code": 400,
+                        "msg": "missing like parameter"
+                    })
+                })
+                return response
+            else:
+                is_like = event["queryStringParameters"]["like"].lower() == "true"
+            if is_like:
+                logger.info("user add one like to an attraction")
+                response.update(add_like_to_attraction(user_id, schedule_id, attraction_id, is_selected))
+            else:
+                logger.info("user remove one like to an attraction")
+                response.update(remove_like_to_attraction(user_id, schedule_id, attraction_id, is_selected))
         elif event["httpMethod"].upper() == "DELETE":
-            response.update(remove_like_to_attraction(user_id, schedule_id, attraction_id, is_selected))
+            response.update(delete_attraction(user_id, schedule_id, attraction_id))
         else:
             response.update({
                 'statusCode': 400,
