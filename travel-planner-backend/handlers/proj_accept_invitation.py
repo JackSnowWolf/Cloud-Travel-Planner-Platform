@@ -84,6 +84,7 @@ def update_schedule(schedule):
 def update_user_info(user_info):
     try:
         schedule_table.update_item(Item=user_info)
+        return True, None
     except Exception as e:
         return False, {
             'statusCode': 400,

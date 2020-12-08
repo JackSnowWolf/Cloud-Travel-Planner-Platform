@@ -101,6 +101,20 @@ def get_schedule_list(user_id, page_size=20, page_no=0):
     }
 
 
+def update_user_info(user_info):
+    try:
+        schedule_table.update_item(Item=user_info)
+        return True, None
+    except Exception as e:
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": str(e)
+            })
+        }
+
+
 def create_schedule_in_db(schedule):
     try:
         schedule_table.put_item(Item=schedule)
@@ -136,6 +150,12 @@ def create_schedule(user_id, target_area="", schedule_title=""):
         "scheduleContent": dict()
     }
     succ, response = create_schedule_in_db(schedule)
+    if not succ:
+        return response
+    if "editableSchedules" not in user_info:
+        user_info["editableSchedules"] = []
+    user_info["editableSchedules"].append(schedule_id)
+    succ, response = update_user_info(user_info)
     if not succ:
         return response
     return {
