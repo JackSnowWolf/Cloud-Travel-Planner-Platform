@@ -79,6 +79,12 @@ def sumbit_schedule(user_id, schedule_id):
         "metaData": "dummy"
     }
     dayschedule_contents=[]
+    dayone={
+        "NumDate":"day1"
+    }
+    daytwo={
+        "NumDate":"day2"
+    }
     preselect_attr_list=list(target_schedule["scheduleContent"].keys())
     preselect_attr_first=str(preselect_attr_list[0])
     response_list=attraction_table.scan(ProjectionExpression="attractionId,score")
@@ -98,13 +104,28 @@ def sumbit_schedule(user_id, schedule_id):
             })
         }
     elif len(pop_attr_list)<=3:
-        dayschedule_contents.append(pop_attr_list)
+        dayone.update({
+            "Details": pop_attr_list
+        })
+        dayschedule_contents.append(dayone)
     elif len(pop_attr_list)<=6:
-        dayschedule_contents.append(pop_attr_list[0:3])
-        dayschedule_contents.append(pop_attr_list[3:])
+        dayone.update({
+            "Details": pop_attr_list[0:3]
+        })
+        daytwo.update({
+            "Details": pop_attr_list[3:]
+        })
+        dayschedule_contents.append(dayone)
+        dayschedule_contents.append(daytwo)
     else:
-        dayschedule_contents.append(pop_attr_list[0:3])
-        dayschedule_contents.append(pop_attr_list[3:6])
+        dayone.update({
+            "Details": pop_attr_list[0:3]
+        })
+        daytwo.update({
+            "Details": pop_attr_list[3:6]
+        })
+        dayschedule_contents.append(dayone)
+        dayschedule_contents.append(daytwo)
 
     schedule_content.update({
         "dayScheduleContents": dayschedule_contents
