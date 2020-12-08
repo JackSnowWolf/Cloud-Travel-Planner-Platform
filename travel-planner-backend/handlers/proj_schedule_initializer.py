@@ -101,11 +101,31 @@ def get_schedule_list(user_id, page_size=20, page_no=0):
     }
 
 
+def update_user_info_editable_schedules(user_info):
+    try:
+        user_table.update_item(
+            Key={"userId": user_info["userId"]},
+            UpdateExpression="set editableSchedules=:s",
+            ExpressionAttributeValues={
+                ":s": user_info["editableSchedules"]
+            })
+        return True, None
+    except Exception as e:
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": str(e)
+            })
+        }
+
+
 def create_schedule_in_db(schedule):
     try:
         schedule_table.put_item(Item=schedule)
         return True, None
     except Exception as e:
+        logger.error(str(e))
         return False, {
             'statusCode': 400,
             'body': json.dumps({
@@ -136,6 +156,12 @@ def create_schedule(user_id, target_area="", schedule_title=""):
         "scheduleContent": dict()
     }
     succ, response = create_schedule_in_db(schedule)
+    if not succ:
+        return response
+    if "editableSchedules" not in user_info:
+        user_info["editableSchedules"] = []
+    user_info["editableSchedules"].append(schedule_id)
+    succ, response = update_user_info_editable_schedules(user_info)
     if not succ:
         return response
     return {

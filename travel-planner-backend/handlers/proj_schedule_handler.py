@@ -132,6 +132,60 @@ def extract_attraction(attraction_info):
     return attraction_info
 
 
+def batch_get_user_info(user_id_list):
+    try:
+        response = boto3.resource('dynamodb').batch_get_item(
+            RequestItems={
+                "userTable": {
+                    "Keys": list(map(lambda user_id: {"userId": user_id}, user_id_list)),
+                    "AttributesToGet": [
+                        "userId",
+                        "editableSchedules"
+                    ]
+                }
+            }
+        )
+
+        if "Responses" in response and len(response["UnprocessedKeys"]) == 0:
+            return True, response["Responses"]
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "can not get user info"
+            })
+        }
+    except Exception as e:
+        logger.error(e)
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "user id doesn't exist"
+            })
+        }
+
+
+def update_user_info_editable_schedules(user_info):
+    try:
+        user_table.update_item(
+            Key={"userId": user_info["userId"]},
+            UpdateExpression="set editableSchedules=:s",
+            ExpressionAttributeValues={
+                ":s": user_info["editableSchedules"]
+            })
+        return True, None
+    except Exception as e:
+        logger.error(e)
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": str(e)
+            })
+        }
+
+
 def batch_get_attraction(attraction_id_list):
     try:
         response = boto3.resource('dynamodb').batch_get_item(
@@ -231,8 +285,21 @@ def delete_schedule(user_id, schedule_id):
                 "msg": "Permission Denied!"
             })
         }
-    delete_target_schedule(schedule_id)
-    # TODO: update user info
+
+    editor_list = target_schedule.get("editorIds", [])
+    editor_list.append(target_schedule["ownerId"])
+    succ, response = batch_get_user_info(editor_list)
+    if not succ:
+        return response
+    editor_user_info_list = response["userTable"]
+    for editor_user_info in editor_user_info_list:
+        if schedule_id in editor_user_info["editableSchedules"]:
+            editor_user_info["editableSchedules"].remove(schedule_id)
+            update_user_info_editable_schedules(editor_user_info)
+
+    succ, response = delete_target_schedule(schedule_id)
+    if not succ:
+        return response
     return {
         'statusCode': 200,
         'body': json.dumps({
