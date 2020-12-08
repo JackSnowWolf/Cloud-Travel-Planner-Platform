@@ -38,16 +38,22 @@
         </div>
       </section>
     </el-main>
+    <el-footer>
+      <UserPerference />
+    </el-footer>
   </el-container>
 </el-container>
 </template>
 <script >
 import MainNav from "../components/Navbars/MainNav"
+import UserPerference from '../components/CustomlizePage/UserPerference'
 // import { Auth } from 'aws-amplify';
 var apigClientFactory = require('aws-api-gateway-client').default;
 export default {
     name:"home",
-    components:{MainNav},
+    components:{
+      MainNav,
+      UserPerference},
     data(){
       return{
         userId:'test-editor'
@@ -104,7 +110,7 @@ export default {
                 // pageSize:'4',
                 // pageNo:'0',
                 scheduleTitle:name,
-                targetAre: "/“New York/*",
+                targetArea: "New York",
                 userId:this.userId
             }
         };

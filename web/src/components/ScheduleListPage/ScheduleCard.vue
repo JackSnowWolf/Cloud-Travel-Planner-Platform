@@ -101,6 +101,7 @@ export default {
             let dayScheduleContents = []
             await apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
                 .then((response =>{
+                    console.log(response)
                     if(response.status === 200){
                         // if response
                         // console.log(response)

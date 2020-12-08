@@ -26,6 +26,11 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/Home.vue")
   },
   {
+    path: "/customlimze",
+    name: "customlimze",  
+    component: () => import("../views/Customlize.vue"),
+  },
+  {
     path: "/createnew",
     name: "createnew",
     component: () =>
