@@ -37,10 +37,10 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/Preselect.vue")
     },
     {
-      path: "/planedit",
+      path: "/planedit/:scheduleId",
       name: "planedit",
       component: () =>
-        import(/* webpackChunkName: "about" */ "../views/PlanEdit.vue")
+        import(/* webpackChunkName: "about" */ "../views/ScheduleSingle.vue")
     },
     {
       path: "/review",
