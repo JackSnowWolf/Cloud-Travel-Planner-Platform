@@ -132,7 +132,7 @@
         }
       },
       postChangedItem(item) {
-        var scheduleContent = { dayScheduleContents: item, metaData: "dummy" };
+        // var scheduleContents = { dayScheduleContents: item, metaData: "dummy" };
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -152,17 +152,15 @@
             userId: this.userId,
           },
         };
-        var body = {
-          scheduleContent: scheduleContent,
-        };
+        var body = { dayScheduleContents: item[0], metaData: "dummy" };
+        console.log("body", body);
         apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
-            console.log(response);
+            // console.log(response);
             if (response.status === 200) {
               // if response
               console.log(response);
-
               //This is where you would put a success callback
             }
           })

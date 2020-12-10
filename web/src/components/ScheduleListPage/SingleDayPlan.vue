@@ -54,7 +54,7 @@
         var tempchange = [];
         // this.changedItem = this.schedule.Detials;
         for (var i = 0; i < Details.length; i++) {
-          tempchange.push([Details[i].attractionId]);
+          tempchange.push(Details[i].attractionId);
         }
         console.log("list", tempchange);
         this.changedItem.push({
