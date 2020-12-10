@@ -123,7 +123,7 @@
           this.scheduleChanged = [];
           this.scheduleChanged.push(item);
           console.log("get!!!!", this.scheduleChanged);
-          this.postChangedItem(this.scheduleChanged);
+          // this.postChangedItem(this.scheduleChanged);
           this.emitflag = false;
         } else {
           this.scheduleChanged.push(item);

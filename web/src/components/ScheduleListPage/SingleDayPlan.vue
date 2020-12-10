@@ -51,11 +51,16 @@
         window.console.log(evt);
         // console.log("wsfs", this.schedule.Details);
         var Details = this.schedule.Details;
+        var tempchange = [];
         // this.changedItem = this.schedule.Detials;
         for (var i = 0; i < Details.length; i++) {
-          this.changedItem.push({ attractionId: Details[i].attractionId });
+          tempchange.push([Details[i].attractionId]);
         }
-        // console.log("list", this.changedItem);
+        console.log("list", tempchange);
+        this.changedItem.push({
+          Details: tempchange,
+          NumDate: this.schedule.NumDate,
+        });
         this.$emit("scheduleChanged", this.changedItem);
         //   if (evt.added){
         //   console.log("wsigne",evt.added)}
