@@ -224,9 +224,6 @@
       this.setScheduleId();
       this.initDataTable(this.scheduleId, this.userId);
     },
-    // mounted(){
-
-    // }
   };
 </script>
 <style scoped>

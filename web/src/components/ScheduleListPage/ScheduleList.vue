@@ -63,9 +63,11 @@
       handleEdit(index, row) {
         console.log(index, row);
         if (row.scheduleType === "EDITING") {
-          this.$router.push("/schedulelist/" + row.scheduleId);
+          this.$router.push("/scheduleedit/" + row.scheduleId);
         } else if (row.scheduleType === "PRESELECT") {
           this.$router.push("/createnew/" + row.scheduleId);
+        } else if (row.scheduleType === "COMPLETED") {
+          this.$router.push("/review/" + row.scheduleId);
         }
       },
       handleDelete(index, row) {

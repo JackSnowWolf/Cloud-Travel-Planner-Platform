@@ -43,26 +43,20 @@ const routes = [
         import(/* webpackChunkName: "about" */ "../views/ScheduleSingle.vue")
     },
     {
-      path: "/review",
+      path: "/review/:scheduleId",
       name: "review",
       component: () =>
         import(/* webpackChunkName: "about" */ "../views/ReviewPage.vue")
       },
       {
-        path: "/schedulelist",
+        path: "/schedulelist/:userId",
         name: "schedulelist",
         component: () =>
           import(/* webpackChunkName: "about" */ "../views/ScheduleListPage")
       },
       {
-        path: "/schedulelist",
-        name: "schedulelist",
-        component: () =>
-          import(/* webpackChunkName: "about" */ "../views/ScheduleListPage")
-      },
-      {
-        path: "/schedulelist/:scheduleId",
-        name: "scheduleId",  
+        path: "/scheduleedit/:scheduleId",
+        name: "scheduledetails",  
         component: () => import("../views/ScheduleSingle.vue"),
       }
 

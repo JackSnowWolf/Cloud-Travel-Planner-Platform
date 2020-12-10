@@ -1,10 +1,5 @@
 <template>
   <div class="attraction-container">
-    <!-- <el-table
-    style="width: 100%"
-    height="600">
-    <el-table-column
-    label="attraction"> -->
     <el-table style="width: 100%" height="500" :data="attractions">
       <el-table-column>
         <template slot-scope="props">

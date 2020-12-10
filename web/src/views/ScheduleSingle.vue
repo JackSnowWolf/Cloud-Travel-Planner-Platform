@@ -107,7 +107,7 @@
               .then((resp) => {
                 console.log(resp);
                 if (resp) {
-                  this.$router.push("/review");
+                  this.$router.push("/review/" + this.scheduleId);
                   this.$msg({
                     type: "success",
                     message: "Your are redirecting to your next step",

@@ -219,7 +219,7 @@
           })
           .then(() => {
             this.submitSchedule(this.scheduleId);
-            this.$router.push("/schedulelist/" + this.scheduleId);
+            this.$router.push("/scheduleedit/" + this.scheduleId);
             this.$msg({
               type: "success",
               message: "You are redirecting to your next step!",

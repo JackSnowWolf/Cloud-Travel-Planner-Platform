@@ -73,8 +73,6 @@
                 this.$router.push("/createnew/" + resp.scheduleId);
               }
             });
-            // console.log(Auth.currentSession())
-            // this.$router.push("/createnew");
           })
           .catch(() => {
             this.$msg({
@@ -85,7 +83,7 @@
       },
       continueOne(e) {
         e.preventDefault();
-        this.$router.push("/schedulelist");
+        this.$router.push("/schedulelist/" + this.userId);
       },
       async postNewSchedule(name) {
         console.log(name);

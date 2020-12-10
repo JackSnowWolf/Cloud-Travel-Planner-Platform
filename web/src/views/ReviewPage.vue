@@ -9,7 +9,7 @@
       </el-header>
       <el-container>
         <el-main>
-          <TimeLineList />
+          <TimeLineList :dayScheduleContents="dayScheduleContents" />
         </el-main>
         <el-footer>
           <el-row>
@@ -28,11 +28,67 @@
 <script>
   import TimeLineList from "../components/ReviewPage/TimeLineList";
   import Slider from "../components/Navbars/Slider";
+  var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "ReviewPage",
     components: {
       TimeLineList,
       Slider,
+    },
+    data() {
+      return {
+        scheduleId: String,
+        userId: "test-editor",
+        dayScheduleContents: "",
+      };
+    },
+    methods: {
+      setScheduleId() {
+        this.scheduleId = this.$route.params.scheduleId;
+      },
+      async initDataTable(scheduleId, userId) {
+        console.log("init Preselect table", this.scheduleId, this.userId);
+        this.tableData = [];
+        this.attracationIdList = [];
+        var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+          scheduleId: scheduleId,
+        };
+        // console.log(this.scheduleId,addItem.attractionId)
+        var pathTemplate = "/schedule/{scheduleId}";
+        var method = "GET";
+        var additionalParams = {
+          //If there are query parameters or headers that need to be sent with the request you can add them here
+          headers: {
+            // param0: '',
+            // param1: ''
+          },
+          queryParams: {
+            userId: userId,
+          },
+        };
+        var body = {
+          //This is where you define the body of the request
+        };
+        await apigClient
+          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+          .then((response) => {
+            if (response.status === 200) {
+              console.log("Get resp init", response.data.scheduleContent.dayScheduleContents);
+              this.dayScheduleContents = response.data.scheduleContent.dayScheduleContents;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+    },
+    mounted() {
+      this.initDataTable(this.scheduleId, this.userId);
+    },
+    created() {
+      this.setScheduleId();
     },
   };
 </script>
