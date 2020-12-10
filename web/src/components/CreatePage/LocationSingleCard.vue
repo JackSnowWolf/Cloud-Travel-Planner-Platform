@@ -88,14 +88,15 @@
         this.addItem = this.attraction;
         this.$emit("itemAdded", this.addItem);
       },
-      // handleLike() {
-      //   this.addLike = this.attraction;
-      //   this.$emit("itemLike", this.addLike.attractionId);
-      // },
-      // handleDislike() {
-      //   this.addDislike = this.attraction;
-      //   this.$emit("itemDislike", this.addDislike.attractionId);
-      // },
+      handleLike() {
+        this.addLike = this.attraction;
+        this.$emit("itemLike", this.addLike.attractionId);
+      },
+      handleDislike() {
+        this.addDislike = this.attraction;
+        console.log("dislike", this.attraction.attractionId);
+        this.$emit("itemDislike", this.addDislike.attractionId);
+      },
     },
     mounted() {
       this.latValue = this.attraction.attractionLoc.lat;

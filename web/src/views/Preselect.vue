@@ -1,7 +1,6 @@
 <template>
   <el-container class="preselect">
-    <el-aside width="250px"
-      >Slide Nav
+    <el-aside width="250px">
       <Slider />
     </el-aside>
     <el-container>
@@ -12,13 +11,11 @@
         <el-aside width="500px"
           >Attraction List
           <div>
-            <LocationList v-on:itemAdded="getAddedItem" />
+            <LocationList v-on:itemAdded="getAddedItem" v-on:itemLike="getItemLike" v-on:itemDislike="getItemDislike" />
           </div>
         </el-aside>
-        <!-- <el-header>Header</el-header> -->
-        <el-main
-          >Main
-          <!-- {{this.add_attraction}} -->
+        <el-main>
+          Main
           <div v-if="ownerView">
             <LocationTable :attractionAdd="add_attraction" :scheduleId="scheduleId" :userId="userId" class="table" />
           </div>
@@ -65,17 +62,18 @@
           this.postLike(t.attractionId, false);
         }
       },
-      //   getItemLike(t) {
-      //     console.log("Like!!!!");
-      //     this.add_likeAttraction = t;
-      //     var flag = true;
-      //     this.postLike(t, flag);
-      //   },
-      //   getItemDislike(t) {
-      //     this.add_dislikeAttraction = t;
-      //     var flag = false;
-      //     this.postLike(t, flag);
-      //   },
+      getItemLike(t) {
+        console.log("Like!!!!");
+        this.add_likeAttraction = t;
+        var flag = true;
+        this.postLike(t, flag);
+      },
+      getItemDislike(t) {
+        console.log("Dislike!!!!");
+        this.add_dislikeAttraction = t;
+        var flag = false;
+        this.postLike(t, flag);
+      },
       async postLike(Id, flag) {
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
@@ -119,7 +117,7 @@
             console.log(err);
             this.$msg({
               type: "failed",
-              message: err,
+              message: err + "Tell onwer to add to your schedule",
             });
           });
       },
@@ -236,12 +234,8 @@
     background: rgb(252, 198, 135);
     background: linear-gradient(90deg, rgba(252, 198, 135, 1) 0%, rgba(242, 134, 160, 1) 100%);
   }
-  .map {
-    margin-top: 100px;
-    margin-left: 40px;
-  }
   .table {
-    margin-top: 10px;
+    margin-top: 0px;
     margin-left: 20px;
   }
 </style>

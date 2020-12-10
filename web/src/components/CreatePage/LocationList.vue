@@ -5,9 +5,26 @@
     height="600">
     <el-table-column
     label="attraction"> -->
-    <div v-for="attraction in attractions" :attraction="attraction" :key="attraction.attractionId">
-      <LocationSingleCard :attraction="attraction" :addAttraction="addAttraction" v-on:itemAdded="getItemAdded" />
-    </div>
+    <el-table style="width: 100%" height="500" :data="attractions">
+      <el-table-column>
+        <template slot-scope="props">
+          <p>
+            <LocationSingleCard
+              :attraction="props.row"
+              :addAttraction="addAttraction"
+              v-on:itemAdded="getItemAdded"
+              v-on:itemLike="getItemLike"
+              v-on:itemDislike="getItemDislike"
+            />
+          </p>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column>
+        <div v-for="attraction in attractions" :attraction="attraction" :key="attraction.attractionId">
+          <LocationSingleCard :attraction="attraction" :addAttraction="addAttraction" v-on:itemAdded="getItemAdded" />
+        </div>
+      </el-table-column> -->
+    </el-table>
     <!-- </el-table-column> -->
     <!-- </div> -->
     <!-- <div
@@ -38,42 +55,26 @@
       return {
         loading: false,
         addAttraction: "",
+        likeAttraction: String,
         attractions: [],
         attraction: {},
-        // attractions:[
-        //     {
-        //         index:1,
-        //         attractionName:"Melody",
-        //         description: "Happy day by day",},
-        //     {
-        //         index:2,
-        //         attractionName:"Melodyyy",
-        //         description: "Sad day by day",},
-        //     {
-        //         index:3,
-        //         attractionName:"Bytedance",
-        //         description: "Dance day by day",},
-        //     {
-        //         index:4,
-        //         attractionName:"Bitjump",
-        //         description: "Jump day by day",},
-        //     {
-        //         index:4,
-        //         attractionName:"Clever",
-        //         description: "Clever day by day",},
-        //     {
-        //         index:5,
-        //         attractionName:"Smart",
-        //         description: "Smart day by day",},
-
-        // ]
       };
     },
     methods: {
       getItemAdded(item) {
         this.addAttraction = item;
-        console.log("emit");
+        // console.log("emit");
         this.$emit("itemAdded", item);
+      },
+      getItemLike(item) {
+        this.likeAttraction = item;
+        // console.log("emit");
+        this.$emit("itemLike", item);
+      },
+      getItemDislike(item) {
+        this.dislikeAttraction = item;
+        console.log("emit dislike");
+        this.$emit("itemDislike", item);
       },
       getLocationList() {
         console.log("elsticsearch!");

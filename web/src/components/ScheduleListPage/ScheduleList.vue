@@ -1,129 +1,111 @@
 <template>
-  <el-table
-    :data="tabledata.filter(data => !search || data.scheduleTitle.toLowerCase().includes(search.toLowerCase()))"
-    style="width: 100%">
-    <el-table-column
-      label="scheduleTitle"
-      prop="scheduleTitle">
-    </el-table-column>
-    <el-table-column
-      label="scheduleId"
-      prop="scheduleId">
-    </el-table-column>
-    <el-table-column
-      label="scheduleType"
-      prop="scheduleType">
-    </el-table-column>
-    <el-table-column
-      label="targetArea"
-      prop="targetArea">
-    </el-table-column>
-    <el-table-column
-      align="right">
+  <el-table :data="tabledata.filter((data) => !search || data.scheduleTitle.toLowerCase().includes(search.toLowerCase()))" style="width: 100%">
+    <el-table-column label="scheduleTitle" prop="scheduleTitle"> </el-table-column>
+    <el-table-column label="scheduleId" prop="scheduleId"> </el-table-column>
+    <el-table-column label="scheduleType" prop="scheduleType"> </el-table-column>
+    <el-table-column label="targetArea" prop="targetArea"> </el-table-column>
+    <el-table-column align="right">
       <template slot="header">
-        <el-input
-          v-model="search"
-          size="mini"
-          placeholder="Type to search"/>
+        <el-input v-model="search" size="mini" placeholder="Type to search" />
       </template>
       <template slot-scope="scope">
-        <el-button
-          size="mini"
-          @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
-        <el-button
-          size="mini"
-          type="danger"
-          @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
       </template>
     </el-table-column>
   </el-table>
 </template>
 <script>
-var apigClientFactory = require('aws-api-gateway-client').default;
-export default {
+  var apigClientFactory = require("aws-api-gateway-client").default;
+  export default {
     data() {
       return {
-        userId:'test-editor',
-        tabledata:[],
-        search: '',
-      }
+        userId: "test-editor",
+        tabledata: [],
+        search: "",
+      };
     },
     methods: {
-      handleEdit(index, row) {
-        console.log(index, row);
-        this.$router.push("/schedulelist/" + row.scheduleId);
-      },
-      handleDelete(index, row) {
-        console.log("delete",index, row.scheduleId);
-        var deleteId = row.scheduleId
-        var config = {invokeUrl:'https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1'}
+      initDatatable() {
+        var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
-            scheduleId: deleteId,
-        }
-        var pathTemplate = '/schedule/{scheduleId}'
-        var method = "DELETE";
-        var additionalParams = {
-    //If there are query parameters or headers that need to be sent with the request you can add them here
-        headers: {
-            // param0: '',
-            // param1: ''
-        },
-        queryParams: {
-            userId:this.userId
-        }
-    };
-        var body = {
-            //This is where you define the body of the request
+          // attractionId:'attr-0001',
         };
-
-        apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-            .then((response =>{
-                if(response.status === 200){
-                    // if response
-                    console.log(response)
-                    this.tabledata = response.data
-                    //This is where you would put a success callback
-                }
-            }))
-
-
-      }
-    },
-    mounted(){
-        var config = {invokeUrl:'https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1'}
-        var apigClient = apigClientFactory.newClient(config);
-        var pathParams = {
-            // attractionId:'attr-0001',
-        }
-        var pathTemplate = '/schedule'
+        var pathTemplate = "/schedule";
         var method = "GET";
         var additionalParams = {
-    //If there are query parameters or headers that need to be sent with the request you can add them here
-        headers: {
+          //If there are query parameters or headers that need to be sent with the request you can add them here
+          headers: {
             // param0: '',
             // param1: ''
-        },
-        queryParams: {
-            pageSize:'10',
-            pageNo:'0',
-            userId:this.userId
-        }
-    };
+          },
+          queryParams: {
+            pageSize: "100",
+            pageNo: "0",
+            userId: this.userId,
+          },
+        };
         var body = {
-            //This is where you define the body of the request
+          //This is where you define the body of the request
         };
 
-        apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-            .then((response =>{
-                if(response.status === 200){
-                    // if response
-                    console.log(response)
-                    this.tabledata = response.data
-                    //This is where you would put a success callback
-                }
-            }))
-    }
-  }
+        apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body).then((response) => {
+          if (response.status === 200) {
+            // if response
+            console.log(response);
+            this.tabledata = response.data;
+            //This is where you would put a success callback
+          }
+        });
+      },
+
+      handleEdit(index, row) {
+        console.log(index, row);
+        if (row.scheduleType === "EDITING") {
+          this.$router.push("/schedulelist/" + row.scheduleId);
+        } else if (row.scheduleType === "PRESELECT") {
+          this.$router.push("/createnew/" + row.scheduleId);
+        }
+      },
+      handleDelete(index, row) {
+        console.log("delete", index, row.scheduleId);
+        var deleteId = row.scheduleId;
+        var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+          scheduleId: deleteId,
+        };
+        var pathTemplate = "/schedule/{scheduleId}";
+        var method = "DELETE";
+        var additionalParams = {
+          //If there are query parameters or headers that need to be sent with the request you can add them here
+          headers: {
+            // param0: '',
+            // param1: ''
+          },
+          queryParams: {
+            userId: this.userId,
+          },
+        };
+        var body = {
+          //This is where you define the body of the request
+        };
+
+        apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body).then((response) => {
+          if (response.status === 200) {
+            // if response
+            console.log(response);
+            this.tabledata = response.data;
+            //This is where you would put a success callback
+          }
+        });
+
+        this.initDatatable();
+      },
+    },
+    mounted() {
+      this.initDatatable();
+    },
+  };
 </script>
-    

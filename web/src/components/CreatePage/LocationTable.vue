@@ -3,10 +3,26 @@
     <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="10">
       <vs-card actionable class="attraction-card">
         <div>
-          <el-table :data="tableData" span-method="tableSpanMethod" style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table :data="tableData" style="width: 100%" max-height="400" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"> </el-table-column>
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <p>LikeCount: {{ props.row.selectedNumber }}</p>
+              </template>
+            </el-table-column>
             <el-table-column property="attractionName" label="Name" width="200"> </el-table-column>
-            <el-table-column property="attractionId" label="attractionId" width="200" show-overflow-tooltip> </el-table-column>
+            <el-table-column property="attractionArea" label="attractionArea" width="120"> </el-table-column>
+            <el-table-column property="attractionId" label="attractionId" width="200"> </el-table-column>
+            <el-table-column fixed="right" label="Operations" width="120">
+              <template slot-scope="scope">
+                <el-button :disabled="scope.row.isSelected" @click="isSelect(scope.$index)" type="text" size="small">
+                  MustChosen
+                </el-button>
+                <el-button :disabled="!scope.row.isSelected" @click="isCancel(scope.$index)" type="text" size="small">
+                  CancelChosen
+                </el-button>
+              </template>
+            </el-table-column>
             <!-- <el-table-column property="isSelected" label="isSelected" width="100" show-overflow-tooltip>
               {{ isSelected }}
             </el-table-column> -->
@@ -83,10 +99,88 @@
             console.log(err);
           });
       },
+
+      async isSelect(index) {
+        console.log("choose", this.tableData[index].attractionId);
+        var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+          scheduleId: this.scheduleId,
+          attractionId: this.tableData[index].attractionId,
+        };
+        // console.log(this.scheduleId,addItem.attractionId)
+        var pathTemplate = "/schedule/{scheduleId}/attraction/{attractionId}";
+        var method = "POST";
+        var additionalParams = {
+          //If there are query parameters or headers that need to be sent with the request you can add them here
+          headers: {
+            // param0: '',
+            // param1: ''
+          },
+          queryParams: {
+            userId: this.userId,
+            isSelected: true,
+          },
+        };
+        var body = {
+          //This is where you define the body of the request
+        };
+        await apigClient
+          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+          .then((response) => {
+            if (response.status === 200) {
+              // if response
+              console.log("Get resp", response);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+
+      async isCancel(index) {
+        console.log("choose", this.tableData[index].attracationId);
+        var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+          scheduleId: this.scheduleId,
+          attractionId: this.tableData[index].attracationId,
+        };
+        // console.log(this.scheduleId,addItem.attractionId)
+        var pathTemplate = "/schedule/{scheduleId}/attraction/{attractionId}";
+        var method = "POST";
+        var additionalParams = {
+          //If there are query parameters or headers that need to be sent with the request you can add them here
+          headers: {
+            // param0: '',
+            // param1: ''
+          },
+          queryParams: {
+            userId: this.userId,
+            isSelected: false,
+          },
+        };
+        var body = {
+          //This is where you define the body of the request
+        };
+        await apigClient
+          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+          .then((response) => {
+            if (response.status === 200) {
+              // if response
+              console.log("Get resp", response);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+
       handleSelectionChange(val) {
         this.multipleSelection = val;
         console.log("selection", this.multipleSelection);
       },
+
       handleDelete(e) {
         e.preventDefault();
         console.log("selection", this.multipleSelection);
@@ -98,8 +192,10 @@
               type: "warning",
             })
             .then(() => {
-              this.deleteSelection(this.multipleSelection);
-              // this.$router.push("/planedit/" + this.scheduleId)
+              for (var index = 0; index < this.multipleSelection.length; index++) {
+                console.log("delete", this.multipleSelection[index]);
+                this.deleteSelection(this.multipleSelection[index]);
+              }
               this.$msg({
                 type: "success",
                 message: "You have changed your selection",
@@ -176,15 +272,16 @@
           return isSuccess;
         }
       },
-      async deleteSelection(scheduleId) {
+      async deleteSelection(item) {
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
-          scheduleId: scheduleId,
+          scheduleId: this.scheduleId,
+          attractionId: item.attractionId,
         };
         // console.log(this.scheduleId,addItem.attractionId)
-        var pathTemplate = "/schedule/{scheduleId}/submit";
-        var method = "GET";
+        var pathTemplate = "/schedule/{scheduleId}/attraction/{attractionId}";
+        var method = "DELETE";
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {

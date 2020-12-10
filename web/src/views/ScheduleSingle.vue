@@ -1,7 +1,6 @@
 <template>
   <el-container class="planedit">
     <el-aside width="250px">
-      Slider
       <Slider />
     </el-aside>
     <el-container>
@@ -30,6 +29,7 @@
   import SearchDialog from "../components/PlanEditPage/SearchDialog";
   import Slider from "../components/Navbars/Slider.vue";
   import ScheduleCard from "../components/ScheduleListPage/ScheduleCard";
+  var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "SchduelSinglePage",
     components: {
@@ -37,11 +37,65 @@
       Slider,
       SearchDialog,
     },
+    data() {
+      return {
+        loading: false,
+        userId: "test-editor",
+        scheduleId: String,
+        scheduleChanged: [],
+        schedule: {},
+        dayScheduleContents: [],
+      };
+    },
     methods: {
       getChangedSchedule(item) {
-        console.log("getchanged", item);
+        // console.log("getchanged", item);
+        for (var i = 0; i < item.length; i++) {
+          console.log("patchItem", item[i][0]);
+          this.patchChangedItem(item[i][0]);
+        }
       },
-      handleSubmit() {
+      patchChangedItem(item) {
+        // var scheduleContents = { dayScheduleContents: item, metaData: "dummy" };
+        var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+          scheduleId: this.scheduleId,
+        };
+        var pathTemplate = "/schedule/{scheduleId}";
+        var method = "PATCH";
+        var additionalParams = {
+          //If there are query parameters or headers that need to be sent with the request you can add them here
+          headers: {
+            // param0: '',
+            // param1: ''
+          },
+          queryParams: {
+            // pageSize:'4',
+            // pageNo:'0',
+            userId: this.userId,
+          },
+        };
+        var body = { NumDate: item.NumDate, Details: item.Details };
+        // var body = { dayScheduleContents: item[0], metaData: "dummy" };
+        console.log("patchbody", body);
+        apigClient
+          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+          .then((response) => {
+            // console.log(response);
+            if (response.status === 200) {
+              // if response
+              console.log("patch Success!", response);
+              //This is where you would put a success callback
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+
+      handleSubmit(e) {
+        e.preventDefault();
         this.$msgbox
           .confirm("Submit your plan now?", "Warning", {
             confirmButtonText: "OK",
@@ -49,11 +103,23 @@
             type: "warning",
           })
           .then(() => {
-            this.$router.push("/review");
-            this.$msg({
-              type: "success",
-              message: "Your are redirecting to your next step",
-            });
+            this.getFinishSchedule()
+              .then((resp) => {
+                console.log(resp);
+                if (resp) {
+                  this.$router.push("/review");
+                  this.$msg({
+                    type: "success",
+                    message: "Your are redirecting to your next step",
+                  });
+                }
+              })
+              .catch(() => {
+                this.$msg({
+                  type: "info",
+                  message: "Failed",
+                });
+              });
           })
           .catch(() => {
             this.$msg({
@@ -62,6 +128,48 @@
             });
           });
       },
+      async getFinishSchedule() {
+        var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+          scheduleId: this.scheduleId,
+        };
+        var pathTemplate = "/schedule/{scheduleId}/finish";
+        var method = "GET";
+        var additionalParams = {
+          //If there are query parameters or headers that need to be sent with the request you can add them here
+          headers: {},
+          queryParams: {
+            userId: this.userId,
+          },
+        };
+        var body = {
+          //This is where you define the body of the request
+        };
+        let isSuccess = false;
+        await apigClient
+          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+          .then((response) => {
+            // console.log(response);
+            if (response.status === 200) {
+              // if response
+              // console.log(response)
+              isSuccess = true;
+              //This is where you would put a success callback
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        if (isSuccess) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+    },
+    created() {
+      this.scheduleId = this.$route.params.scheduleId;
     },
   };
 </script>

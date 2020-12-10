@@ -11,25 +11,6 @@
       </vs-card>
     </vs-col>
   </vs-row>
-  <!-- <vs-row vs-justify="center">
-    <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="10">
-      <vs-card actionable class="cardx">
-        <div v-for="(elements, key) in schedule" :key="key">
-          <div slot="header">
-            <h3>{{ elements.NumDate }}</h3>
-          </div>
-          <draggable class="list-group" :list="[elements]" group="people" @change="log">
-            <div class="list-group-item" v-for="element in elements.Details" :key="element.attractionId">
-              {{ element.attractionName }} -- {{ element.attractionId }} -->
-  <!-- <div v-for="n in element.Details.length" :key="n">
-                {{ element.Details[n] }}
-              </div> -->
-  <!-- </div>
-          </draggable>
-        </div>
-      </vs-card>
-    </vs-col>
-  </vs-row> -->
 </template>
 <script>
   import draggable from "vuedraggable";
