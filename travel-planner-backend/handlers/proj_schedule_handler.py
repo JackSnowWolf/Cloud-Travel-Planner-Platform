@@ -218,6 +218,9 @@ def batch_get_attraction(attraction_id_list):
 
 def get_preselect_schedule(target_schedule):
     attraction_id_list = list(target_schedule["scheduleContent"].keys())
+    if attraction_id_list is None or len(attraction_id_list) == 0:
+        logger.debug("No attractions in the schedule")
+        return True, target_schedule
     succ, response = batch_get_attraction(set(attraction_id_list))
     if not succ:
         return False, response
@@ -229,10 +232,13 @@ def get_preselect_schedule(target_schedule):
 
 
 def get_complete_schedule(target_schedule):
-    list_of_attrlist=[]
+    list_of_attrlist = []
     for dayContent in target_schedule["scheduleContent"]["dayScheduleContents"]:
         list_of_attrlist.append(dayContent["Details"])
     attraction_id_list = reduce(iconcat, list_of_attrlist)
+    if attraction_id_list is None or len(attraction_id_list) == 0:
+        logger.debug("No attractions in the schedule")
+        return True, target_schedule
     succ, response = batch_get_attraction(set(attraction_id_list))
     if not succ:
         return False, response
@@ -243,8 +249,10 @@ def get_complete_schedule(target_schedule):
                                    attraction_info_list))
     for ind, day_schedule_content in enumerate(target_schedule["scheduleContent"]["dayScheduleContents"]):
         target_schedule["scheduleContent"]["dayScheduleContents"][ind]["Details"] = list(map(lambda attraction_id:
-                                                                                  attraction_info_map[attraction_id],
-                                                                                  day_schedule_content["Details"]))
+                                                                                             attraction_info_map[
+                                                                                                 attraction_id],
+                                                                                             day_schedule_content[
+                                                                                                 "Details"]))
     return True, target_schedule
 
 
