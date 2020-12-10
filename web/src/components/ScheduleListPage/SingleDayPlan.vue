@@ -37,7 +37,7 @@
     props: ["schedule", "scheduleChanged"],
     data() {
       return {
-        changedItem: "",
+        changedItem: [],
       };
     },
     components: {
@@ -49,8 +49,13 @@
       },
       log: function(evt) {
         window.console.log(evt);
-        console.log("wsfs", this.schedule);
-        this.changedItem = this.schedule;
+        // console.log("wsfs", this.schedule.Details);
+        var Details = this.schedule.Details;
+        // this.changedItem = this.schedule.Detials;
+        for (var i = 0; i < Details.length; i++) {
+          this.changedItem.push({ attractionId: Details[i].attractionId });
+        }
+        // console.log("list", this.changedItem);
         this.$emit("scheduleChanged", this.changedItem);
         //   if (evt.added){
         //   console.log("wsigne",evt.added)}
