@@ -354,6 +354,68 @@ def post_schedule(user_id, schedule_id, schedule_content):
     return response
 
 
+def patch_schedule(user_id, schedule_id, day_schedule_content):
+    succ, response = get_target_schedule(schedule_id)
+    if not succ:
+        return response
+    target_schedule = response["Item"]
+    if user_id not in target_schedule["editorIds"] and user_id != target_schedule["ownerId"]:
+        return {
+            'statusCode': 403,
+            'body': json.dumps({
+                "code": 403,
+                "msg": "Permission Denied!"
+            })
+        }
+    if target_schedule["scheduleType"].upper() != "EDITING":
+        return {
+            'statusCode': 403,
+            'body': json.dumps({
+                "code": 403,
+                "msg": "Permission Denied!"
+            })
+        }
+    print("jiji1")
+    print(day_schedule_content["metaData"])
+    valid_operation_list=["ADD","DELETE"]
+    if day_schedule_content["metaData"] is None or day_schedule_content["metaData"].upper() not in valid_operation_list:
+        return {
+            'statusCode': 403,
+            'body': json.dumps({
+                "code": 403,
+                "msg": "No Operation!"
+            })
+        }
+    operation = day_schedule_content["metaData"]
+    try:
+        data_to_change = int(day_schedule_content["NumDate"][3:])
+    except Exception as e:
+        logger.error(e)
+        return {
+            'statusCode': 403,
+            'body': json.dumps({
+                "code": 403,
+                "msg": "No or Invalid NumDate!"
+            })
+        }
+    operated_data = day_schedule_content["Details"]
+    if operation.upper() == "ADD":
+        target_schedule["scheduleContent"]["dayScheduleContents"][data_to_change - 1]["Details"].append(operated_data)
+    elif operation.upper() == "DELETE":
+        target_schedule["scheduleContent"]["dayScheduleContents"][data_to_change - 1]["Details"].remove(operated_data)
+
+    succ, response = update_schedule(target_schedule)
+    if succ:
+        return {
+            'statusCode': 200,
+            'body': json.dumps({
+                "code": 200,
+                "msg": "Update successfully!"
+            })
+        }
+    return response
+
+
 def lambda_handler(event, context):
     response = {
         'statusCode': 200,
@@ -395,6 +457,9 @@ def lambda_handler(event, context):
             return response
         if event["httpMethod"].upper() == "POST":
             response.update(post_schedule(user_id, schedule_id, json.loads(event["body"])))
+            return response
+        if event["httpMethod"].upper() == "PATCH":
+            response.update(patch_schedule(user_id, schedule_id, json.loads(event["body"])))
             return response
         response.update({
             'statusCode': 400,

@@ -26,7 +26,7 @@ class ScheduleSubmitterCase(unittest.TestCase):
                 ]
             },
             "pathParameters": {
-                "scheduleId": "preselect-schedule-example-for-submit4"
+                "scheduleId": "preselect-schedule-example-for-submit5"
             }
         }
         handler_response = lambda_handler(get_test_event, None)
