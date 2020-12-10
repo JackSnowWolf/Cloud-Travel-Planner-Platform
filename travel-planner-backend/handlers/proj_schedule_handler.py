@@ -235,7 +235,10 @@ def get_complete_schedule(target_schedule):
     list_of_attrlist = []
     for dayContent in target_schedule["scheduleContent"]["dayScheduleContents"]:
         list_of_attrlist.append(dayContent["Details"])
-    attraction_id_list = reduce(iconcat, list_of_attrlist)
+
+    attraction_id_list= [item for elem in list_of_attrlist for item in elem]
+    # attraction_id_list = reduce(iconcat, list_of_attrlist)
+
     if attraction_id_list is None or len(attraction_id_list) == 0:
         logger.debug("No attractions in the schedule")
         return True, target_schedule
