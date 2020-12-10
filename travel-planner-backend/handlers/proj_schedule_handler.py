@@ -375,18 +375,7 @@ def patch_schedule(user_id, schedule_id, day_schedule_content):
                 "msg": "Permission Denied!"
             })
         }
-    print("jiji1")
-    print(day_schedule_content["metaData"])
-    valid_operation_list=["ADD","DELETE"]
-    if day_schedule_content["metaData"] is None or day_schedule_content["metaData"].upper() not in valid_operation_list:
-        return {
-            'statusCode': 403,
-            'body': json.dumps({
-                "code": 403,
-                "msg": "No Operation!"
-            })
-        }
-    operation = day_schedule_content["metaData"]
+
     try:
         data_to_change = int(day_schedule_content["NumDate"][3:])
     except Exception as e:
@@ -399,10 +388,7 @@ def patch_schedule(user_id, schedule_id, day_schedule_content):
             })
         }
     operated_data = day_schedule_content["Details"]
-    if operation.upper() == "ADD":
-        target_schedule["scheduleContent"]["dayScheduleContents"][data_to_change - 1]["Details"].append(operated_data)
-    elif operation.upper() == "DELETE":
-        target_schedule["scheduleContent"]["dayScheduleContents"][data_to_change - 1]["Details"].remove(operated_data)
+    target_schedule["scheduleContent"]["dayScheduleContents"][data_to_change - 1]["Details"]=operated_data
 
     succ, response = update_schedule(target_schedule)
     if succ:

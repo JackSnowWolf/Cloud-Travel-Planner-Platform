@@ -168,9 +168,11 @@ class ScheduleHandlerTestCase(unittest.TestCase):
                 "scheduleId": "editing-schedule-03"
             },
             "body": json.dumps({
-                "metaData": "add",
                 "NumDate": "day1",
-                "Details": "attr-3f6c194e-3094-11eb-9017-54e1ad16ceb2"
+                "Details": [
+                    "attr-3f6c194e-3094-11eb-9017-54e1ad16ceb2",
+                    "attr-11111111-308c-11eb-9017-54e1ad16ceb2"
+                ]
             }
             )
         }
@@ -180,33 +182,6 @@ class ScheduleHandlerTestCase(unittest.TestCase):
         self.assertEqual(handler_response["statusCode"], 200)
         logger.info("Completed!")
 
-        patch_test_event2 = {
-            "resource": "/schedule/{scheduleId}",
-            "path": "/schedule/editing-schedule",
-            "httpMethod": "PATCH",
-            "queryStringParameters": {
-                "userId": "test-editor"
-            },
-            "multiValueQueryStringParameters": {
-                "userId": [
-                    "test-editor"
-                ]
-            },
-            "pathParameters": {
-                "scheduleId": "editing-schedule-03"
-            },
-            "body": json.dumps({
-                "metaData": "delete",
-                "NumDate": "day1",
-                "Details": "attr-3f6c194e-3094-11eb-9017-54e1ad16ceb2"
-            }
-            )
-        }
-        handler_response = lambda_handler(patch_test_event2, None)
-        logger.debug(json.dumps(handler_response, indent=2))
-        logger.debug(json.dumps(json.loads(handler_response["body"]), indent=2))
-        self.assertEqual(handler_response["statusCode"], 200)
-        logger.info("Completed!")
 
     def test_delete_schedule_handler(self):
         logger.info("test delete schedule handler")
