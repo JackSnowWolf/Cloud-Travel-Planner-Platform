@@ -139,7 +139,7 @@
           // attractionId:'attr-0001',
         };
         var pathTemplate = "/schedule/" + this.scheduleId;
-        var method = "GET";
+        var method = "POST";
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
