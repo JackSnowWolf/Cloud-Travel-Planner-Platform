@@ -15,12 +15,14 @@
     components: {
       SingleDayPlan,
     },
+    props: {
+      userId: String,
+      scheduleIdId: String,
+    },
     data() {
       return {
         loading: false,
         emitflag: false,
-        userId: "test-editor",
-        scheduleId: String,
         scheduleChanged: [],
         schedule: {},
         dayScheduleContents: [],
@@ -100,13 +102,20 @@
           this.emitflag = true;
         }
       },
+
+      userId(val) {
+        this.userId = val;
+        console.log("userid", this.userId);
+        this.initData();
+      },
     },
     created() {
       this.scheduleId = this.$route.params.scheduleId;
-      console.log(this.scheduleId);
+      // console.log(this.scheduleId);
     },
     mounted() {
-      this.initData();
+      // console.log("schdulecard", this.userId);
+      // this.initData();
     },
   };
 </script>

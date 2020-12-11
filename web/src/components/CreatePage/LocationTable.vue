@@ -58,7 +58,7 @@
       },
 
       async initDataTable() {
-        console.log("init Preselect table", this.scheduleId, this.userId);
+        console.log("init LocationTable", this.userId);
         this.tableData = [];
         this.attracationIdList = [];
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
@@ -82,6 +82,7 @@
         var body = {
           //This is where you define the body of the request
         };
+        this.$msg("Init!!!");
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
@@ -196,6 +197,7 @@
                 console.log("delete", this.multipleSelection[index]);
                 this.deleteSelection(this.multipleSelection[index]);
               }
+              setTimeout(this.initDataTable(), 1000 * 10);
               this.$msg({
                 type: "success",
                 message: "You have changed your selection",
@@ -209,6 +211,7 @@
             });
         }
       },
+
       handleSubmit(e) {
         e.preventDefault();
         this.$msgbox
@@ -232,6 +235,7 @@
             });
           });
       },
+
       async submitSchedule(scheduleId) {
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
@@ -272,6 +276,7 @@
           return isSuccess;
         }
       },
+
       async deleteSelection(item) {
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
@@ -309,16 +314,19 @@
           });
       },
     },
+
     watch: {
       attractionAdd(newAttraction) {
         console.log(newAttraction);
-        this.initDataTable();
+        this.$msg("Wait!!!");
+        setTimeout(this.initDataTable(), 1000 * 10);
       },
     },
     created() {
       this.setScheduleId();
     },
     mounted() {
+      console.log(this.userId);
       this.initDataTable();
     },
   };

@@ -16,16 +16,34 @@
   </el-table>
 </template>
 <script>
+  import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     data() {
       return {
-        userId: "test-editor",
+        user: "",
+        userId: "",
         tabledata: [],
         search: "",
       };
     },
     methods: {
+      async setUserInfo() {
+        const user = await Auth.currentAuthenticatedUser();
+        const session = await Auth.currentSession();
+        console.log(session);
+        this.user = user;
+        this.userId = "user-" + user.username;
+        console.log(this.userId);
+        return true;
+      },
+      async createmethod() {
+        this.setUserInfo().then((resp) => {
+          if (resp) {
+            this.initDatatable();
+          }
+        });
+      },
       initDatatable() {
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
@@ -60,6 +78,32 @@
         });
       },
 
+      handleDelete(index, row) {
+        this.$msgbox
+          .confirm("This will permanently delete the Schedule. Continue?", "Warning", {
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel",
+            type: "warning",
+          })
+          .then(() => {
+            this.deleteQuery(index, row).then((resp) => {
+              if (resp) {
+                this.$msg({
+                  type: "success",
+                  message: "Delete completed",
+                });
+                this.initDatatable();
+              }
+            });
+          })
+          .catch(() => {
+            this.$msg({
+              type: "info",
+              message: "Delete canceled",
+            });
+          });
+      },
+
       handleEdit(index, row) {
         console.log(index, row);
         if (row.scheduleType === "EDITING") {
@@ -70,7 +114,8 @@
           this.$router.push("/review/" + row.scheduleId);
         }
       },
-      handleDelete(index, row) {
+
+      async deleteQuery(index, row) {
         console.log("delete", index, row.scheduleId);
         var deleteId = row.scheduleId;
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
@@ -93,21 +138,25 @@
         var body = {
           //This is where you define the body of the request
         };
-
-        apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body).then((response) => {
+        var isSuccess = false;
+        await apigClient.invokeApi(pathParams, pathTemplate, method, additionalParams, body).then((response) => {
           if (response.status === 200) {
             // if response
             console.log(response);
-            this.tabledata = response.data;
+            isSuccess = true;
+            // this.tabledata = response.data;
             //This is where you would put a success callback
           }
         });
-
-        this.initDatatable();
+        if (isSuccess) {
+          return true;
+        } else {
+          return false;
+        }
       },
     },
     mounted() {
-      this.initDatatable();
+      this.createmethod();
     },
   };
 </script>

@@ -8,7 +8,7 @@
         header
       </el-header>
       <el-container>
-        <ScheduleCard v-on:newChange="getChangedSchedule" />
+        <ScheduleCard :userId="userId" :scheduleId="scheduleId" v-on:newChange="getChangedSchedule" />
         <el-footer>
           <el-row>
             <el-col :span="12">
@@ -29,6 +29,7 @@
   import SearchDialog from "../components/PlanEditPage/SearchDialog";
   import Slider from "../components/Navbars/Slider.vue";
   import ScheduleCard from "../components/ScheduleListPage/ScheduleCard";
+  import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "SchduelSinglePage",
@@ -40,7 +41,8 @@
     data() {
       return {
         loading: false,
-        userId: "test-editor",
+        user: "",
+        userId: String,
         scheduleId: String,
         scheduleChanged: [],
         schedule: {},
@@ -48,6 +50,27 @@
       };
     },
     methods: {
+      async setUserInfo() {
+        const user = await Auth.currentAuthenticatedUser();
+        const session = await Auth.currentSession();
+        console.log(session);
+        this.user = user;
+        this.userId = "user-" + user.username;
+        console.log(this.userId);
+        return true;
+      },
+
+      async createmethod() {
+        this.setUserInfo().then((resp) => {
+          if (resp) {
+            this.setScheduleId();
+            // this.initDataTable(this.scheduleId, this.userId);
+          }
+        });
+      },
+      setScheduleId() {
+        this.scheduleId = this.$route.params.scheduleId;
+      },
       getChangedSchedule(item) {
         // console.log("getchanged", item);
         for (var i = 0; i < item.length; i++) {
@@ -55,6 +78,7 @@
           this.patchChangedItem(item[i][0]);
         }
       },
+
       patchChangedItem(item) {
         // var scheduleContents = { dayScheduleContents: item, metaData: "dummy" };
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
@@ -128,6 +152,7 @@
             });
           });
       },
+
       async getFinishSchedule() {
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
@@ -169,7 +194,7 @@
       },
     },
     created() {
-      this.scheduleId = this.$route.params.scheduleId;
+      this.createmethod();
     },
   };
 </script>

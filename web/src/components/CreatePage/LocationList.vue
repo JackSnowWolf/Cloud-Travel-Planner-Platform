@@ -77,10 +77,6 @@
           console.log("response", response.data.results);
           this.attractions = response.data.results;
           console.log(this.attractions);
-          // if (response.data.status == "success") {
-          //   this.events = response.data.data;
-          //   console.log(this.events);
-          // } else window.alert("Failed");
         });
       },
     },

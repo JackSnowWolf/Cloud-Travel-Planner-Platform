@@ -28,6 +28,7 @@
 <script>
   import TimeLineList from "../components/ReviewPage/TimeLineList";
   import Slider from "../components/Navbars/Slider";
+  import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "ReviewPage",
@@ -38,11 +39,29 @@
     data() {
       return {
         scheduleId: String,
-        userId: "test-editor",
+        userId: "",
+        user: "",
         dayScheduleContents: "",
       };
     },
     methods: {
+      async setUserInfo() {
+        const user = await Auth.currentAuthenticatedUser();
+        const session = await Auth.currentSession();
+        console.log(session);
+        this.user = user;
+        this.userId = "user-" + user.username;
+        console.log(this.userId);
+        return true;
+      },
+      async createmethod() {
+        this.setUserInfo().then((resp) => {
+          if (resp) {
+            this.setScheduleId();
+            this.initDataTable(this.scheduleId, this.userId);
+          }
+        });
+      },
       setScheduleId() {
         this.scheduleId = this.$route.params.scheduleId;
       },
@@ -88,7 +107,7 @@
       this.initDataTable(this.scheduleId, this.userId);
     },
     created() {
-      this.setScheduleId();
+      this.createmethod();
     },
   };
 </script>

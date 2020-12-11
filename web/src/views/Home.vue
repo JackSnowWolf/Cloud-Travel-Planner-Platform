@@ -34,7 +34,7 @@
 <script>
   import MainNav from "../components/Navbars/MainNav";
   import UserPerference from "../components/CustomlizePage/UserPerference";
-  // import { Auth } from 'aws-amplify';
+  import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "home",
@@ -44,12 +44,19 @@
     },
     data() {
       return {
-        userId: "test-editor",
+        user: "",
+        userId: "",
         targetArea: "",
         newSchedule: "",
       };
     },
     methods: {
+      async setUserInfo() {
+        const user = await Auth.currentAuthenticatedUser();
+        this.user = user;
+        this.userId = "user-" + user.username;
+        console.log(user);
+      },
       pickArea(val) {
         this.targetArea = val;
         // console.log("area",val)
@@ -70,7 +77,8 @@
             this.postNewSchedule(value).then((resp) => {
               if (resp) {
                 console.log("async", resp.scheduleId);
-                this.$router.push("/createnew/" + resp.scheduleId);
+                setTimeout(this.$router.push("/createnew/" + resp.scheduleId), 5000);
+                // this.$router.push("/createnew/" + resp.scheduleId);
               }
             });
           })
@@ -135,6 +143,9 @@
           return false;
         }
       },
+    },
+    created() {
+      this.setUserInfo();
     },
   };
 </script>

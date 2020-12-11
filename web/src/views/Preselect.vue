@@ -17,7 +17,7 @@
         <el-main>
           Main
           <div v-if="ownerView">
-            <LocationTable :attractionAdd="add_attraction" :scheduleId="scheduleId" :userId="userId" class="table" />
+            <LocationTable :attractionAdd="add_attraction" :scheduleId="scheduleId" :userId="userId" v-if="userId" class="table" />
           </div>
           <div v-else>
             You have no permission
@@ -31,6 +31,7 @@
   import LocationTable from "../components/CreatePage/LocationTable";
   import LocationList from "../components/CreatePage/LocationList";
   import Slider from "../components/Navbars/Slider";
+  import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "preselect",
@@ -44,12 +45,30 @@
         add_attraction: Object,
         add_likeAttraction: String,
         add_dislikeAttraction: String,
-        userId: "test-editor",
+        userId: "",
+        user: "",
         scheduleId: null,
         ownerView: false,
       };
     },
     methods: {
+      async setUserInfo() {
+        const user = await Auth.currentAuthenticatedUser();
+        const session = await Auth.currentSession();
+        console.log(session);
+        this.user = user;
+        this.userId = "user-" + user.username;
+        console.log(this.userId);
+        return true;
+      },
+      async createmethod() {
+        this.setUserInfo().then((resp) => {
+          if (resp) {
+            this.setScheduleId();
+            this.initDataTable(this.scheduleId, this.userId);
+          }
+        });
+      },
       setScheduleId() {
         this.scheduleId = this.$route.params.scheduleId;
       },
@@ -200,7 +219,6 @@
               if (userId === response.data.ownerId) {
                 ownerView = true;
                 this.ownerView = true;
-                // console.log(this.ownerView,"true")
               }
               // var object = response.data.scheduleContent;
             }
@@ -221,8 +239,10 @@
       // this.initDataTable(this.scheduleId,this.userId)
     },
     created() {
-      this.setScheduleId();
-      this.initDataTable(this.scheduleId, this.userId);
+      this.createmethod();
+      // this.setUserInfo();
+      // this.setScheduleId();
+      // this.initDataTable(this.scheduleId, this.userId);
     },
   };
 </script>
