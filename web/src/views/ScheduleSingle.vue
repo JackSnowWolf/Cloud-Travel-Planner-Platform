@@ -52,11 +52,8 @@
     methods: {
       async setUserInfo() {
         const user = await Auth.currentAuthenticatedUser();
-        const session = await Auth.currentSession();
-        console.log(session);
         this.user = user;
         this.userId = "user-" + user.username;
-        console.log(this.userId);
         return true;
       },
 
@@ -79,8 +76,8 @@
         }
       },
 
-      patchChangedItem(item) {
-        // var scheduleContents = { dayScheduleContents: item, metaData: "dummy" };
+      async patchChangedItem(item) {
+        const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -91,22 +88,17 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // param0: '',
-            // param1: ''
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            // pageSize:'4',
-            // pageNo:'0',
             userId: this.userId,
           },
         };
         var body = { NumDate: item.NumDate, Details: item.Details };
-        // var body = { dayScheduleContents: item[0], metaData: "dummy" };
         console.log("patchbody", body);
         apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
-            // console.log(response);
             if (response.status === 200) {
               // if response
               console.log("patch Success!", response);
@@ -154,6 +146,7 @@
       },
 
       async getFinishSchedule() {
+        // const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -163,7 +156,9 @@
         var method = "GET";
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
-          headers: {},
+          headers: {
+            // Authorization: session.idToken.jwtToken,
+          },
           queryParams: {
             userId: this.userId,
           },
@@ -175,7 +170,7 @@
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
-            // console.log(response);
+            console.log(response);
             if (response.status === 200) {
               // if response
               // console.log(response)

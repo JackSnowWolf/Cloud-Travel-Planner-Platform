@@ -28,8 +28,5 @@
   export default {
     name: "TimeLineComponent",
     props: ["dayScheduleContents"],
-    // mounted() {
-    //   console.log(this.dayScheduleContents);
-    // },
   };
 </script>

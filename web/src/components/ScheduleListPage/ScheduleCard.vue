@@ -10,6 +10,7 @@
 <script>
   var apigClientFactory = require("aws-api-gateway-client").default;
   import SingleDayPlan from "./SingleDayPlan";
+  import { Auth } from "aws-amplify";
   export default {
     name: "EventsList",
     components: {
@@ -30,6 +31,7 @@
     },
     methods: {
       async initData() {
+        const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -40,12 +42,9 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // param0: '',
-            // param1: ''
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            // pageSize:'4',
-            // pageNo:'0',
             userId: this.userId,
           },
         };
@@ -60,9 +59,7 @@
             console.log(response);
             if (response.status === 200) {
               // if response
-              // console.log(response)
               this.scheduleTable = response.data;
-              // console.log(this.scheduleTable);
               isSuccess = true;
               dayScheduleContents = response.data.scheduleContent.dayScheduleContents;
               // console.log(""", dayScheduleContents);
@@ -111,7 +108,6 @@
     },
     created() {
       this.scheduleId = this.$route.params.scheduleId;
-      // console.log(this.scheduleId);
     },
     mounted() {
       // console.log("schdulecard", this.userId);

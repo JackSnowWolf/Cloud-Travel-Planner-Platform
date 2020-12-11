@@ -38,6 +38,7 @@
 </template>
 
 <script>
+  import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     props: {
@@ -59,6 +60,7 @@
 
       async initDataTable() {
         console.log("init LocationTable", this.userId);
+        const session = await Auth.currentSession();
         this.tableData = [];
         this.attracationIdList = [];
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
@@ -72,8 +74,7 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // param0: '',
-            // param1: ''
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
@@ -87,8 +88,6 @@
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
             if (response.status === 200) {
-              // if response
-              // console.log("Get resp", response.data.scheduleContent);
               var object = response.data.scheduleContent;
               for (var attracationId in object) {
                 this.attracationIdList.push(attracationId);
@@ -102,7 +101,8 @@
       },
 
       async isSelect(index) {
-        console.log("choose", this.tableData[index].attractionId);
+        const session = await Auth.currentSession();
+        // console.log("choose", this.tableData[index].attractionId);
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -115,8 +115,7 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // param0: '',
-            // param1: ''
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
@@ -140,7 +139,8 @@
       },
 
       async isCancel(index) {
-        console.log("choose", this.tableData[index].attracationId);
+        const session = await Auth.currentSession();
+        // console.log("choose", this.tableData[index].attracationId);
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -153,8 +153,7 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // param0: '',
-            // param1: ''
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
@@ -237,6 +236,7 @@
       },
 
       async submitSchedule(scheduleId) {
+        const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -248,8 +248,7 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // param0: '',
-            // param1: ''
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
@@ -278,6 +277,7 @@
       },
 
       async deleteSelection(item) {
+        const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -290,8 +290,7 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // param0: '',
-            // param1: ''
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,

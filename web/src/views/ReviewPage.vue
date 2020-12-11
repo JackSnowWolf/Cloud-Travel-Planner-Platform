@@ -47,11 +47,9 @@
     methods: {
       async setUserInfo() {
         const user = await Auth.currentAuthenticatedUser();
-        const session = await Auth.currentSession();
-        console.log(session);
         this.user = user;
         this.userId = "user-" + user.username;
-        console.log(this.userId);
+        // console.log(this.userId);
         return true;
       },
       async createmethod() {
@@ -67,6 +65,7 @@
       },
       async initDataTable(scheduleId, userId) {
         console.log("init Preselect table", this.scheduleId, this.userId);
+        const session = await Auth.currentSession();
         this.tableData = [];
         this.attracationIdList = [];
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
@@ -74,14 +73,12 @@
         var pathParams = {
           scheduleId: scheduleId,
         };
-        // console.log(this.scheduleId,addItem.attractionId)
         var pathTemplate = "/schedule/{scheduleId}";
         var method = "GET";
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // param0: '',
-            // param1: ''
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: userId,

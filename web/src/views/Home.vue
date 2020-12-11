@@ -48,6 +48,7 @@
         userId: "",
         targetArea: "",
         newSchedule: "",
+        session: "",
       };
     },
     methods: {
@@ -94,7 +95,9 @@
         this.$router.push("/schedulelist/" + this.userId);
       },
       async postNewSchedule(name) {
-        console.log(name);
+        const session = await Auth.currentSession();
+        // console.log(session);
+        this.session = session;
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -105,6 +108,7 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
+            Authorization: session.idToken.jwtToken,
             // param0: '',
             // param1: ''
           },
