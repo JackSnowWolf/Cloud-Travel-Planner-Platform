@@ -59,6 +59,7 @@
         console.log(this.userId);
         return true;
       },
+
       async createmethod() {
         this.setUserInfo().then((resp) => {
           if (resp) {
@@ -67,9 +68,11 @@
           }
         });
       },
+
       setScheduleId() {
         this.scheduleId = this.$route.params.scheduleId;
       },
+
       getAddedItem(t) {
         this.add_attraction = t;
         console.log(this.add_attraction);
@@ -79,14 +82,16 @@
           this.postLike(t.attractionId, false);
         }
       },
+
       getItemLike(t) {
-        console.log("Like!!!!");
+        // console.log("Like!!!!");
         this.add_likeAttraction = t;
         var flag = true;
         this.postLike(t, flag);
       },
+
       getItemDislike(t) {
-        console.log("Dislike!!!!");
+        // console.log("Dislike!!!!");
         this.add_dislikeAttraction = t;
         var flag = false;
         this.postLike(t, flag);
@@ -139,6 +144,7 @@
             });
           });
       },
+
       async putIntoScheduleContent(addItem) {
         const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
@@ -182,6 +188,7 @@
           return false;
         }
       },
+
       async initDataTable(scheduleId, userId) {
         console.log("init Preselect table", this.scheduleId, this.userId);
         const session = await Auth.currentSession();
@@ -210,7 +217,7 @@
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
-            console.log("init", response);
+            // console.log("init", response);
             if (response.status === 200) {
               // if response
               console.log("Get resp", response.data.ownerId);

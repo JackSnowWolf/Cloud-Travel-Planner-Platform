@@ -97,6 +97,7 @@
           // console.log("newchange", newChanged.length);
           this.$emit("newChange", newChanged);
           this.emitflag = true;
+          this.initData();
         }
       },
 

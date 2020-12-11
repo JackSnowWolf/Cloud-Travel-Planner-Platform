@@ -23,7 +23,7 @@
         <i class="el-icon-user"></i>
         <span slot="title">Log out</span>
       </el-menu-item>
-      <el-submenu index="1">
+      <el-submenu index="1" disabled>
         <template slot="title">
           <i class="el-icon-location"></i>
           <span slot="title">Navigator One</span>

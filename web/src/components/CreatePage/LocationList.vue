@@ -72,7 +72,7 @@
         this.$emit("itemDislike", item);
       },
       getLocationList() {
-        console.log("elsticsearch!");
+        // console.log("elsticsearch!");
         this.$axios.get("https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1/attraction/_search?q=*:*").then((response) => {
           console.log("response", response.data.results);
           this.attractions = response.data.results;

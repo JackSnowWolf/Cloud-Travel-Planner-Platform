@@ -83,7 +83,7 @@
         var body = {
           //This is where you define the body of the request
         };
-        this.$msg("Init!!!");
+        // this.$msg("Init!!!");
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
@@ -196,7 +196,7 @@
                 console.log("delete", this.multipleSelection[index]);
                 this.deleteSelection(this.multipleSelection[index]);
               }
-              setTimeout(this.initDataTable(), 1000 * 10);
+              setTimeout(this.initDataTable(), 1000 * 1);
               this.$msg({
                 type: "success",
                 message: "You have changed your selection",
@@ -221,7 +221,7 @@
           })
           .then(() => {
             this.submitSchedule(this.scheduleId);
-            this.$router.push("/scheduleedit/" + this.scheduleId);
+            setTimeout(this.$router.push("/scheduleedit/" + this.scheduleId), 1000 * 1);
             this.$msg({
               type: "success",
               message: "You are redirecting to your next step!",
@@ -317,8 +317,8 @@
     watch: {
       attractionAdd(newAttraction) {
         console.log(newAttraction);
-        this.$msg("Wait!!!");
-        setTimeout(this.initDataTable(), 1000 * 10);
+        // this.$msg("Wait!!!");
+        setTimeout(this.initDataTable(), 1000 * 1);
       },
     },
     created() {
