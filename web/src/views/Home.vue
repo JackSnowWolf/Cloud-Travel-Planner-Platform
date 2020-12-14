@@ -75,7 +75,7 @@
           return;
         }
         alert(JSON.stringify(confirmation));
-        console.log("chatComplete", this.options.botTitle);
+        console.log("chatComplete", confirmation);
         AmplifyEventBus.$emit("chatComplete", this.options.botTitle);
       },
 

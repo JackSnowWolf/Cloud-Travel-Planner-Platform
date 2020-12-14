@@ -1,12 +1,7 @@
 <template>
   <div class="Login">
     <amplify-authenticator> </amplify-authenticator>
-    <div v-if="authStatus == 'signedIn'">
-      <amplify-sign-out></amplify-sign-out>
-    </div>
-    <!-- <div v-else>
-      <amplify-sign-in></amplify-sign-in>
-    </div> -->
+    <amplify-sign-out></amplify-sign-out>
   </div>
 </template>
 
@@ -22,8 +17,6 @@
       };
     },
     mounted() {
-      this.authStatus = window.sessionStorage.getItem("authState");
-      console.log(window.sessionStorage.getItem("authState"));
       AmplifyEventBus.$on("authState", (info) => {
         window.sessionStorage.setItem("authState", info);
         console.log("auth", window.sessionStorage.getItem("authState"));

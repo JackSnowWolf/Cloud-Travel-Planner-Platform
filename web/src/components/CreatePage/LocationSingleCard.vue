@@ -36,12 +36,18 @@
                       style="width: 300px; height: 300px"
                     >
                       <GmapMarker
-                        :key="index"
-                        v-for="(m, index) in markers"
-                        :position="m.position"
+                        :position="{
+                          lat: attraction.attractionLoc.lat,
+                          lng: attraction.attractionLoc.lng,
+                        }"
                         :clickable="true"
                         :draggable="true"
-                        @click="center = m.position"
+                        @click="
+                          center = {
+                            lat: attraction.attractionLoc.lat,
+                            lng: attraction.attractionLoc.lng,
+                          }
+                        "
                       />
                     </GmapMap>
                   </div>
@@ -98,9 +104,9 @@
         this.$emit("itemDislike", this.addDislike.attractionId);
       },
     },
-    mounted() {
-      this.latValue = this.attraction.attractionLoc.lat;
-      this.lngValue = this.attraction.attractionLoc.lng;
-    },
+    // mounted() {
+    //   this.latValue = this.attraction.attractionLoc.lat;
+    //   this.lngValue = this.attraction.attractionLoc.lng;
+    // },
   };
 </script>
