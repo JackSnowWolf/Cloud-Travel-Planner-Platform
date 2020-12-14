@@ -8,5 +8,12 @@
       "customAuth": false
     }
   },
-  "api": {}
+  "api": {},
+  "interactions": {
+    "ScheduleBot1214": {
+      "service": "Lex",
+      "providerPlugin": "awscloudformation",
+      "build": true
+    }
+  }
 }

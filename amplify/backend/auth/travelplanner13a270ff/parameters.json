@@ -1,6 +1,6 @@
 {
     "identityPoolName": "travelplanner13a270ff_identitypool_13a270ff",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "travel13a270ff",
     "userPoolName": "travelplanner13a270ff_userpool_13a270ff",
     "autoVerifiedAttributes": [
