@@ -25,8 +25,11 @@
                 <el-button @click="continueOne" type="primary" icon="el-icon-edit" slot="reference">Continue Your Trip Plan</el-button>
               </el-popover>
             </div>
-            <div class="chatbot">
+            <div v-show="false" class="chatbot">
               <amplify-chatbot :chatbotConfig="chatbotConfig"></amplify-chatbot>
+            </div>
+            <div class="chatbot">
+              <Chatbot />
             </div>
           </div>
         </section>
@@ -40,12 +43,14 @@
   import { AmplifyEventBus } from "aws-amplify-vue";
   import { Auth } from "aws-amplify";
   import { Interactions } from "aws-amplify";
+  import Chatbot from "../components/Chatbot/Chatbot";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "home",
     components: {
       MainNav,
       UserPerference,
+      Chatbot,
     },
     data() {
       return {
@@ -66,7 +71,7 @@
     },
     methods: {
       initChatbot() {
-        Interactions.onComplete("ScheduleBot_first_dev");
+        Interactions.onComplete("ScheduleBot_first_dev", this.handleComplete);
       },
       handleComplete(err, confirmation) {
         console.log("ppprint", JSON.stringify(confirmation));
