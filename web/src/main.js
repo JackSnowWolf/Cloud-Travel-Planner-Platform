@@ -10,6 +10,7 @@ import { AmplifyEventBus } from 'aws-amplify-vue';
 import awsconfig from './aws-exports'
 import 'element-ui/lib/theme-chalk/index.css';
 import 'material-icons/iconfont/material-icons.css';
+// import Loading from './plugins/loading'
 
 
 
@@ -32,6 +33,7 @@ import * as VueGoogleMaps from 'vue2-google-maps';
 import infiniteScroll from "vue-infinite-scroll";
 Vue.use(infiniteScroll);
 
+// Vue.use(Loading)
 Vue.prototype.$axios = axios //全局注册，使用方法为:this.$axios          
 Vue.component(Button.name, Button);
 Vue.component(Select.name, Select);

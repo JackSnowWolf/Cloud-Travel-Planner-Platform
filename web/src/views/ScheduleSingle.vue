@@ -7,7 +7,7 @@
       <el-header>
         header
       </el-header>
-      <el-container>
+      <el-container v-loading="loading">
         <ScheduleCard :userId="userId" :scheduleId="scheduleId" v-on:newChange="getChangedSchedule" />
         <el-footer>
           <el-row>
@@ -69,11 +69,12 @@
         this.scheduleId = this.$route.params.scheduleId;
       },
       getChangedSchedule(item) {
-        // console.log("getchanged", item);
+        // this.$loading.show();
         for (var i = 0; i < item.length; i++) {
-          console.log("patchItem", item[i][0]);
+          // console.log("patchItem", item[i][0]);
           this.patchChangedItem(item[i][0]);
         }
+        // this.$loading.close();
       },
 
       async patchChangedItem(item) {
@@ -103,10 +104,12 @@
               // if response
               console.log("patch Success!", response);
               //This is where you would put a success callback
+              return true;
             }
           })
           .catch((err) => {
             console.log(err);
+            return false;
           });
       },
 

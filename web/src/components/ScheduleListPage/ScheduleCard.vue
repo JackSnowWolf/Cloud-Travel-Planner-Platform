@@ -62,7 +62,7 @@
               this.scheduleTable = response.data;
               isSuccess = true;
               dayScheduleContents = response.data.scheduleContent.dayScheduleContents;
-              // console.log(""", dayScheduleContents);
+              console.log("init", dayScheduleContents);
               //This is where you would put a success callback
             }
           })
@@ -94,10 +94,10 @@
       scheduleChanged(newChanged) {
         if (newChanged) {
           // this.scheduleChanged.push(newChanged);
-          // console.log("newchange", newChanged.length);
+          console.log("newchange", newChanged.length);
           this.$emit("newChange", newChanged);
           this.emitflag = true;
-          this.initData();
+          // this.initData();
         }
       },
 

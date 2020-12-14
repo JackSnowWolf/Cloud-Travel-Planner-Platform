@@ -25,7 +25,7 @@
                 <el-button @click="continueOne" type="primary" icon="el-icon-edit" slot="reference">Continue Your Trip Plan</el-button>
               </el-popover>
             </div>
-            <div>
+            <div class="chatbot">
               <amplify-chatbot :chatbotConfig="chatbotConfig"></amplify-chatbot>
             </div>
           </div>
@@ -65,7 +65,7 @@
     },
     methods: {
       initChatbot() {
-        Interactions.onComplete("ScheduleBot_first_dev", this.handleComplete);
+        Interactions.onComplete("ScheduleBot_first_dev");
       },
       handleComplete(err, confirmation) {
         console.log("ppprint", JSON.stringify(confirmation));
@@ -200,5 +200,8 @@
   .createbn {
     margin-top: 40px;
     /* margin-bottom: 40px; */
-  }</style
->>
+  }
+  .chatbot {
+    max-height: 200px;
+  }
+</style>
