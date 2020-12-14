@@ -56,7 +56,7 @@
         session: "",
         chatbotConfig: {
           bot: "ScheduleBot_first_dev",
-          clearComplete: false,
+          clearComplete: true,
         },
       };
     },

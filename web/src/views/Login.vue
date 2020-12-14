@@ -4,9 +4,9 @@
     <div v-if="authStatus == 'signedIn'">
       <amplify-sign-out></amplify-sign-out>
     </div>
-    <div v-else>
+    <!-- <div v-else>
       <amplify-sign-in></amplify-sign-in>
-    </div>
+    </div> -->
   </div>
 </template>
 
