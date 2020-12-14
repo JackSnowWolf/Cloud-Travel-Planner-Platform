@@ -57,6 +57,7 @@
         chatbotConfig: {
           bot: "ScheduleBot_first_dev",
           clearComplete: true,
+          botTitle: "Helper",
         },
       };
     },
