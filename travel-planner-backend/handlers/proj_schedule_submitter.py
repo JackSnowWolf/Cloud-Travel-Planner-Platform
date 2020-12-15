@@ -92,9 +92,9 @@ def submit_schedule(user_id, schedule_id):
     response_list = attraction_table.scan(ProjectionExpression="attractionId,score")
     attr_score_item_list = response_list["Items"]
     attr_score_item_list.sort(key=lambda a: -a["score"])
-    pop_attr_list = list(map(lambda a: str(a["attractionId"]), attr_score_item_list))
-
-    pop_attr_list.insert(0, preselect_attr_first)
+    pop_attr_list_db = list(map(lambda a: str(a["attractionId"]), attr_score_item_list))
+    pop_attr_list_db.insert(0, preselect_attr_first)
+    pop_attr_list = list(dict.fromkeys(pop_attr_list_db))
 
     # By default: 2 day and 6 attractions max
     if len(pop_attr_list) <= 0:
@@ -170,10 +170,22 @@ def submit_post_schedule(user_id, schedule_id, submit_detail):
         }
 
     mode_list = ["BUSY", "MEDIUM", "RELAX"]
-    if submit_detail["mode"].upper() not in mode_list or submit_detail["model"] is None:
+    mode_dict = {
+        "BUSY": 3,
+        "MEDIUM": 2,
+        "RELAX": 1
+    }
+    print("jiji1")
+    print(submit_detail["mode"].upper())
+    if submit_detail["mode"].upper() not in mode_list and submit_detail["model"] is None:
+        print("jiji2")
         submit_schedule(user_id, schedule_id)
     view_mode = submit_detail["mode"].upper()
-
+    print("jiji23")
+    print(view_mode)
+    num_attr_oneday = mode_dict[view_mode]
+    print(num_attr_oneday)
+    print("jiji3")
     try:
         num_day = int(submit_detail["day"])
         if num_day >= 7:
@@ -196,60 +208,32 @@ def submit_post_schedule(user_id, schedule_id, submit_detail):
     schedule_content = {
         "metaData": "dummy"
     }
-    dayschedule_contents = []
-    daynum=[]
-    for i in range(num_day):
-        daynum[i+1]={
-            "NumDate":"day"+str(i+1)
-        }
-    dayone = {
-        "NumDate": "day1"
-    }
-    daytwo = {
-        "NumDate": "day2"
-    }
+    dayschedule_contents = [{"NumDate": "day" + str(i + 1)} for i in range(num_day)]
+
     preselect_attr_list = list(target_schedule["scheduleContent"].keys())
     preselect_attr_first = str(preselect_attr_list[0])
     response_list = attraction_table.scan(ProjectionExpression="attractionId,score")
     attr_score_item_list = response_list["Items"]
     attr_score_item_list.sort(key=lambda a: -a["score"])
-    pop_attr_list = list(map(lambda a: str(a["attractionId"]), attr_score_item_list))
-
-    pop_attr_list.insert(0, preselect_attr_first)
-
-    # By default: 2 day and 6 attractions max
-    if len(pop_attr_list) <= 0:
-        return {
+    pop_attr_list_db = list(map(lambda a: str(a["attractionId"]), attr_score_item_list))
+    pop_attr_list_db.insert(0, preselect_attr_first)
+    pop_attr_list = list(dict.fromkeys(pop_attr_list_db))
+    print("jiji4")
+    try:
+        start_day = 0
+        for i in range(num_day):
+            dayschedule_contents[i].update({
+                "Details": pop_attr_list[start_day:start_day + num_attr_oneday]
+            })
+            start_day = start_day + num_attr_oneday
+    except Exception as e:
+        return False, {
             'statusCode': 400,
             'body': json.dumps({
                 "code": 400,
-                "msg": "No attraction"
+                "msg": "Attractions are not enough"
             })
         }
-    elif len(pop_attr_list) <= 3:
-        dayone.update({
-            "Details": pop_attr_list
-        })
-        dayschedule_contents.append(dayone)
-    elif len(pop_attr_list) <= 6:
-        dayone.update({
-            "Details": pop_attr_list[0:3]
-        })
-        daytwo.update({
-            "Details": pop_attr_list[3:]
-        })
-        dayschedule_contents.append(dayone)
-        dayschedule_contents.append(daytwo)
-    else:
-        dayone.update({
-            "Details": pop_attr_list[0:3]
-        })
-        daytwo.update({
-            "Details": pop_attr_list[3:6]
-        })
-        dayschedule_contents.append(dayone)
-        dayschedule_contents.append(daytwo)
-
     schedule_content.update({
         "dayScheduleContents": dayschedule_contents
     })

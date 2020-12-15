@@ -26,7 +26,7 @@ class ScheduleSubmitterCase(unittest.TestCase):
                 ]
             },
             "pathParameters": {
-                "scheduleId": "preselect-schedule-example-for-submit5"
+                "scheduleId": "preselect-schedule-example-for-submit6"
             }
         }
         handler_response = lambda_handler(get_test_event, None)
@@ -42,20 +42,20 @@ class ScheduleSubmitterCase(unittest.TestCase):
             "path": "/attraction/test-submit-schedule-sample/submit",
             "httpMethod": "POST",
             "queryStringParameters": {
-                "userId": "test-editor"
+                "userId": "test-owner"
             },
             "multiValueQueryStringParameters": {
                 "userId": [
-                    "test-editor"
+                    "test-owner"
                 ]
             },
             "pathParameters": {
-                "scheduleId": "preselect-schedule-example-for-submit5"
+                "scheduleId": "preselect-schedule-example-for-submit7"
             },
             "body": json.dumps({
-                "mode": "busy",
+                "mode": "relax",
                 "typePreference":"nature",
-                "day":"3"
+                "day":"4"
             }
             )
         }
