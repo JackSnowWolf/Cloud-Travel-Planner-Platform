@@ -35,37 +35,35 @@ class ScheduleSubmitterCase(unittest.TestCase):
         self.assertEqual(handler_response["statusCode"], 200)
         logger.info("Completed!")
 
-    # def test_post_schedule_submitter(self):
-    #     logger.info("test post schedule submitter")
-    #     post_test_event = {
-    #         "resource": "/schedule/{scheduleId}/submit",
-    #         "path": "/attraction/test-submit-schedule-sample/submit",
-    #         "httpMethod": "POST",
-    #         "queryStringParameters": {
-    #             "userId": "test-editor",
-    #             "timePreference": "medium",
-    #             "typePreference": "nature"
-    #         },
-    #         "multiValueQueryStringParameters": {
-    #             "userId": [
-    #                 "test-editor"
-    #             ],
-    #             "timePreference": [
-    #                 "medium"
-    #             ],
-    #             "typePreference": [
-    #                 "nature"
-    #             ]
-    #         },
-    #         "pathParameters": {
-    #             "scheduleId": "preselect-schedule-example-for-submit4"
-    #         }
-    #     }
-    #     handler_response = lambda_handler(post_test_event, None)
-    #     print(json.dumps(handler_response, indent=2))
-    #     self.assertEqual(handler_response["statusCode"], 200)
-    #     logger.debug(json.dumps(json.loads(handler_response["body"]), indent=2))
-    #     logger.info("Completed!")
+    def test_post_schedule_submitter(self):
+        logger.info("test post schedule submitter")
+        post_test_event = {
+            "resource": "/schedule/{scheduleId}/submit",
+            "path": "/attraction/test-submit-schedule-sample/submit",
+            "httpMethod": "POST",
+            "queryStringParameters": {
+                "userId": "test-editor"
+            },
+            "multiValueQueryStringParameters": {
+                "userId": [
+                    "test-editor"
+                ]
+            },
+            "pathParameters": {
+                "scheduleId": "preselect-schedule-example-for-submit5"
+            },
+            "body": json.dumps({
+                "mode": "busy",
+                "typePreference":"nature",
+                "day":"3"
+            }
+            )
+        }
+        handler_response = lambda_handler(post_test_event, None)
+        print(json.dumps(handler_response, indent=2))
+        self.assertEqual(handler_response["statusCode"], 200)
+        logger.debug(json.dumps(json.loads(handler_response["body"]), indent=2))
+        logger.info("Completed!")
 
 if __name__ == '__main__':
     unittest.main()
