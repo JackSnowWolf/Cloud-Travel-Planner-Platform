@@ -4,43 +4,44 @@
   </el-scrollbar>
 </template>
 <script>
-import { AmplifyEventBus } from "aws-amplify-vue";
-// import { Auth } from "aws-amplify";
-import { Interactions } from "aws-amplify";
-export default {
-  name: "ChatbotComponent",
-  data() {
-    return {
-      chatbotConfig: {
-        bot: "ScheduleBot_first_dev",
-        clearComplete: true,
-        botTitle: "Helper",
+  // import { AmplifyEventBus } from "aws-amplify-vue";
+  // import { Auth } from "aws-amplify";
+  import { Interactions } from "aws-amplify";
+  export default {
+    name: "ChatbotComponent",
+    data() {
+      return {
+        chatbotConfig: {
+          bot: "ScheduleBot_first_dev",
+          clearComplete: true,
+          botTitle: "Helper",
+        },
+      };
+    },
+    methods: {
+      initChatbot() {
+        Interactions.onComplete("ScheduleBot_first_dev", this.handleComplete);
       },
-    };
-  },
-  methods: {
-    initChatbot() {
-      Interactions.onComplete("ScheduleBot_first_dev", this.handleComplete);
+      handleComplete(err, confirmation) {
+        // console.log("ppprint", JSON.stringify(confirmation));
+        if (err) {
+          alert(err);
+          return;
+        }
+        // alert(JSON.stringify(confirmation));
+        console.log("chatComplete", confirmation);
+        this.$emit("chatComplete", confirmation);
+        // AmplifyEventBus.$emit("chatComplete");
+      },
     },
-    handleComplete(err, confirmation) {
-      console.log("ppprint", JSON.stringify(confirmation));
-      if (err) {
-        alert(err);
-        return;
-      }
-      // alert(JSON.stringify(confirmation));
-      console.log("chatComplete", confirmation);
-      AmplifyEventBus.$emit("chatComplete", this.options.botTitle);
+    mounted() {
+      this.initChatbot();
     },
-  },
-  mounted() {
-    this.initChatbot();
-  },
-};
+  };
 </script>
 <style scoped>
-.chatbot {
-  min-height: 100px;
-  max-height: 200px;
-}
+  .chatbot {
+    min-height: 100px;
+    max-height: 200px;
+  }
 </style>

@@ -23,13 +23,31 @@
                 </el-button>
               </template>
             </el-table-column>
-            <!-- <el-table-column property="isSelected" label="isSelected" width="100" show-overflow-tooltip>
-              {{ isSelected }}
-            </el-table-column> -->
           </el-table>
           <div style="margin-top: 20px">
             <el-button @click="handleDelete">Select Delete</el-button>
-            <el-button @click="handleSubmit">Fininsh Selection</el-button>
+            <el-button @click="dialogFormVisible = true">Fininsh Selection</el-button>
+            <vs-popup title="Choose your trip mode" :active.sync="dialogFormVisible">
+              <h4>
+                <span>We provide following trip mode for you, please select one as you wish </span>
+              </h4>
+              <vs-row>
+                <vs-select label="Trip mode" v-model="select1">
+                  <vs-select-item :key="index" :value="item.value" :text="item.text" v-for="(item, index) in options1" />
+                </vs-select>
+              </vs-row>
+              <vs-row>
+                <vs-select label="Trip perference" v-model="select2">
+                  <vs-select-item :key="index" :value="item.value" :text="item.text" v-for="(item, index) in options2" />
+                </vs-select>
+              </vs-row>
+              <vs-row>
+                <vs-input :warning="true" warning-text="The entered data could not be verified" placeholder="Input number of days" v-model="dateNmuber" />
+              </vs-row>
+              <vs-row>
+                <vs-button @click="handleSubmit" color="success" type="filled">Next step</vs-button>
+              </vs-row>
+            </vs-popup>
           </div>
         </div>
       </vs-card>
@@ -48,9 +66,24 @@
     data() {
       return {
         tableData: [],
+        dialogFormVisible: false,
         scheduleId: "",
         attracationIdList: [],
         multipleSelection: [],
+        dateNmuber: 3,
+        select1: "normal",
+        options1: [
+          { text: "Busy", value: "busy" },
+          { text: "Normal", value: "normal" },
+          { text: "Relax", value: "relax" },
+        ],
+        select2: "nature",
+        options2: [
+          { text: "Nature", value: "nature" },
+          { text: "History", value: "history" },
+          { text: "Fashion", value: "fashion" },
+          { text: "Art", value: "art" },
+        ],
       };
     },
     methods: {
@@ -212,6 +245,8 @@
       },
 
       handleSubmit(e) {
+        this.dialogFormVisible = false;
+        console.log(this.dateNmuber);
         e.preventDefault();
         this.$msgbox
           .confirm("Submit your preselection schedule now?", "Warning", {
@@ -244,7 +279,7 @@
         };
         // console.log(this.scheduleId,addItem.attractionId)
         var pathTemplate = "/schedule/{scheduleId}/submit";
-        var method = "GET";
+        var method = "POST";
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
@@ -255,7 +290,9 @@
           },
         };
         var body = {
-          //This is where you define the body of the request
+          mode: this.select1,
+          typePreference: this.select2,
+          day: this.dateNmuber,
         };
         var isSuccess = false;
         await apigClient
@@ -334,5 +371,16 @@
   .table {
     margin-top: 20px;
     margin-bottom: 20px;
+  }
+  .vs-input {
+    float: left;
+    width: 50%;
+    margin: 10px;
+    margin-top: 5px;
+  }
+  .con-select {
+    margin-left: 10px;
+    width: 50%;
+    margin-bottom: 10px;
   }
 </style>
