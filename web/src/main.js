@@ -16,7 +16,7 @@ import 'material-icons/iconfont/material-icons.css';
 
 import { Button, Select, Menu, MenuItem, Submenu,
   Header,Container,Aside,Main,Popover,Footer,
-  Table,TableColumn,Input,Card,
+  Table,TableColumn,Input,Card,Divider,
   Step,Steps,Col,Row,RadioButton,RadioGroup,MenuItemGroup,
   Form,FormItem,Option,Dialog, Timeline, TimelineItem, Scrollbar
 } from 'element-ui';
@@ -41,7 +41,8 @@ Vue.use(Menu).use(MenuItem).use(Submenu);
 Vue.use(Header).use(Container).use(Aside).use(Main).use(Footer).use(Popover);
 Vue.use(Table).use(TableColumn).use(Input).use(Card).use(Step).use(Steps);
 Vue.use(Col).use(Row).use(RadioButton).use(RadioGroup).use(MenuItemGroup)
-    .use(FormItem).use(Option).use(Form).use(Dialog).use(Timeline).use(TimelineItem).use(Scrollbar);
+    .use(FormItem).use(Option).use(Form).use(Dialog).use(Timeline).use(TimelineItem)
+    .use(Scrollbar).use(Divider);
 
 
 

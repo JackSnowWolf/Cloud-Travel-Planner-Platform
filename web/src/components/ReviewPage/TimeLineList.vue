@@ -7,13 +7,32 @@
             <!-- <div v-for="(schedule, key) in dayScheduleContents" :schedule="schedule" :key="key"> -->
             <el-timeline-item timestamp="2018/4/12" placement="top">
               <el-card shadow="hover">
-                <div v-for="(item, index) in props.row.Details" :item="item" :key="index">
-                  <h4>{{ index + 1 }} -- {{ item.attractionName }}</h4>
-                  <!-- <h4>{{ item.attractionImgUrls }}</h4> -->
-                  <div>
-                    <img :src="item.attractionImgUrls[1]" width="50" height="50" />
-                  </div>
-                </div>
+                <el-row :gutter="20">
+                  <el-col :span="12">
+                    <div v-for="(item, index) in props.row.Details" :item="item" :key="index">
+                      <h4>{{ index + 1 }} -- {{ item.attractionName }}</h4>
+                      <!-- <h4>{{ item.attractionImgUrls }}</h4> -->
+                      <div>
+                        <img :src="item.attractionImgUrls[1]" width="50" height="50" />
+                      </div>
+                    </div>
+                  </el-col>
+                  <el-col :span="12">
+                    <div>
+                      <!-- {{ props.row.Details[0].attractionLoc }} -->
+                      <gmap-map :center="center" :zoom="10" style="width: 300%; height: 300px">
+                        <gmap-marker
+                          v-for="(item, key) in props.row.Details"
+                          :key="key"
+                          :position="getPosition(item)"
+                          :clickable="true"
+                          @click="center = center"
+                        >
+                        </gmap-marker>
+                      </gmap-map>
+                    </div>
+                  </el-col>
+                </el-row>
                 <p>Some Text</p>
               </el-card>
             </el-timeline-item>
@@ -28,5 +47,22 @@
   export default {
     name: "TimeLineComponent",
     props: ["dayScheduleContents"],
+    data() {
+      return {
+        center: {
+          lat: 40.74852,
+          lng: -73.98635,
+        },
+      };
+    },
+    methods: {
+      getPosition: function(marker) {
+        console.log(marker.attractionLoc.lat);
+        return {
+          lat: parseFloat(marker.attractionLoc.lat),
+          lng: parseFloat(marker.attractionLoc.lng),
+        };
+      },
+    },
   };
 </script>

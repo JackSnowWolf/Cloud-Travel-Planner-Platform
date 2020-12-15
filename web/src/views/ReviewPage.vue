@@ -15,7 +15,7 @@
           <el-row>
             <el-col :span="12">
               <div>
-                <el-button type="warning" @click="handleSubmit">Submit</el-button>
+                <el-button type="warning">Submit</el-button>
               </div>
             </el-col>
             <el-col :span="12"><div>xx</div></el-col>
