@@ -9,19 +9,37 @@
               <el-card shadow="hover">
                 <el-row :gutter="20">
                   <el-col :span="12">
-                    <div v-for="(item, index) in props.row.Details" :item="item" :key="index">
+                    <div
+                      v-for="(item, index) in props.row.Details"
+                      :item="item"
+                      :key="index"
+                    >
                       <h4>{{ index + 1 }} -- {{ item.attractionName }}</h4>
                       <!-- <h4>{{ item.attractionImgUrls }}</h4> -->
                       <div>
-                        <img :src="item.attractionImgUrls[1]" width="50" height="50" />
+                        <img
+                          :src="item.attractionImgUrls[1]"
+                          width="50"
+                          height="50"
+                        />
                       </div>
                     </div>
                   </el-col>
                   <el-col :span="12">
                     <div>
                       <!-- {{ props.row.Details[0].attractionLoc }} -->
-                      <gmap-map :center="center" :zoom="10" style="width: 300%; height: 300px">
-                        <gmap-marker v-for="(item, key) in props.row.Details" :key="key" :position="getPosition(item)" :clickable="true"> </gmap-marker>
+                      <gmap-map
+                        :center="center"
+                        :zoom="10"
+                        style="width: 300%; height: 300px"
+                      >
+                        <gmap-marker
+                          v-for="(item, key) in props.row.Details"
+                          :key="key"
+                          :position="getPosition(item)"
+                          :clickable="true"
+                        >
+                        </gmap-marker>
                       </gmap-map>
                     </div>
                   </el-col>
@@ -37,24 +55,24 @@
   </div>
 </template>
 <script>
-  export default {
-    name: "TimeLineComponent",
-    props: ["dayScheduleContents"],
-    data() {
+export default {
+  name: "TimeLineComponent",
+  props: ["dayScheduleContents"],
+  data() {
+    return {
+      center: {
+        lat: 40.77,
+        lng: -73.4,
+      },
+    };
+  },
+  methods: {
+    getPosition: function(marker) {
       return {
-        center: {
-          lat: 40.74852,
-          lng: -73.98635,
-        },
+        lat: parseFloat(marker.attractionLoc.lat),
+        lng: parseFloat(marker.attractionLoc.lng),
       };
     },
-    methods: {
-      getPosition: function(marker) {
-        return {
-          lat: parseFloat(marker.attractionLoc.lat),
-          lng: parseFloat(marker.attractionLoc.lng),
-        };
-      },
-    },
-  };
+  },
+};
 </script>
