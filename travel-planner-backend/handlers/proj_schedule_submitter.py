@@ -175,17 +175,12 @@ def submit_post_schedule(user_id, schedule_id, submit_detail):
         "MEDIUM": 2,
         "RELAX": 1
     }
-    print("jiji1")
-    print(submit_detail["mode"].upper())
-    if submit_detail["mode"].upper() not in mode_list and submit_detail["model"] is None:
-        print("jiji2")
-        submit_schedule(user_id, schedule_id)
+    if "mode" not in list(submit_detail.keys()) or "day" not in list(submit_detail.keys()):
+        return submit_schedule(user_id, schedule_id)
+    if submit_detail["mode"].upper() not in mode_list:
+        return submit_schedule(user_id, schedule_id)
     view_mode = submit_detail["mode"].upper()
-    print("jiji23")
-    print(view_mode)
     num_attr_oneday = mode_dict[view_mode]
-    print(num_attr_oneday)
-    print("jiji3")
     try:
         num_day = int(submit_detail["day"])
         if num_day >= 7:
@@ -204,7 +199,6 @@ def submit_post_schedule(user_id, schedule_id, submit_detail):
                 "msg": str(e)
             })
         }
-
     schedule_content = {
         "metaData": "dummy"
     }
@@ -218,7 +212,6 @@ def submit_post_schedule(user_id, schedule_id, submit_detail):
     pop_attr_list_db = list(map(lambda a: str(a["attractionId"]), attr_score_item_list))
     pop_attr_list_db.insert(0, preselect_attr_first)
     pop_attr_list = list(dict.fromkeys(pop_attr_list_db))
-    print("jiji4")
     try:
         start_day = 0
         for i in range(num_day):
