@@ -3,7 +3,7 @@
     <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="10">
       <vs-card actionable class="cardx">
         <div slot="header">
-          <h3>Day {{ schedule.NumDate }}</h3>
+          <h3>{{ schedule.NumDate }}</h3>
         </div>
         <draggable class="list-group" :list="schedule.Details" group="people" @change="log">
           <div class="list-group-item" v-for="(element, index) in schedule.Details" :key="element.attractionId">{{ element.attractionName }} {{ index }}</div>

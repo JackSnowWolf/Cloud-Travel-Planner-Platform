@@ -15,11 +15,11 @@
             <el-table-column property="attractionId" label="attractionId" width="200"> </el-table-column>
             <el-table-column fixed="right" label="Operations" width="120">
               <template slot-scope="scope">
-                <el-button :disabled="scope.row.isSelected" @click="isSelect(scope.$index)" type="text" size="small">
-                  MustChosen
+                <el-button :disabled="getlikeFlag(scope.row.selectedUsers)" @click="isSelect(scope.$index)" type="text" size="small">
+                  Like
                 </el-button>
-                <el-button :disabled="!scope.row.isSelected" @click="isCancel(scope.$index)" type="text" size="small">
-                  CancelChosen
+                <el-button :disabled="!getlikeFlag(scope.row.selectedUsers)" @click="isCancel(scope.$index)" type="text" size="small">
+                  CancelLike
                 </el-button>
               </template>
             </el-table-column>
@@ -91,6 +91,10 @@
         this.scheduleId = this.$route.params.scheduleId;
       },
 
+      getlikeFlag(selectedUsers) {
+        console.log(selectedUsers.includes(this.userId));
+        return selectedUsers.includes(this.userId);
+      },
       async initDataTable() {
         console.log("init LocationTable", this.userId);
         const session = await Auth.currentSession();
@@ -142,17 +146,15 @@
           scheduleId: this.scheduleId,
           attractionId: this.tableData[index].attractionId,
         };
-        // console.log(this.scheduleId,addItem.attractionId)
         var pathTemplate = "/schedule/{scheduleId}/attraction/{attractionId}";
         var method = "POST";
         var additionalParams = {
-          //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
             Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
-            isSelected: true,
+            like: true,
           },
         };
         var body = {
@@ -164,6 +166,7 @@
             if (response.status === 200) {
               // if response
               console.log("Get resp", response);
+              this.initDataTable();
             }
           })
           .catch((err) => {
@@ -173,24 +176,22 @@
 
       async isCancel(index) {
         const session = await Auth.currentSession();
-        // console.log("choose", this.tableData[index].attracationId);
+        // console.log("choose", this.tableData[index].attractionId);
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
           scheduleId: this.scheduleId,
-          attractionId: this.tableData[index].attracationId,
+          attractionId: this.tableData[index].attractionId,
         };
-        // console.log(this.scheduleId,addItem.attractionId)
         var pathTemplate = "/schedule/{scheduleId}/attraction/{attractionId}";
         var method = "POST";
         var additionalParams = {
-          //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
             Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
-            isSelected: false,
+            like: false,
           },
         };
         var body = {
@@ -202,6 +203,7 @@
             if (response.status === 200) {
               // if response
               console.log("Get resp", response);
+              this.initDataTable();
             }
           })
           .catch((err) => {

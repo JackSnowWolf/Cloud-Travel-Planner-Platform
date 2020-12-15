@@ -21,14 +21,7 @@
                     <div>
                       <!-- {{ props.row.Details[0].attractionLoc }} -->
                       <gmap-map :center="center" :zoom="10" style="width: 300%; height: 300px">
-                        <gmap-marker
-                          v-for="(item, key) in props.row.Details"
-                          :key="key"
-                          :position="getPosition(item)"
-                          :clickable="true"
-                          @click="center = center"
-                        >
-                        </gmap-marker>
+                        <gmap-marker v-for="(item, key) in props.row.Details" :key="key" :position="getPosition(item)" :clickable="true"> </gmap-marker>
                       </gmap-map>
                     </div>
                   </el-col>
@@ -57,7 +50,6 @@
     },
     methods: {
       getPosition: function(marker) {
-        console.log(marker.attractionLoc.lat);
         return {
           lat: parseFloat(marker.attractionLoc.lat),
           lng: parseFloat(marker.attractionLoc.lng),
