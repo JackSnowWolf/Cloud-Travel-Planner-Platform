@@ -1,6 +1,7 @@
 import json
 import logging
 import boto3
+from boto3.dynamodb.conditions import Key
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -36,6 +37,29 @@ def get_target_user(user_id):
             })
         }
 
+def get_target_user_by_email(user_email):
+    try:
+        response = user_table.scan(
+            FilterExpression=Key("userEmail").eq(user_email)
+        )
+        if "Items" in response and len(response["Items"]) != 0:
+            # logger.debug(json.dumps(response, indent=2))
+            return True, response
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "user can not be revised"
+            })
+        }
+    except Exception as e:
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "user email doesn't exist"
+            })
+        }
 
 def pollSQS():
     sqs = boto3.resource('sqs')
@@ -54,7 +78,7 @@ def sendSMS(owner_user_name, invited_user_id, invited_user_email, schedule_id):
 
     msg_text = "Dear guest! \nYour friend %s send you an invitation.\n" % owner_user_name
     msg_text += "The schedule id for you to view is: %s\n\n" % schedule_id
-    msg_text += "Please click here to accept the invitation:\n" + authUrl+schedule_id+"?editorId="+invited_user_id
+    msg_text += "Please click here to accept the invitation:\n" + authUrl+"?editorId="+invited_user_id+"&scheduleId="+schedule_id
     logger.debug("SMS message:\n" + msg_text)
 
     client=boto3.client('ses',region_name="us-east-1")
@@ -99,13 +123,13 @@ def lambda_handler(event, context):
         logger.debug("sending data: " + json.dumps(r_data))
 
         owner_user_id = r_data["ownerUserId"]
-        invited_user_id = r_data["invitedUserId"]
+        invited_user_email = r_data["invitedUserEmail"]
         schedule_id = r_data["scheduleId"]
 
-        succ1, response_invited = get_target_user(invited_user_id)
+        succ1, response_invited = get_target_user_by_email(invited_user_email)
         if not succ1:
             return response_invited
-        invited_user_email = response_invited["Item"]["userEmail"]
+        invited_user_id = response_invited["Items"][0]["userId"]
 
         succ2, response_owner = get_target_user(owner_user_id)
         if not succ2:
