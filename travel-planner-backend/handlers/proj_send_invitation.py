@@ -8,8 +8,7 @@ logger.setLevel(logging.DEBUG)
 q_name = "travel-invitation-mq"
 user_table = boto3.resource('dynamodb').Table('userTable')
 sender_email="cchenwenjie0901@gmail.com"
-authUrl="http://localhost:8080/#/invite/schedule/"
-
+authUrl="http://localhost:8080/#/accept/schedule/"
 
 def get_target_user(user_id):
     try:
@@ -49,13 +48,13 @@ def pollSQS():
     return response
 
 
-def sendSMS(owner_user_name, invited_user_email, schedule_id):
+def sendSMS(owner_user_name, invited_user_id, invited_user_email, schedule_id):
     subject="Your invitation to a schedule."
     charset="UTF-8"
 
     msg_text = "Dear guest! \nYour friend %s send you an invitation.\n" % owner_user_name
     msg_text += "The schedule id for you to view is: %s\n\n" % schedule_id
-    msg_text += "Please click here to accept the invitation:\n" + authUrl+schedule_id
+    msg_text += "Please click here to accept the invitation:\n" + authUrl+schedule_id+"?editorId="+invited_user_id
     logger.debug("SMS message:\n" + msg_text)
 
     client=boto3.client('ses',region_name="us-east-1")
@@ -116,7 +115,7 @@ def lambda_handler(event, context):
         logger.debug("sending data to email: " + invited_user_email)
         # owner_user_email = response_owner["Item"]["userEmail"]
 
-        sendSMS(owner_user_name, invited_user_email, schedule_id)
+        sendSMS(owner_user_name, invited_user_id, invited_user_email, schedule_id)
 
 
     return {
