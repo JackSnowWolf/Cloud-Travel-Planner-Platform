@@ -67,7 +67,7 @@ def pollSQS():
     response = queue.receive_messages(MaxNumberOfMessages=1)
     if len(response) == 0:
         logger.info("no message")
-        return "no message in the queue."
+        return None
 
     return response
 
@@ -118,8 +118,23 @@ def lambda_handler(event, context):
 
     SQS_response = pollSQS()
 
+    if SQS_response is None:
+        return {
+            'statusCode': 400,
+            'headers': {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+                "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+            },
+            'body': json.dumps({
+                "code": 400,
+                "msg": "SQS empty"
+            })
+        }
+
     for SQS_r in SQS_response:
         r_data = json.loads(SQS_r.body)
+        SQS_r.delete()
         logger.debug("sending data: " + json.dumps(r_data))
 
         owner_user_id = r_data["ownerUserId"]
@@ -142,8 +157,15 @@ def lambda_handler(event, context):
         sendSMS(owner_user_name, invited_user_id, invited_user_email, schedule_id)
 
 
+
+
     return {
         'statusCode': 200,
+        'headers': {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT",
+            "Access-Control-Allow-Headers": "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With"
+        },
         'body': json.dumps({
             "code": 200,
             "msg": "send email successfully"

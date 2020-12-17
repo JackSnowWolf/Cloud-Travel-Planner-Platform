@@ -4,6 +4,7 @@ import logging
 import boto3
 import random
 import requests
+# from botocore.vendored import requests
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)

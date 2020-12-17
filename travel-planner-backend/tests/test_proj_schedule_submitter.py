@@ -50,7 +50,7 @@ class ScheduleSubmitterCase(unittest.TestCase):
                 ]
             },
             "pathParameters": {
-                "scheduleId": "preselect-schedule-example-for-submit8"
+                "scheduleId": "preselect-schedule-example-for-submit7"
             },
             "body": json.dumps({
                 "mode": "relax",
