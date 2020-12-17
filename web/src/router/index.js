@@ -58,7 +58,18 @@ const routes = [
         path: "/scheduleedit/:scheduleId",
         name: "scheduledetails",  
         component: () => import("../views/ScheduleSingle.vue"),
-      }
+      },
+      {
+        path: "/accpect/:scheduleId",
+        name: "accpectInvitation", 
+        component: () => import("../views/AcceptInvitation.vue"),
+      },
+      {
+        path: "/layout",
+        name: "layout", 
+        component: () => import("../components/Layout.vue"),
+      },
+
 
 ];
 

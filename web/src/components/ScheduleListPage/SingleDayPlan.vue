@@ -8,6 +8,20 @@
         <draggable class="list-group" :list="schedule.Details" group="people" @change="log">
           <div class="list-group-item" v-for="(element, index) in schedule.Details" :key="element.attractionId">{{ element.attractionName }} {{ index }}</div>
         </draggable>
+        <div slot="footer">
+          <vs-row vs-justify="flex-end">
+            <vs-button type="gradient" color="success" @click="popupActivo = true">
+              <vs-icon icon="public"></vs-icon>
+            </vs-button>
+            <vs-popup class="holamundo" title="Google Map" :active.sync="popupActivo">
+              <div>
+                <gmap-map :center="center" :zoom="12" style="width: 300%; height: 300px">
+                  <gmap-marker v-for="(item, key) in schedule.Details" :key="key" :position="getPosition(item)" :clickable="true"> </gmap-marker>
+                </gmap-map>
+              </div>
+            </vs-popup>
+          </vs-row>
+        </div>
       </vs-card>
     </vs-col>
   </vs-row>
@@ -19,6 +33,11 @@
     data() {
       return {
         changedItem: [],
+        popupActivo: false,
+        center: {
+          lat: 40.71852,
+          lng: -73.83635,
+        },
       };
     },
     components: {
@@ -46,6 +65,12 @@
         //   if (evt.added){
         //   console.log("wsigne",evt.added)}
         //   this.$emit("scheduleAdded",this.schedule)
+      },
+      getPosition: function(marker) {
+        return {
+          lat: parseFloat(marker.attractionLoc.lat),
+          lng: parseFloat(marker.attractionLoc.lng),
+        };
       },
     },
     watch: {

@@ -1,32 +1,28 @@
 <template>
-  <el-container class="planedit">
-    <el-aside width="250px">
-      <Slider />
-    </el-aside>
-    <el-container>
-      <el-header>
-        header
-      </el-header>
-      <el-container v-loading="loading">
-        <ScheduleCard :userId="userId" :scheduleId="scheduleId" v-on:newChange="getChangedSchedule" />
-        <el-footer>
-          <el-row>
-            <el-col :span="12">
-              <div>
-                <el-button type="warning" @click="handleSubmit">Submit</el-button>
-              </div>
-            </el-col>
-            <el-col :span="12"
-              ><div><SearchDialog /></div
-            ></el-col>
-          </el-row>
-        </el-footer>
-      </el-container>
-    </el-container>
-  </el-container>
+  <div>
+    <MainNav class="header" />
+    <Slider />
+    <div class="main">
+      <el-row class="select">
+        <el-col :span="20">
+          <h3>Your Trip Plan is Here!</h3>
+          <h4>You can edit the tour order as you wish</h4>
+          <ScheduleCard :userId="userId" :scheduleId="scheduleId" v-on:newChange="getChangedSchedule" />
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="20" class="select-bucket">
+          <div>
+            <el-button type="success" @click="handleSubmit" el-icon-check plain>Submit</el-button>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+  </div>
 </template>
 <script>
-  import SearchDialog from "../components/PlanEditPage/SearchDialog";
+  import MainNav from "../components/Navbars/MainNav";
+  // import SearchDialog from "../components/PlanEditPage/SearchDialog";
   import Slider from "../components/Navbars/Slider.vue";
   import ScheduleCard from "../components/ScheduleListPage/ScheduleCard";
   import { Auth } from "aws-amplify";
@@ -36,7 +32,8 @@
     components: {
       ScheduleCard,
       Slider,
-      SearchDialog,
+      // SearchDialog,
+      MainNav,
     },
     data() {
       return {
@@ -201,5 +198,22 @@
   .planedit {
     background: rgb(34, 193, 195);
     background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
+  }
+  /* 主区域 */
+  .main {
+    position: absolute;
+    top: 50px;
+    left: 230px;
+    bottom: 0px;
+    right: 0px; /* 距离右边0像素 */
+    padding: 10px;
+    overflow-y: auto; /* 当内容过多时y轴出现滚动条 */
+    /* background-color: red; */
+  }
+  .select {
+    margin-top: 20px;
+  }
+  .select-bucket-title {
+    margin-bottom: 40px;
   }
 </style>

@@ -1,5 +1,26 @@
-<template>
+<template class="preselect">
   <el-container class="preselect">
+    <MainNav class="header" />
+    <Slider />
+    <div class="main">
+      <el-row class="select">
+        <el-col :span="12">
+          <h3>Best Spotlights</h3>
+          <LocationList v-on:itemAdded="getAddedItem" v-on:itemLike="getItemLike" v-on:itemDislike="getItemDislike" />
+        </el-col>
+        <el-col :span="12" class="select-bucket">
+          <h3 class="select-bucket-title">Your selection bucket</h3>
+          <div v-if="ownerView">
+            <LocationTable :attractionAdd="add_attraction" :scheduleId="scheduleId" :userId="userId" v-if="userId" class="table" />
+          </div>
+          <div v-else>
+            You have no permission
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+  </el-container>
+  <!-- <el-container class="preselect">
     <el-aside width="250px">
       <Slider />
     </el-aside>
@@ -25,12 +46,14 @@
         </el-main>
       </el-container>
     </el-container>
-  </el-container>
+  </el-container> -->
 </template>
+
 <script>
   import LocationTable from "../components/CreatePage/LocationTable";
   import LocationList from "../components/CreatePage/LocationList";
   import Slider from "../components/Navbars/Slider";
+  import MainNav from "../components/Navbars/MainNav";
   import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
@@ -39,6 +62,7 @@
       LocationTable,
       LocationList,
       Slider,
+      MainNav,
     },
     data() {
       return {
@@ -253,8 +277,19 @@
     background: rgb(252, 198, 135);
     background: linear-gradient(90deg, rgba(252, 198, 135, 1) 0%, rgba(242, 134, 160, 1) 100%);
   }
-  .table {
-    margin-top: 0px;
-    margin-left: 20px;
+  .main {
+    position: absolute;
+    top: 50px;
+    left: 230px;
+    bottom: 0px;
+    right: 0px; /* 距离右边0像素 */
+    padding: 10px;
+    overflow-y: auto; /* 当内容过多时y轴出现滚动条 */
+  }
+  .select {
+    margin-top: 20px;
+  }
+  .select-bucket-title {
+    margin-bottom: 40px;
   }
 </style>

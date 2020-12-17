@@ -1,7 +1,7 @@
 <template>
   <div class="attraction-container">
-    <el-table style="width: 100%" height="500" :data="attractions">
-      <el-table-column>
+    <el-table style="width: 100%" height="550" :data="attractions">
+      <el-table-column fixed label="Click view to see details">
         <template slot-scope="props">
           <p>
             <LocationSingleCard
@@ -14,26 +14,7 @@
           </p>
         </template>
       </el-table-column>
-      <!-- <el-table-column>
-        <div v-for="attraction in attractions" :attraction="attraction" :key="attraction.attractionId">
-          <LocationSingleCard :attraction="attraction" :addAttraction="addAttraction" v-on:itemAdded="getItemAdded" />
-        </div>
-      </el-table-column> -->
     </el-table>
-    <!-- </el-table-column> -->
-    <!-- </div> -->
-    <!-- <div
-        v-for="attraction in attractions"
-        :attraction="attraction"
-        :key="attraction.index"
-        class="column is-one-quarter">
-         <LocationSingleCard 
-         :attraction="attraction"
-         :addAttraction="addAttraction"
-         v-on:itemAdded="getItemAdded"
-         />
-      </div> -->
-    <!-- </el-table> -->
   </div>
 </template>
 <script>
@@ -87,9 +68,6 @@
 </script>
 <style scoped>
   .attraction-container {
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
     text-align: center;
   }
 </style>

@@ -1,44 +1,48 @@
 <template>
-  <el-container>
-    <el-header> <MainNav /></el-header>
-    <el-container>
-      <!-- <el-aside width="200px">Aside</el-aside> -->
-      <el-main>
-        <section class="banner">
-          <div class="banner-body">
-            <h1 class="title">
-              Almost 100,000 people have used our planner for their next trips
-            </h1>
-            <h2 class="subtitle">
-              Start yout trip right now!
-            </h2>
-            <div class="createbn">
-              <UserPerference v-on:pickArea="pickArea" />
-            </div>
-            <div class="createbn">
-              <el-popover placement="top-start" title="Descirption" width="200" trigger="hover" content="Descirption Descirption Descirption">
-                <el-button @click="createNew" type="primary" icon="el-icon-plus" slot="reference">hover Create My Next Trip Plan</el-button>
-              </el-popover>
-            </div>
-            <div class="createbn">
-              <el-popover placement="bottom" title="Descirption" width="200" trigger="hover" content="Descirption Descirption Descirption">
-                <el-button @click="continueOne" type="primary" icon="el-icon-edit" slot="reference">Continue Your Trip Plan</el-button>
-              </el-popover>
-            </div>
-            <div class="chatbot">
-              <Chatbot v-on:chatComplete="getslot" />
-            </div>
-          </div>
-        </section>
-      </el-main>
-    </el-container>
-  </el-container>
+  <div>
+    <MainNav class="header" />
+    <div class="main">
+      <h1 class="title">
+        Almost 100,000 people have used our planner for their next trips
+      </h1>
+      <h2 class="subtitle">
+        Start yout trip right now!
+      </h2>
+      <el-row class="select">
+        <el-col :span="24">
+          <h4 class="select-text">Please Select Your Main Destination</h4>
+          <UserPerference class="select-destination" />
+        </el-col>
+      </el-row>
+      <el-row class="select">
+        <el-col :span="24" class="select-option">
+          <el-popover placement="top-start" title="Descirption" width="200" trigger="hover" content="Descirption Descirption Descirption">
+            <el-button @click="createNew" type="primary" icon="el-icon-plus" slot="reference">hover Create My Next Trip Plan</el-button>
+          </el-popover>
+        </el-col>
+      </el-row>
+      <el-row class="select">
+        <el-col :span="24" class="select-option">
+          <el-popover placement="bottom" title="Descirption" width="200" trigger="hover" content="Descirption Descirption Descirption">
+            <el-button @click="continueOne" type="primary" icon="el-icon-edit" slot="reference">Continue Your Trip Plan</el-button>
+          </el-popover>
+        </el-col>
+      </el-row>
+      <el-divider></el-divider>
+      <el-row>
+        <el-col :span="24" class="select-chatbot">
+          <h4 class="select-text">Try To Talk With Our Bot to Have Some Ideas</h4>
+          <Chatbot />
+        </el-col>
+      </el-row>
+    </div>
+  </div>
 </template>
 <script>
   import MainNav from "../components/Navbars/MainNav";
   import UserPerference from "../components/CustomlizePage/UserPerference";
-  import { Auth } from "aws-amplify";
   import Chatbot from "../components/Chatbot/Chatbot";
+  import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
 
   export default {
@@ -179,20 +183,22 @@
   };
 </script>
 <style scoped>
-  .banner {
+  /* .banner {
     text-align: center;
     background-image: url("https://i.loli.net/2020/11/30/RTndCaxA3PL9JUi.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     height: 700px;
-  }
+  } */
   .title {
-    font-size: 40px;
+    font-size: 30px;
+    text-align: center;
   }
   .subtitle {
     text-shadow: 4px 4px 4px rgba(45, 204, 106, 0.699);
-    font-size: 20px;
+    font-size: 15px;
+    text-align: center;
   }
   .createbn {
     margin-top: 40px;
@@ -201,5 +207,27 @@
   .chatbot {
     max-height: 200px;
     margin-top: 40px;
+  }
+  .main {
+    position: absolute;
+    top: 50px;
+    bottom: 0px;
+    right: 0px; /* 距离右边0像素 */
+    left: 0px;
+    padding: 20px;
+    overflow-y: auto; /* 当内容过多时y轴出现滚动条 */
+    /* background-color: red; */
+  }
+  .select {
+    padding: 5px;
+  }
+  .select-destination {
+    margin-top: 5px;
+  }
+  .select-option {
+    margin-top: 10px;
+  }
+  .select-text {
+    margin-top: 10px;
   }
 </style>

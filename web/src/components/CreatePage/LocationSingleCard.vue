@@ -59,11 +59,11 @@
                 </vs-col>
               </vs-row>
               <vs-row>
-                <el-button @click="handleLike" icon="el-icon-circle-plus-outline" circle></el-button>
-                <el-button @click="handleDislike" icon="el-icon-remove-outline" circle></el-button>
+                <el-button @click="handleLike" type="success" icon="el-icon-plus" circle></el-button>
+                <el-button @click="handleDislike" type="info" icon="el-icon-minus" circle></el-button>
               </vs-row>
             </vs-popup>
-            <vs-button @click="handleAdd" color="danger" type="gradient">Add</vs-button>
+            <vs-button @click="handleAdd" color="danger" type="gradient"><vs-icon icon="add_location"></vs-icon>Add</vs-button>
           </vs-row>
         </div>
       </vs-card>

@@ -3,7 +3,7 @@
     <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="10">
       <vs-card actionable class="attraction-card">
         <div>
-          <el-table :data="tableData" style="width: 100%" max-height="400" @selection-change="handleSelectionChange">
+          <el-table :data="tableData" style="width: 100%" max-height="440" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column type="expand">
               <template slot-scope="props">
