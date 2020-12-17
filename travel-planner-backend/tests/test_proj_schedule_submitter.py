@@ -50,12 +50,12 @@ class ScheduleSubmitterCase(unittest.TestCase):
                 ]
             },
             "pathParameters": {
-                "scheduleId": "preselect-schedule-example-for-submit7"
+                "scheduleId": "preselect-schedule-example-for-submit8"
             },
             "body": json.dumps({
                 "mode": "relax",
-                "typePreference":"nature",
-                "day":"4"
+                "typePreference": "nature",
+                "day": "4"
             }
             )
         }
@@ -64,6 +64,7 @@ class ScheduleSubmitterCase(unittest.TestCase):
         self.assertEqual(handler_response["statusCode"], 200)
         logger.debug(json.dumps(json.loads(handler_response["body"]), indent=2))
         logger.info("Completed!")
+
 
 if __name__ == '__main__':
     unittest.main()

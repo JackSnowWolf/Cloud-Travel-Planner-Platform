@@ -2,6 +2,8 @@ import json
 import logging
 
 import boto3
+import random
+import requests
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -9,6 +11,8 @@ logger.setLevel(logging.DEBUG)
 user_table = boto3.resource('dynamodb').Table('userTable')
 schedule_table = boto3.resource('dynamodb').Table('scheduleTable')
 attraction_table = boto3.resource('dynamodb').Table('attractionTable')
+
+ATTRACTION_ELASTICSEARCH_BASE_URL = 'https://search-proj-for-attractions-um6r2mitevcydyzporkglj72ea.us-east-1.es.amazonaws.com/attractions/_search'
 
 
 def get_target_schedule(schedule_id):
@@ -51,6 +55,15 @@ def update_schedule(schedule):
                 "msg": str(e)
             })
         }
+
+
+def extract_item(item):
+    object_key = item["_source"]["objectKey"]
+    attractionName = item["_source"]["attractionName"]
+    return {
+        "object_key": object_key,
+        "attractionName": attractionName
+    }
 
 
 def submit_schedule(user_id, schedule_id):
@@ -211,6 +224,26 @@ def submit_post_schedule(user_id, schedule_id, submit_detail):
     attr_score_item_list.sort(key=lambda a: -a["score"])
     pop_attr_list_db = list(map(lambda a: str(a["attractionId"]), attr_score_item_list))
     pop_attr_list_db.insert(0, preselect_attr_first)
+
+    # Art, Outdoor, Indoor, Iconic, Humantic, Nature
+    try:
+        if "typePreference" in list(submit_detail.keys()):
+            query = submit_detail["typePreference"]
+            url = ATTRACTION_ELASTICSEARCH_BASE_URL + "?q=%s" % query
+            es_response = requests.get(url).json()
+            if "hits" in es_response and "hits" in es_response["hits"]:
+                attr_list = list(map(extract_item, es_response["hits"]["hits"]))
+                prefered_type_attr_one = random.choice(attr_list)
+                pop_attr_list_db.insert(1, prefered_type_attr_one["object_key"])
+    except Exception as e:
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "Hit type reference fail"
+            })
+        }
+
     pop_attr_list = list(dict.fromkeys(pop_attr_list_db))
     try:
         start_day = 0
