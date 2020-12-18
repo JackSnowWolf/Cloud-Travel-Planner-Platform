@@ -8,10 +8,19 @@
     </a> -->
     <!-- logo和文字结束 -->
 
-    <el-menu :default-active="activeIndex" router class="el-menu" mode="horizontal" @select="handleSelect">
-      <el-menu-item index="/home"> <i class="el-icon-s-home"></i>Home</el-menu-item>
-      <el-menu-item index="1" disabled>Info</el-menu-item>
-      <el-menu-item index="2" disabled>My account</el-menu-item>
+    <el-menu
+      :default-active="activeIndex"
+      router
+      class="el-menu"
+      mode="horizontal"
+      background-color="#3d5a56"
+      text-color="#fff"
+      active-text-color="#cab891"
+      @select="handleSelect"
+    >
+      <el-menu-item index="/home">Home</el-menu-item>
+      <el-menu-item index="">Info</el-menu-item>
+      <!-- <el-menu-item index="2" disabled>My account</el-menu-item> -->
       <el-submenu index="3">
         <template slot="title">My account</template>
         <el-menu-item index="/">Log Out</el-menu-item>
@@ -44,10 +53,9 @@
     top: 0px;
     left: 0px;
     right: 0px;
-    /* background-color: #2d3a4b; */
   }
   .el-submenu {
     float: right; /* 浮动在右边 */
     margin-right: 40px; /* 靠右40px */
-  }</style
->>
+  }
+</style>

@@ -1,20 +1,31 @@
 <template>
   <div class="left-menu">
-    <el-menu router default-active="$route.path" class="el-menu-vertical" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+    <el-menu
+      router
+      default-active="$route.path"
+      class="el-menu-vertical"
+      @open="handleOpen"
+      @close="handleClose"
+      :collapse="isCollapse"
+      background-color="#bab8a5"
+      text-color="#fff"
+      active-text-color="#84703d"
+    >
       <div class="menu-toggle" @click.prevent="control">
         <i class="el-icon-s-fold" v-show="!isCollapse" title="collapse"></i>
         <i class="el-icon-s-unfold" v-show="isCollapse" title="expand"></i>
       </div>
       <el-menu-item index="/home">
-        <i class="el-icon-s-home"></i>
+        <vs-icon icon="home" size="small"></vs-icon>
         <span slot="title">Back to home page</span>
       </el-menu-item>
       <el-menu-item @click="handleAddAuth">
-        <i class="el-icon-s-promotion"></i>
+        <vs-icon icon="person_add" size="small"></vs-icon>
+        <!-- <i class="el-icon-s-promotion"></i> -->
         <span slot="title">Add friends</span>
       </el-menu-item>
       <el-menu-item index="/">
-        <i class="el-icon-user"></i>
+        <vs-icon icon="account_circle" size="small"></vs-icon>
         <span slot="title">Log out</span>
       </el-menu-item>
       <el-submenu index="1" disabled>

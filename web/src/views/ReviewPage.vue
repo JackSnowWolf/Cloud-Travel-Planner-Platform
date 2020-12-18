@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ReviewPage">
     <MainNav class="header" />
     <Slider />
     <div class="main">
@@ -11,37 +11,12 @@
       <el-row class="button">
         <el-col :span="24">
           <div>
-            <el-button type="success" icon="el-icon-download" plain>Create My PDF</el-button>
+            <el-button @click="getPDF" type="success" icon="el-icon-download" plain>Create My PDF</el-button>
           </div>
         </el-col>
       </el-row>
     </div>
   </div>
-  <!-- <el-container class="review">
-    <el-aside width="250px">
-      <Slider />
-    </el-aside>
-    <el-container>
-      <el-header>
-        header
-      </el-header>
-      <el-container>
-        <el-main>
-          <TimeLineList :dayScheduleContents="dayScheduleContents" />
-        </el-main>
-        <el-footer>
-          <el-row>
-            <el-col :span="12">
-              <div>
-                <el-button type="warning">Submit</el-button>
-              </div>
-            </el-col>
-            <el-col :span="12"><div>xx</div></el-col>
-          </el-row>
-        </el-footer>
-      </el-container>
-    </el-container>
-  </el-container> -->
 </template>
 <script>
   import TimeLineList from "../components/ReviewPage/TimeLineList";
@@ -122,7 +97,7 @@
       async getPDF(e) {
         e.preventDefault();
         console.log("Generate PDF", this.scheduleId, this.userId);
-        // const session = await Auth.currentSession();
+        const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -133,7 +108,7 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // Authorization: session.idToken.jwtToken,
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
@@ -165,18 +140,23 @@
 </script>
 
 <style scoped>
-  .review {
-    background: rgb(34, 193, 195);
-    background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
+  .ReviewPage {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background: #abb8b5;
+    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
   }
   .main {
     position: absolute;
     top: 50px;
-    left: 230px;
+    left: 200px;
     bottom: 0px;
     right: 0px; /* 距离右边0像素 */
     padding: 10px;
     overflow-y: auto; /* 当内容过多时y轴出现滚动条 */
+
     /* background-color: red; */
   }
   .list {

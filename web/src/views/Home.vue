@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <MainNav class="header" />
+  <el-container class="HomePage">
+    <MainNav />
     <div class="main">
       <h1 class="title">
         Almost 100,000 people have used our planner for their next trips
@@ -16,15 +16,15 @@
       </el-row>
       <el-row class="select">
         <el-col :span="24" class="select-option">
-          <el-popover placement="top-start" title="Descirption" width="200" trigger="hover" content="Descirption Descirption Descirption">
-            <el-button @click="createNew" type="primary" icon="el-icon-plus" slot="reference">hover Create My Next Trip Plan</el-button>
+          <el-popover placement="top-start" title="Instruction" width="200" trigger="hover" content="First select a main destination and then click me!">
+            <el-button @click="createNew" type="create" icon="el-icon-plus" slot="reference">Create My Next Trip Plan</el-button>
           </el-popover>
         </el-col>
       </el-row>
       <el-row class="select">
         <el-col :span="24" class="select-option">
-          <el-popover placement="bottom" title="Descirption" width="200" trigger="hover" content="Descirption Descirption Descirption">
-            <el-button @click="continueOne" type="primary" icon="el-icon-edit" slot="reference">Continue Your Trip Plan</el-button>
+          <el-popover placement="bottom" title="Instruction" width="200" trigger="hover" content="Click me to see what you have created with our web">
+            <el-button @click="continueOne" type="continue" icon="el-icon-edit" slot="reference">Continue Your Trip Plan</el-button>
           </el-popover>
         </el-col>
       </el-row>
@@ -36,7 +36,7 @@
         </el-col>
       </el-row>
     </div>
-  </div>
+  </el-container>
 </template>
 <script>
   import MainNav from "../components/Navbars/MainNav";
@@ -183,20 +183,21 @@
   };
 </script>
 <style scoped>
-  /* .banner {
-    text-align: center;
-    background-image: url("https://i.loli.net/2020/11/30/RTndCaxA3PL9JUi.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 700px;
-  } */
+  .HomePage {
+    color: #775039;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background: #abb8b5;
+    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
+  }
   .title {
     font-size: 30px;
     text-align: center;
   }
   .subtitle {
-    text-shadow: 4px 4px 4px rgba(45, 204, 106, 0.699);
+    text-shadow: 4px 4px 4px rgba(20, 110, 55, 0.699);
     font-size: 15px;
     text-align: center;
   }
@@ -206,7 +207,7 @@
   }
   .chatbot {
     max-height: 200px;
-    margin-top: 40px;
+    margin-top: 20px;
   }
   .main {
     position: absolute;
@@ -228,6 +229,27 @@
     margin-top: 10px;
   }
   .select-text {
-    margin-top: 10px;
+    margin-top: 0px;
+  }
+  .el-button--continue {
+    background: #1a968f;
+    border-color: #1a968f;
+    color: #fff;
+  }
+  .el-button--continue:hover {
+    background: #639c9e;
+    border-color: #639c9e;
+    color: #fff;
+  }
+
+  .el-button--create {
+    background: #22326e;
+    border-color: #22326e;
+    color: #fff;
+  }
+  .el-button--create:hover {
+    background: #006eb3;
+    border-color: #006eb3;
+    color: #fff;
   }
 </style>

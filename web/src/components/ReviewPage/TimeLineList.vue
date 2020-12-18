@@ -1,7 +1,14 @@
 <template>
   <div>
     <el-timeline>
-      <el-table style="width: 100%" height="550" :data="dayScheduleContents">
+      <el-table
+        style="width: 100%"
+        height="550"
+        :data="dayScheduleContents"
+        :row-style="getRowClass"
+        :header-row-style="getRowClass"
+        :header-cell-style="getRowClass"
+      >
         <el-table-column label="Your Final Schedule">
           <template slot-scope="props">
             <el-timeline-item :timestamp="props.row.NumDate" placement="top">
@@ -54,6 +61,30 @@
           lng: parseFloat(marker.attractionLoc.lng),
         };
       },
+      getRowClass() {
+        return "background:transparent;color:#000;";
+      },
     },
   };
 </script>
+<style scoped>
+  .el-table {
+    /* 表格字体颜色 */
+    color: #3c1507;
+    /* 表格边框颜色 */
+    border: 5px solid #b99a6d;
+    /* height: 500px; */
+    background-color: #ebe7de;
+  }
+  .el-table th,
+  .el-table tr,
+  .el-table td {
+    border: 0;
+    background-color: transparent;
+  }
+  .el-table thead {
+    color: #9c8467;
+    font-weight: 800;
+    background-color: rgba(148, 144, 144, 0.3);
+  }
+</style>

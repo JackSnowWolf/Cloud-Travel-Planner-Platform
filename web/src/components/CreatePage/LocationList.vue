@@ -1,6 +1,6 @@
 <template>
   <div class="attraction-container">
-    <el-table style="width: 100%" height="550" :data="attractions">
+    <el-table style="width: 100%" height="550" :data="attractions" :header-cell-style="tableHeaderColor">
       <el-table-column fixed label="Click view to see details">
         <template slot-scope="props">
           <p>
@@ -37,6 +37,12 @@
       };
     },
     methods: {
+      //  modify the table header the background color
+      tableHeaderColor({ rowIndex }) {
+        if (rowIndex === 0) {
+          return "background-color: #be7c39;color: #debe90;font-weight: 600;";
+        }
+      },
       getItemAdded(item) {
         this.addAttraction = item;
         // console.log("emit");
@@ -69,5 +75,24 @@
 <style scoped>
   .attraction-container {
     text-align: center;
+  }
+  .el-table {
+    /* 表格字体颜色 */
+    color: #6b3633;
+    /* 表格边框颜色 */
+    border: 5px solid #ce9139;
+    /* height: 500px; */
+    background-color: #debe90;
+  }
+  .el-table th,
+  .el-table tr,
+  .el-table td {
+    border: 10;
+    background-color: transparent;
+  }
+  .el-table thead {
+    color: #9c8467;
+    font-weight: 800;
+    background-color: #be7c39;
   }
 </style>

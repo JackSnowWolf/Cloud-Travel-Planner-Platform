@@ -23,7 +23,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    color: #b58860;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background: #abb8b5;
+    background: linear-gradient(180deg, #38576d 0%, #92a9c0 100%);
   }
 
   #nav {
@@ -32,10 +38,10 @@
 
   #nav a {
     font-weight: bold;
-    color: #2c3e50;
+    color: #b58860;
   }
 
   #nav a.router-link-exact-active {
-    color: #42b983;
+    color: #e7933c;
   }
 </style>

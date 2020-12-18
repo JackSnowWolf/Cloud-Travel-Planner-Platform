@@ -81,3 +81,9 @@
     },
   };
 </script>
+<style scoped>
+  .cardx {
+    background: #7f867b;
+    color: #e5d8ca;
+  }
+</style>

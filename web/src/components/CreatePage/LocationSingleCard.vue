@@ -7,9 +7,6 @@
             {{ attraction.attractionName }}
           </h3>
         </div>
-        <div slot="media">
-          <!-- <img :src="$withBase('/card.png')"> -->
-        </div>
         <div>
           <h3>{{ attraction.attractionDescription }}</h3>
           <h4>Estimate Veiw Time: {{ attraction.estimateViewTime }}</h4>
@@ -110,3 +107,9 @@
     // },
   };
 </script>
+<style scoped>
+  .attraction-card {
+    background: #efad43;
+    background: linear-gradient(90deg, #efad43 0%, #efada3 100%);
+  }
+</style>

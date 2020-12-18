@@ -3,7 +3,15 @@
     <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="10">
       <vs-card actionable class="attraction-card">
         <div>
-          <el-table :data="tableData" style="width: 100%" max-height="440" @selection-change="handleSelectionChange">
+          <el-table
+            :data="tableData"
+            style="width: 100%"
+            max-height="470"
+            @selection-change="handleSelectionChange"
+            :row-style="getRowClass"
+            :header-row-style="getRowClass"
+            :header-cell-style="getRowClass"
+          >
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column type="expand">
               <template slot-scope="props">
@@ -25,8 +33,8 @@
             </el-table-column>
           </el-table>
           <div style="margin-top: 20px">
-            <el-button @click="handleDelete">Select Delete</el-button>
-            <el-button @click="dialogFormVisible = true">Fininsh Selection</el-button>
+            <el-button @click="handleDelete" type="danger">Select Delete</el-button>
+            <el-button @click="dialogFormVisible = true" type="continue">Fininsh Selection</el-button>
             <vs-popup title="Choose your trip mode" :active.sync="dialogFormVisible">
               <h4>
                 <span>We provide following trip mode for you, please select one as you wish </span>
@@ -71,7 +79,7 @@
         attracationIdList: [],
         multipleSelection: [],
         dateNmuber: 3,
-        select1: "normal",
+        select1: "BUSY",
         options1: [
           { text: "Busy", value: "BUSY" },
           { text: "Medium", value: "MEDIUM" },
@@ -351,6 +359,10 @@
             console.log(err);
           });
       },
+
+      getRowClass() {
+        return "background:transparent;color:#000;";
+      },
     },
 
     watch: {
@@ -369,7 +381,7 @@
     },
   };
 </script>
-<style scoped>
+<style>
   .table {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -384,5 +396,43 @@
     margin-left: 10px;
     width: 50%;
     margin-bottom: 10px;
+  }
+  .attraction-card {
+    background: #d0aaa3;
+  }
+  .el-table {
+    /* 表格字体颜色 */
+    color: #6b3633;
+    /* 表格边框颜色 */
+    border: 0px solid #debe90;
+    /* height: 500px; */
+    background-color: #ebe7de;
+  }
+  .el-table th,
+  .el-table tr,
+  .el-table td {
+    border: 0;
+    background-color: transparent;
+  }
+  .el-table thead {
+    color: #9c8467;
+    font-weight: 800;
+    background-color: rgba(148, 144, 144, 0.3);
+  }
+  .el-button--continue {
+    background: #1a968f;
+    border-color: #1a968f;
+    color: #fff;
+  }
+  .el-button--continue:hover {
+    background: #639c9e;
+    border-color: #639c9e;
+    color: #fff;
+  }
+  .el-button--text {
+    color: #1a968f;
+  }
+  .el-button--text:hover {
+    color: #639c9e;
   }
 </style>

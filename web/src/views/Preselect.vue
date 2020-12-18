@@ -1,11 +1,11 @@
-<template class="preselect">
-  <el-container class="preselect">
+<template>
+  <div class="PreselectPage">
     <MainNav class="header" />
     <Slider />
     <div class="main">
       <el-row class="select">
         <el-col :span="12">
-          <h3>Best Spotlights</h3>
+          <h3 class="subtitle">Best Spotlights</h3>
           <LocationList v-on:itemAdded="getAddedItem" v-on:itemLike="getItemLike" v-on:itemDislike="getItemDislike" />
         </el-col>
         <el-col :span="12" class="select-bucket">
@@ -19,34 +19,7 @@
         </el-col>
       </el-row>
     </div>
-  </el-container>
-  <!-- <el-container class="preselect">
-    <el-aside width="250px">
-      <Slider />
-    </el-aside>
-    <el-container>
-      <el-header>
-        Pick Up Your Favorite Attractiones
-      </el-header>
-      <el-container>
-        <el-aside width="500px"
-          >Attraction List
-          <div>
-            <LocationList v-on:itemAdded="getAddedItem" v-on:itemLike="getItemLike" v-on:itemDislike="getItemDislike" />
-          </div>
-        </el-aside>
-        <el-main>
-          Main
-          <div v-if="ownerView">
-            <LocationTable :attractionAdd="add_attraction" :scheduleId="scheduleId" :userId="userId" v-if="userId" class="table" />
-          </div>
-          <div v-else>
-            You have no permission
-          </div>
-        </el-main>
-      </el-container>
-    </el-container>
-  </el-container> -->
+  </div>
 </template>
 
 <script>
@@ -273,14 +246,19 @@
   };
 </script>
 <style scoped>
-  .preselect {
-    background: rgb(252, 198, 135);
-    background: linear-gradient(90deg, rgba(252, 198, 135, 1) 0%, rgba(242, 134, 160, 1) 100%);
+  .PreselectPage {
+    color: #775039;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background: #c2a19a;
+    background: linear-gradient(90deg, #c2a19a 0%, #d1c78c 100%);
   }
   .main {
     position: absolute;
     top: 50px;
-    left: 230px;
+    left: 200px;
     bottom: 0px;
     right: 0px; /* 距离右边0像素 */
     padding: 10px;
@@ -289,8 +267,11 @@
   .select {
     margin-top: 20px;
   }
+  .subtitle {
+    margin-bottom: 20px;
+  }
   .select-bucket-title {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     margin-right: 40px;
   }
 </style>

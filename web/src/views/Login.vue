@@ -1,14 +1,20 @@
 <template>
-  <div class="Login">
-    <amplify-authenticator> </amplify-authenticator>
-    <amplify-sign-out></amplify-sign-out>
-  </div>
+  <el-row>
+    <el-col :span="6" :offset="4" class="Banner">
+      <LoginBanner />
+    </el-col>
+    <el-col :span="8" :offset="2" class="Login">
+      <amplify-authenticator> </amplify-authenticator>
+      <amplify-sign-out></amplify-sign-out>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
   // @ is an alias to /src
   import { AmplifyEventBus } from "aws-amplify-vue";
   import { Auth } from "aws-amplify";
+  import LoginBanner from "../components/LoginBanner";
 
   export default {
     data() {
@@ -28,6 +34,11 @@
       });
     },
     name: "login",
-    components: {},
+    components: { LoginBanner },
   };
 </script>
+<style>
+  .banner {
+    margin-top: 20px;
+  }
+</style>

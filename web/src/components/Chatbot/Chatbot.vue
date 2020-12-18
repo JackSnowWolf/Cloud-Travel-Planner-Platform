@@ -41,7 +41,6 @@
 </script>
 <style scoped>
   .chatbot {
-    min-height: 100px;
     max-height: 200px;
   }
 </style>

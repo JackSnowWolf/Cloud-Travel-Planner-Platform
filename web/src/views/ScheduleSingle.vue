@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <MainNav class="header" />
+  <div class="EditPage">
+    <MainNav />
     <Slider />
     <div class="main">
       <el-row class="select">
@@ -13,7 +13,7 @@
       <el-row>
         <el-col :span="20" class="select-bucket">
           <div>
-            <el-button type="success" @click="handleSubmit" el-icon-check plain>Submit</el-button>
+            <el-button type="continue" @click="handleSubmit" el-icon-check plain>Submit</el-button>
           </div>
         </el-col>
       </el-row>
@@ -195,9 +195,14 @@
 </script>
 
 <style scoped>
-  .planedit {
-    background: rgb(34, 193, 195);
-    background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
+  .EditPage {
+    color: #775039;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    background: #abb8b5;
+    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
   }
   /* 主区域 */
   .main {
@@ -215,5 +220,15 @@
   }
   .select-bucket-title {
     margin-bottom: 40px;
+  }
+  .el-button--continue {
+    background: #1a968f;
+    border-color: #1a968f;
+    color: #fff;
+  }
+  .el-button--continue:hover {
+    background: #639c9e;
+    border-color: #639c9e;
+    color: #fff;
   }
 </style>

@@ -9,7 +9,7 @@
         <el-input v-model="search" size="mini" placeholder="Type to search" />
       </template>
       <template slot-scope="scope">
-        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)" type="continue">Edit</el-button>
         <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
       </template>
     </el-table-column>
@@ -157,3 +157,34 @@
     },
   };
 </script>
+<style>
+  .el-table {
+    /* 表格字体颜色 */
+    color: #3c1507;
+    /* 表格边框颜色 */
+    border: 5px solid #b99a6d;
+    /* height: 500px; */
+    background-color: #ebe7de;
+  }
+  .el-table th,
+  .el-table tr,
+  .el-table td {
+    border: 0;
+    background-color: transparent;
+  }
+  .el-table thead {
+    color: #9c8467;
+    font-weight: 800;
+    background-color: rgba(148, 144, 144, 0.3);
+  }
+  .el-button--continue {
+    background: #20b2aa;
+    border-color: #20b2aa;
+    color: #fff;
+  }
+  .el-button--continue:hover {
+    background: #8cd8da;
+    border-color: #8cd8da;
+    color: #fff;
+  }
+</style>
