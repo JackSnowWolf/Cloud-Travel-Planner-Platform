@@ -3,22 +3,9 @@
     <MainNav class="header" />
     <Slider />
     <div class="main">
-      <h1 class="title">
-        Almost 100,000 people have used our planner for their next trips
-      </h1>
-      <h2 class="subtitle">
-        Start yout trip right now!
-      </h2>
       <el-row class="select">
         <el-col :span="24">
-          <h4 class="select-bucket-title">Please Select Your Main Destination</h4>
-          <UserPerference />
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24" class="select-bucket">
-          <h4 class="select-bucket-title">Try To Talk With Our Bot to Have Some Ideas</h4>
-          <Chatbot />
+          <TimeLineList />
         </el-col>
       </el-row>
     </div>
@@ -27,14 +14,12 @@
 <script>
   import MainNav from "./Navbars/MainNav";
   import Slider from "./Navbars/Slider";
-  import UserPerference from "../components/CustomlizePage/UserPerference";
-  import Chatbot from "../components/Chatbot/Chatbot";
+  import TimeLineList from "../components/ReviewPage/TimeLineList";
   export default {
     components: {
       MainNav,
       Slider,
-      UserPerference,
-      Chatbot,
+      TimeLineList,
     },
   };
 </script>
