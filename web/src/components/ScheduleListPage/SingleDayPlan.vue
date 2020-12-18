@@ -15,7 +15,7 @@
             </vs-button>
             <vs-popup class="holamundo" title="Google Map" :active.sync="popupActivo">
               <div>
-                <gmap-map :center="center" :zoom="12" style="width: 300%; height: 300px">
+                <gmap-map :center="center" :zoom="10" style="width: 300%; height: 300px">
                   <gmap-marker v-for="(item, key) in schedule.Details" :key="key" :position="getPosition(item)" :clickable="true"> </gmap-marker>
                 </gmap-map>
               </div>
@@ -35,8 +35,8 @@
         changedItem: [],
         popupActivo: false,
         center: {
-          lat: 40.71852,
-          lng: -73.83635,
+          lat: 42.77,
+          lng: -73.5,
         },
       };
     },

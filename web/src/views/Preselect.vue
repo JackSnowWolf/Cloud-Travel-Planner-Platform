@@ -291,5 +291,6 @@
   }
   .select-bucket-title {
     margin-bottom: 40px;
+    margin-right: 40px;
   }
 </style>

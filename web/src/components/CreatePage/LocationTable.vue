@@ -73,9 +73,9 @@
         dateNmuber: 3,
         select1: "normal",
         options1: [
-          { text: "Busy", value: "busy" },
-          { text: "Normal", value: "normal" },
-          { text: "Relax", value: "relax" },
+          { text: "Busy", value: "BUSY" },
+          { text: "Medium", value: "MEDIUM" },
+          { text: "Relax", value: "RELAX" },
         ],
         select2: "nature",
         options2: [

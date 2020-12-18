@@ -1,11 +1,10 @@
 <template>
   <div>
     <el-timeline>
-      <el-table style="width: 100%" height="500" :data="dayScheduleContents">
+      <el-table style="width: 100%" height="550" :data="dayScheduleContents">
         <el-table-column label="Your Final Schedule">
           <template slot-scope="props">
-            <!-- <div v-for="(schedule, key) in dayScheduleContents" :schedule="schedule" :key="key"> -->
-            <el-timeline-item timestamp="2018/4/12" placement="top">
+            <el-timeline-item :timestamp="props.row.NumDate" placement="top">
               <el-card shadow="hover">
                 <el-row :gutter="20">
                   <el-col :span="12">
@@ -13,14 +12,14 @@
                       <h4>{{ index + 1 }} -- {{ item.attractionName }}</h4>
                       <!-- <h4>{{ item.attractionImgUrls }}</h4> -->
                       <div>
-                        <img :src="item.attractionImgUrls[1]" width="50" height="50" />
+                        <img :src="item.attractionImgUrls[0]" width="50" height="50" />
                       </div>
                     </div>
                   </el-col>
                   <el-col :span="12">
                     <div>
                       <!-- {{ props.row.Details[0].attractionLoc }} -->
-                      <gmap-map :center="center" :zoom="10" style="width: 300%; height: 300px">
+                      <gmap-map :center="center" :zoom="12" style="width: 300%; height: 300px">
                         <gmap-marker v-for="(item, key) in props.row.Details" :key="key" :position="getPosition(item)" :clickable="true"> </gmap-marker>
                       </gmap-map>
                     </div>
