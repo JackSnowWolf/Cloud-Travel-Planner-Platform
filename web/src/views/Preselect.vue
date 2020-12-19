@@ -73,11 +73,11 @@
       getAddedItem(t) {
         this.add_attraction = t;
         console.log(this.add_attraction);
-        if (this.ownerView) {
-          this.putIntoScheduleContent(t);
-        } else {
-          this.postLike(t.attractionId, false);
-        }
+        // if (this.ownerView) {
+        this.putIntoScheduleContent(t);
+        // } else {
+        //   this.postLike(t.attractionId, false);
+        // }
       },
 
       getItemLike(t) {
@@ -236,7 +236,7 @@
       },
     },
     mounted() {
-      console.log("Tye".this.ownerView);
+      console.log("Type".this.ownerView);
       // this.checkUserType(this.scheduleId,this.userId)
       // this.initDataTable(this.scheduleId,this.userId)
     },

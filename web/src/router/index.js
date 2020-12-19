@@ -60,8 +60,9 @@ const routes = [
         component: () => import("../views/ScheduleSingle.vue"),
       },
       {
-        path: "/accpect/:scheduleId",
-        name: "accpectInvitation", 
+        path: "/accept/schedule",
+        query:"editorId:'userId',scheduleId:'scheduleId",
+        name: "acceptInvitation", 
         component: () => import("../views/AcceptInvitation.vue"),
       },
       {
