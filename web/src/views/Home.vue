@@ -123,8 +123,7 @@
       },
       async postNewSchedule(name) {
         const session = await Auth.currentSession();
-        // console.log(session);
-        this.session = session;
+
         var config = {
           invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1",
         };
@@ -138,12 +137,8 @@
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
             Authorization: session.idToken.jwtToken,
-            // param0: '',
-            // param1: ''
           },
           queryParams: {
-            // pageSize:'4',
-            // pageNo:'0',
             scheduleTitle: name,
             targetArea: this.targetArea,
             userId: this.userId,

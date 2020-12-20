@@ -96,32 +96,33 @@
       },
       async getPDF(e) {
         e.preventDefault();
-        console.log("Generate PDF", this.scheduleId, this.userId);
-        const session = await Auth.currentSession();
+        console.log("Generate PDF");
+        // const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
           scheduleId: this.scheduleId,
         };
-        var pathTemplate = "/schedule/{scheduleId}/finish";
+        var pathTemplate = "/schedule/{scheduleId}/download";
         var method = "GET";
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            Authorization: session.idToken.jwtToken,
+            // Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            userId: this.userId,
+            // userId: this.userId,
           },
         };
         var body = {
+          // name: "melody",
           //This is where you define the body of the request
         };
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
             if (response.status === 200) {
-              console.log("Get resp init", response.data);
+              console.log("getPDF", response.data);
             }
           })
           .catch((err) => {

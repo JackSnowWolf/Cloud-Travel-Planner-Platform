@@ -35,6 +35,7 @@
         console.log(this.userId);
         return true;
       },
+
       async createmethod() {
         this.setUserInfo().then((resp) => {
           if (resp) {
@@ -42,8 +43,10 @@
           }
         });
       },
+
       async initDatatable() {
         const session = await Auth.currentSession();
+        // console.log(session);
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -57,7 +60,7 @@
             Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            pageSize: "100",
+            pageSize: "20",
             pageNo: "0",
             userId: this.userId,
           },
@@ -71,6 +74,7 @@
             // if response
             console.log(response);
             this.tabledata = response.data;
+            return Promise.resolve(response);
             //This is where you would put a success callback
           }
         });

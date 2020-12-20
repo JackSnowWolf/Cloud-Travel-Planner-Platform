@@ -128,7 +128,6 @@
         var body = {
           //This is where you define the body of the request
         };
-        // this.$msg("Init!!!");
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
@@ -239,11 +238,12 @@
                 console.log("delete", this.multipleSelection[index]);
                 this.deleteSelection(this.multipleSelection[index]);
               }
-              setTimeout(this.initDataTable(), 1000 * 1);
+              // setTimeout(this.initDataTable(), 1000 * this.multipleSelection.length);
               this.$msg({
                 type: "success",
                 message: "You have changed your selection",
               });
+              setTimeout(this.initDataTable(), 1000 * this.multipleSelection.length);
             })
             .catch(() => {
               this.$msg({
@@ -266,7 +266,7 @@
           })
           .then(() => {
             this.submitSchedule(this.scheduleId);
-            setTimeout(this.$router.push("/scheduleedit/" + this.scheduleId), 1000 * 1);
+            setTimeout(this.$router.push("/scheduleedit/" + this.scheduleId), 5000);
             this.$msg({
               type: "success",
               message: "You are redirecting to your next step!",
@@ -324,7 +324,7 @@
       },
 
       async deleteSelection(item) {
-        const session = await Auth.currentSession();
+        // const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -337,7 +337,7 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            Authorization: session.idToken.jwtToken,
+            // Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
@@ -369,7 +369,7 @@
       attractionAdd(newAttraction) {
         console.log(newAttraction);
         // this.$msg("Wait!!!");
-        setTimeout(this.initDataTable(), 1000 * 1);
+        setTimeout(this.initDataTable(), 5000 * 1);
       },
     },
     created() {
