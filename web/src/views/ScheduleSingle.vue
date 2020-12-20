@@ -22,7 +22,6 @@
 </template>
 <script>
   import MainNav from "../components/Navbars/MainNav";
-  // import SearchDialog from "../components/PlanEditPage/SearchDialog";
   import Slider from "../components/Navbars/Slider.vue";
   import ScheduleCard from "../components/ScheduleListPage/ScheduleCard";
   import { Auth } from "aws-amplify";
@@ -39,38 +38,44 @@
       return {
         loading: false,
         user: "",
-        userId: String,
-        scheduleId: String,
+        userId: "",
+        scheduleId: "",
         scheduleChanged: [],
         schedule: {},
         dayScheduleContents: [],
       };
     },
     methods: {
-      async setUserInfo() {
-        const user = await Auth.currentAuthenticatedUser();
+      userPromise(user) {
         this.user = user;
         this.userId = "user-" + user.username;
-        return true;
+        return this.userId;
       },
 
-      async createmethod() {
-        this.setUserInfo().then((resp) => {
-          if (resp) {
-            this.setScheduleId();
-            // this.initDataTable(this.scheduleId, this.userId);
-          }
-        });
+      PromiseInit() {
+        var user = Auth.currentAuthenticatedUser();
+        user.then(this.userPromise);
       },
+
+      createmethod() {
+        this.setScheduleId();
+      },
+
       setScheduleId() {
         this.scheduleId = this.$route.params.scheduleId;
       },
       getChangedSchedule(item) {
         // this.$loading.show();
+        var promises = [];
         for (var i = 0; i < item.length; i++) {
-          // console.log("patchItem", item[i][0]);
-          this.patchChangedItem(item[i][0]);
+          promises.push(this.patchChangedItem(item[i][0]));
         }
+        Promise.all(promises).then(() => {
+          this.$msg({
+            type: "success",
+            message: "You have changed your order",
+          });
+        });
         // this.$loading.close();
       },
 
@@ -122,13 +127,11 @@
             this.getFinishSchedule()
               .then((resp) => {
                 console.log(resp);
-                if (resp) {
-                  this.$router.push("/review/" + this.scheduleId);
-                  this.$msg({
-                    type: "success",
-                    message: "Your are redirecting to your next step",
-                  });
-                }
+                this.$router.push("/review/" + this.scheduleId);
+                this.$msg({
+                  type: "success",
+                  message: "Your are redirecting to your next step",
+                });
               })
               .catch(() => {
                 this.$msg({
@@ -146,7 +149,7 @@
       },
 
       async getFinishSchedule() {
-        // const session = await Auth.currentSession();
+        const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -157,36 +160,31 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // Authorization: session.idToken.jwtToken,
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
           },
         };
-        var body = {
-          //This is where you define the body of the request
-        };
-        let isSuccess = false;
-        await apigClient
-          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-          .then((response) => {
-            console.log(response);
-            if (response.status === 200) {
-              // if response
-              // console.log(response)
-              isSuccess = true;
-              //This is where you would put a success callback
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        if (isSuccess) {
-          return true;
-        } else {
-          return false;
-        }
+        var body = {};
+        return new Promise(function(resolve, reject) {
+          apigClient
+            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response) => {
+              console.log(response);
+              if (response.status === 200) {
+                resolve(response);
+              }
+            })
+            .catch((err) => {
+              reject(err);
+              console.log(err);
+            });
+        });
       },
+    },
+    mounted() {
+      this.PromiseInit();
     },
     created() {
       this.createmethod();

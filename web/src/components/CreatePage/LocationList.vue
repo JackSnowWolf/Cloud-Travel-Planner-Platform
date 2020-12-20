@@ -30,8 +30,8 @@
     data() {
       return {
         loading: false,
-        addAttraction: "",
-        likeAttraction: String,
+        addAttraction: {},
+        likeAttraction: "",
         attractions: [],
         attraction: {},
       };

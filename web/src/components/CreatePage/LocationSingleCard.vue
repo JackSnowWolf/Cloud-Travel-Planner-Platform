@@ -74,15 +74,14 @@
       addAttraction: Object,
     },
     name: "LocationSingleCard",
-    components: [],
     data() {
       return {
         popupActivo: false,
         addItem: "",
-        addLike: String,
-        addDislike: String,
-        latValue: Number,
-        lngValue: Number,
+        addLike: "",
+        addDislike: "",
+        latValue: 0,
+        lngValue: 0,
       };
     },
     methods: {

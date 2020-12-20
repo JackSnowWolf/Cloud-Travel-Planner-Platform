@@ -68,7 +68,12 @@
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     props: {
-      attractionAdd: Object,
+      attractionAdd: {
+        type: String,
+        default() {
+          return "attraction";
+        },
+      },
       userId: String,
     },
     data() {
@@ -100,9 +105,10 @@
       },
 
       getlikeFlag(selectedUsers) {
-        console.log(selectedUsers.includes(this.userId));
+        // console.log(selectedUsers.includes(this.userId));
         return selectedUsers.includes(this.userId);
       },
+
       async initDataTable() {
         console.log("init LocationTable", this.userId);
         const session = await Auth.currentSession();
@@ -113,7 +119,6 @@
         var pathParams = {
           scheduleId: this.scheduleId,
         };
-        // console.log(this.scheduleId,addItem.attractionId)
         var pathTemplate = "/schedule/{scheduleId}";
         var method = "GET";
         var additionalParams = {
@@ -125,9 +130,7 @@
             userId: this.userId,
           },
         };
-        var body = {
-          //This is where you define the body of the request
-        };
+        var body = {};
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
@@ -146,7 +149,6 @@
 
       async isSelect(index) {
         const session = await Auth.currentSession();
-        // console.log("choose", this.tableData[index].attractionId);
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -164,9 +166,7 @@
             like: true,
           },
         };
-        var body = {
-          //This is where you define the body of the request
-        };
+        var body = {};
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
@@ -220,7 +220,7 @@
 
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log("selection", this.multipleSelection);
+        // console.log("selection", this.multipleSelection);
       },
 
       handleDelete(e) {
@@ -234,16 +234,24 @@
               type: "warning",
             })
             .then(() => {
-              for (var index = 0; index < this.multipleSelection.length; index++) {
-                console.log("delete", this.multipleSelection[index]);
-                this.deleteSelection(this.multipleSelection[index]);
-              }
-              // setTimeout(this.initDataTable(), 1000 * this.multipleSelection.length);
-              this.$msg({
-                type: "success",
-                message: "You have changed your selection",
+              let promises = [];
+              this.multipleSelection.forEach((item) => {
+                console.log(item);
+                promises.push(this.deleteSelection(item));
               });
-              setTimeout(this.initDataTable(), 1000 * this.multipleSelection.length);
+              // for (var index = 0; index < this.multipleSelection.length; index++) {
+              //   console.log("delete", this.multipleSelection[index]);
+              //   this.deleteSelection(this.multipleSelection[index]);
+              // }
+              // setTimeout(this.initDataTable(), 1000 * this.multipleSelection.length);
+              return Promise.all(promises).then(() => {
+                console.log("test");
+                this.$msg({
+                  type: "success",
+                  message: "You have changed your selection",
+                });
+                this.initDataTable();
+              });
             })
             .catch(() => {
               this.$msg({
@@ -265,11 +273,12 @@
             type: "warning",
           })
           .then(() => {
-            this.submitSchedule(this.scheduleId);
-            setTimeout(this.$router.push("/scheduleedit/" + this.scheduleId), 5000);
-            this.$msg({
-              type: "success",
-              message: "You are redirecting to your next step!",
+            this.submitSchedule(this.scheduleId).then(() => {
+              this.$router.push("/scheduleedit/" + this.scheduleId);
+              this.$msg({
+                type: "success",
+                message: "You are redirecting to your next step!",
+              });
             });
           })
           .catch(() => {
@@ -304,27 +313,25 @@
           typePreference: this.select2,
           day: this.dateNmuber,
         };
-        var isSuccess = false;
-        await apigClient
-          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-          .then((response) => {
-            if (response.status === 200) {
-              console.log("post resp", response);
-              isSuccess = true;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        if (isSuccess) {
-          return isSuccess;
-        } else {
-          return isSuccess;
-        }
+        // var isSuccess = false;
+        return new Promise(function(resolve, reject) {
+          apigClient
+            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log("post resp", response);
+                resolve(response);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            });
+        });
       },
 
       async deleteSelection(item) {
-        // const session = await Auth.currentSession();
+        const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -337,27 +344,27 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // Authorization: session.idToken.jwtToken,
+            Authorization: session.idToken.jwtToken,
           },
           queryParams: {
             userId: this.userId,
           },
         };
-        var body = {
-          //This is where you define the body of the request
-        };
-        await apigClient
-          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-          .then((response) => {
-            if (response.status === 200) {
-              // if response
-              console.log("post resp", response);
-              //This is where you would put a success callback
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        var body = {};
+        return new Promise(function(resolve, reject) {
+          apigClient
+            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log("post resp", response);
+                resolve(response);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            });
+        });
       },
 
       getRowClass() {
@@ -366,8 +373,8 @@
     },
 
     watch: {
-      attractionAdd(newAttraction) {
-        console.log(newAttraction);
+      attractionAdd() {
+        // console.log(newAttraction);
         // this.$msg("Wait!!!");
         setTimeout(this.initDataTable(), 5000 * 1);
       },

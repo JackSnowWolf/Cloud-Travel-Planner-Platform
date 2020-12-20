@@ -23,6 +23,7 @@
   import MainNav from "../components/Navbars/MainNav";
   import Slider from "../components/Navbars/Slider";
   import { Auth } from "aws-amplify";
+  import fileDownload from "js-file-download";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "ReviewPage",
@@ -33,33 +34,44 @@
     },
     data() {
       return {
-        scheduleId: String,
+        scheduleId: "",
         userId: "",
         user: "",
-        dayScheduleContents: "",
+        dayScheduleContents: [],
       };
     },
     methods: {
-      async setUserInfo() {
-        const user = await Auth.currentAuthenticatedUser();
+      userPromise(user) {
         this.user = user;
         this.userId = "user-" + user.username;
-        // console.log(this.userId);
-        return true;
+        return this.userId;
       },
-      async createmethod() {
-        this.setUserInfo().then((resp) => {
-          if (resp) {
-            this.setScheduleId();
-            this.initDataTable(this.scheduleId, this.userId);
-          }
-        });
+
+      dataInit(user) {
+        console.log("test", user);
+        this.initDataTable(this.scheduleId, user).then(this.ParseData);
       },
+
+      ParseData(data) {
+        this.dayScheduleContents = data;
+      },
+
+      PromiseInit() {
+        var user = Auth.currentAuthenticatedUser();
+        // user.then(this.userPromise).then(this.dataInit);
+        user.then(this.userPromise).then(this.dataInit);
+      },
+
+      createmethod() {
+        this.setScheduleId();
+      },
+
       setScheduleId() {
         this.scheduleId = this.$route.params.scheduleId;
       },
+
       async initDataTable(scheduleId, userId) {
-        console.log("init Preselect table", this.scheduleId, this.userId);
+        // console.log("init Preselect table", this.scheduleId, this.userId);
         const session = await Auth.currentSession();
         this.tableData = [];
         this.attracationIdList = [];
@@ -79,25 +91,28 @@
             userId: userId,
           },
         };
-        var body = {
-          //This is where you define the body of the request
-        };
-        await apigClient
-          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-          .then((response) => {
-            if (response.status === 200) {
-              console.log("Get resp init", response.data.scheduleContent.dayScheduleContents);
-              this.dayScheduleContents = response.data.scheduleContent.dayScheduleContents;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        var body = {};
+        return new Promise(function(resolve, reject) {
+          apigClient
+            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log("Get resp init", response.data.scheduleContent.dayScheduleContents);
+                // this.dayScheduleContents = response.data.scheduleContent.dayScheduleContents;
+                resolve(response.data.scheduleContent.dayScheduleContents);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            });
+        });
       },
+
       async getPDF(e) {
         e.preventDefault();
         console.log("Generate PDF");
-        // const session = await Auth.currentSession();
+        const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -108,21 +123,16 @@
         var additionalParams = {
           //If there are query parameters or headers that need to be sent with the request you can add them here
           headers: {
-            // Authorization: session.idToken.jwtToken,
+            Authorization: session.idToken.jwtToken,
           },
-          queryParams: {
-            // userId: this.userId,
-          },
+          queryParams: {},
         };
-        var body = {
-          // name: "melody",
-          //This is where you define the body of the request
-        };
+        var body = {};
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
             if (response.status === 200) {
-              console.log("getPDF", response.data);
+              fileDownload(response.data, String(this.scheduleId) + ".pdf");
             }
           })
           .catch((err) => {
@@ -132,7 +142,8 @@
     },
 
     mounted() {
-      this.initDataTable(this.scheduleId, this.userId);
+      // this.initDataTable(this.scheduleId, this.userId);
+      this.PromiseInit();
     },
     created() {
       this.createmethod();

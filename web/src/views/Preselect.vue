@@ -39,9 +39,9 @@
     },
     data() {
       return {
-        add_attraction: Object,
-        add_likeAttraction: String,
-        add_dislikeAttraction: String,
+        add_attraction: "",
+        add_likeAttraction: "",
+        add_dislikeAttraction: "",
         userId: "",
         user: "",
         scheduleId: null,
@@ -49,21 +49,31 @@
       };
     },
     methods: {
-      async setUserInfo() {
-        const user = await Auth.currentAuthenticatedUser();
+      userPromise(user) {
         this.user = user;
         this.userId = "user-" + user.username;
-        console.log(this.userId);
-        return true;
+        return this.userId;
       },
 
-      async createmethod() {
-        this.setUserInfo().then((resp) => {
-          if (resp) {
-            this.setScheduleId();
-            this.initDataTable(this.scheduleId, this.userId);
-          }
-        });
+      dataInit(user) {
+        console.log("test", user);
+        this.initDataTable(this.scheduleId, user).then(this.ParseData);
+      },
+
+      ParseData(data) {
+        if (this.userId === data) {
+          this.ownerView = true;
+        }
+      },
+
+      PromiseInit() {
+        var user = Auth.currentAuthenticatedUser();
+        // user.then(this.userPromise).then(this.dataInit);
+        user.then(this.userPromise).then(this.dataInit);
+      },
+
+      createmethod() {
+        this.setScheduleId();
       },
 
       setScheduleId() {
@@ -71,13 +81,32 @@
       },
 
       getAddedItem(t) {
-        this.add_attraction = t;
-        console.log(this.add_attraction);
-        // if (this.ownerView) {
-        this.putIntoScheduleContent(t);
-        // } else {
-        //   this.postLike(t.attractionId, false);
-        // }
+        var add_id = t.attractionId;
+        // this.add_attraction = t;
+        // console.log(this.add_attraction);
+        this.putIntoScheduleContent(t)
+          .then(this.ParseAddData(add_id))
+          .then((resp) => {
+            // console.log("resp", resp);
+            this.add_attraction = add_id;
+            this.$msg({
+              type: "success",
+              message: resp.data.msg,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            this.$msg({
+              type: "info",
+              message: "Can not add twice " + error,
+            });
+          });
+      },
+
+      ParseAddData(attractionId) {
+        return new Promise(function(resolve) {
+          resolve(attractionId);
+        });
       },
 
       getItemLike(t) {
@@ -162,28 +191,21 @@
             userId: this.userId,
           },
         };
-        var body = {
-          //This is where you define the body of the request
-        };
-        let isSuccess = false;
-        await apigClient
-          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-          .then((response) => {
-            if (response.status === 200) {
-              // if response
-              console.log("post resp", response);
-              isSuccess = true;
-              //This is where you would put a success callback
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        if (isSuccess) {
-          return isSuccess;
-        } else {
-          return false;
-        }
+        var body = {};
+        return new Promise(function(resolve, reject) {
+          apigClient
+            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log("post resp", response);
+                resolve(response);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            });
+        });
       },
 
       async initDataTable(scheduleId, userId) {
@@ -207,38 +229,26 @@
             userId: userId,
           },
         };
-        var body = {
-          //This is where you define the body of the request
-        };
-        var ownerView = false;
-        await apigClient
-          .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-          .then((response) => {
-            // console.log("init", response);
-            if (response.status === 200) {
-              // if response
-              console.log("Get resp", response.data.ownerId);
-              if (userId === response.data.ownerId) {
-                ownerView = true;
-                this.ownerView = true;
+        var body = {};
+
+        return new Promise(function(resolve, reject) {
+          apigClient
+            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log("Get resp", response.data.ownerId);
+                resolve(response.data.ownerId);
               }
-              // var object = response.data.scheduleContent;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-        if (ownerView) {
-          return true;
-        } else {
-          return false;
-        }
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            });
+        });
       },
     },
     mounted() {
-      console.log("Type".this.ownerView);
-      // this.checkUserType(this.scheduleId,this.userId)
-      // this.initDataTable(this.scheduleId,this.userId)
+      this.PromiseInit();
     },
     created() {
       this.createmethod();

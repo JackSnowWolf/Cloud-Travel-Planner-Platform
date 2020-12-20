@@ -45,7 +45,15 @@
 <script>
   export default {
     name: "TimeLineComponent",
-    props: ["dayScheduleContents"],
+    props: {
+      dayScheduleContents: {
+        type: Array,
+        default() {
+          return [];
+        },
+      },
+    },
+    // props: ["dayScheduleContents"],
     data() {
       return {
         center: {
