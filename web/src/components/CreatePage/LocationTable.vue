@@ -273,13 +273,20 @@
             type: "warning",
           })
           .then(() => {
-            this.submitSchedule(this.scheduleId).then(() => {
-              this.$router.push("/scheduleedit/" + this.scheduleId);
-              this.$msg({
-                type: "success",
-                message: "You are redirecting to your next step!",
+            this.submitSchedule(this.scheduleId)
+              .then(() => {
+                this.$router.push("/scheduleedit/" + this.scheduleId);
+                this.$msg({
+                  type: "success",
+                  message: "You are redirecting to your next step!",
+                });
+              })
+              .catch((err) => {
+                this.$msg({
+                  type: "info",
+                  message: "Error " + err,
+                });
               });
-            });
           })
           .catch(() => {
             this.$msg({
@@ -311,7 +318,7 @@
         var body = {
           mode: this.select1,
           typePreference: this.select2,
-          day: this.dateNmuber,
+          day: Number(this.dateNmuber),
         };
         // var isSuccess = false;
         return new Promise(function(resolve, reject) {
