@@ -40,7 +40,7 @@
       //  modify the table header the background color
       tableHeaderColor({ rowIndex }) {
         if (rowIndex === 0) {
-          return "background-color: #be7c39;color: #debe90;font-weight: 600;";
+          return "background-color: #5c6680; color: #debe90;font-weight: 600;";
         }
       },
       getItemAdded(item) {
@@ -80,19 +80,19 @@
     /* 表格字体颜色 */
     color: #6b3633;
     /* 表格边框颜色 */
-    border: 5px solid #ce9139;
+    border: 0px solid #618cac;
     /* height: 500px; */
-    background-color: #debe90;
+    background-color: #90a8c0;
   }
   .el-table th,
   .el-table tr,
   .el-table td {
-    border: 10;
+    border: 10px;
     background-color: transparent;
   }
   .el-table thead {
     color: #9c8467;
     font-weight: 800;
-    background-color: #be7c39;
+    background-color: #618cac;
   }
 </style>

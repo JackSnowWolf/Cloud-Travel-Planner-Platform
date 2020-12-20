@@ -1,14 +1,14 @@
 <template>
   <div class="PreselectPage">
-    <MainNav class="header" />
+    <MainNav />
     <Slider />
     <div class="main">
       <el-row class="select">
-        <el-col :span="12">
+        <el-col :span="10">
           <h3 class="subtitle">Best Spotlights</h3>
           <LocationList v-on:itemAdded="getAddedItem" v-on:itemLike="getItemLike" v-on:itemDislike="getItemDislike" />
         </el-col>
-        <el-col :span="12" class="select-bucket">
+        <el-col :span="14" class="select-bucket">
           <h3 class="select-bucket-title">Your selection bucket</h3>
           <div v-if="ownerView">
             <LocationTable :attractionAdd="add_attraction" :scheduleId="scheduleId" :userId="userId" v-if="userId" class="table" />
@@ -262,8 +262,8 @@
     width: 100%;
     height: 100%;
     top: 0px;
-    background: #c2a19a;
-    background: linear-gradient(90deg, #c2a19a 0%, #d1c78c 100%);
+    background: #abb8b5;
+    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
   }
   .main {
     position: absolute;

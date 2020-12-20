@@ -28,7 +28,7 @@ import { Message } from 'element-ui';
 Vue.prototype.$msg = Message
 
 import { vsButton, vsSelect, vsPopup, vsCard,vsRow, vsCol, vsIcon, 
-  vsSideBar, vsDivider, vsSpacer, vsInput} from 'vuesax';
+  vsSideBar, vsDivider, vsSpacer, vsInput,vsImages} from 'vuesax';
 import 'vuesax/dist/vuesax.css';
 
 import * as VueGoogleMaps from 'vue2-google-maps';
@@ -48,7 +48,7 @@ Vue.use(Col).use(Row).use(RadioButton).use(RadioGroup).use(MenuItemGroup)
 
 
 
-Vue.use(vsButton).use(vsSpacer)
+Vue.use(vsButton).use(vsSpacer).use(vsImages)
 Vue.use(vsSelect).use(vsSideBar).use(vsDivider)
 Vue.use(vsPopup).use(vsCard).use(vsRow).use(vsCol).use(vsIcon).use(vsInput)
 Amplify.configure(awsconfig)

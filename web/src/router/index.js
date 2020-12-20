@@ -70,6 +70,11 @@ const routes = [
         name: "layout", 
         component: () => import("../components/Layout.vue"),
       },
+      {
+        path:"/info",
+        name:"info",
+        component: () => import("../views/Info.vue"),
+      }
 
 
 ];

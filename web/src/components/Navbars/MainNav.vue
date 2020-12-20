@@ -19,7 +19,7 @@
       @select="handleSelect"
     >
       <el-menu-item index="/home">Home</el-menu-item>
-      <el-menu-item index="">Info</el-menu-item>
+      <el-menu-item index="/info">Info</el-menu-item>
       <!-- <el-menu-item index="2" disabled>My account</el-menu-item> -->
       <el-submenu index="3">
         <template slot="title">My account</template>

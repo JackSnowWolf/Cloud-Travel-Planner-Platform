@@ -1,6 +1,6 @@
 <template lang="html">
   <vs-row vs-justify="center">
-    <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="8">
+    <vs-col type="flex" vs-justify="center" vs-align="center" vs-w="10">
       <vs-card actionable class="attraction-card">
         <div slot="header">
           <h3>
@@ -108,7 +108,7 @@
 </script>
 <style scoped>
   .attraction-card {
-    background: #efad43;
-    background: linear-gradient(90deg, #efad43 0%, #efada3 100%);
+    background: #9a92a5;
+    background: linear-gradient(90deg, #9a92a5 0%, #efada3 100%);
   }
 </style>
