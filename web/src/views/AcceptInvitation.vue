@@ -60,6 +60,10 @@
           })
           .catch((err) => {
             console.log(err);
+            this.$msg({
+              type: "info",
+              message: err,
+            });
           });
       },
     },
