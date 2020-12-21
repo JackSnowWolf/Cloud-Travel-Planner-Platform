@@ -37,8 +37,8 @@
     width: 100%;
     height: 100%;
     top: 0px;
-    background: #abb8b5;
-    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
+    background: #f0ece3;
+    background: linear-gradient(0deg, #abb8b5 0%, #f0ece3 100%);
   }
   .main {
     position: absolute;

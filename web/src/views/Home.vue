@@ -89,7 +89,6 @@
             if (resp) {
               console.log("post", resp.scheduleId);
               setTimeout(this.$router.push("/createnew/" + resp.scheduleId), 5000);
-              // this.$router.push("/createnew/" + resp.scheduleId);
             }
           });
         }
@@ -217,8 +216,10 @@
     width: 100%;
     height: 100%;
     top: 0px;
-    background: #abb8b5;
-    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
+    background-image: url("https://proj-for-attraction-photos.s3.amazonaws.com/trip-bg-1.jpeg");
+    background-size: cover;
+    background-color: #abb8b5;
+    /* background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%); */
   }
   .title {
     font-size: 30px;
@@ -265,19 +266,19 @@
     color: #fff;
   }
   .el-button--continue:hover {
-    background: #639c9e;
-    border-color: #639c9e;
-    color: #fff;
+    background: #205355;
+    border-color: #205355;
+    color: #b58860;
   }
 
   .el-button--create {
-    background: #22326e;
-    border-color: #22326e;
+    background: #425d8a;
+    border-color: #425d8a;
     color: #fff;
   }
   .el-button--create:hover {
-    background: #006eb3;
-    border-color: #006eb3;
-    color: #fff;
+    background: #38576d;
+    border-color: #38576d;
+    color: #b58860;
   }
 </style>

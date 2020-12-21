@@ -7,8 +7,8 @@
       @open="handleOpen"
       @close="handleClose"
       :collapse="isCollapse"
-      background-color="#bab8a5"
-      text-color="#fff"
+      background-color="#ccc"
+      text-color="#b58860"
       active-text-color="#84703d"
     >
       <div class="menu-toggle" @click.prevent="control">
@@ -103,8 +103,6 @@
         const session = await Auth.currentSession();
         const user = await Auth.currentAuthenticatedUser();
         var userId = "user-" + user.username;
-        // console.log("email", email);
-        // console.log("session", session.idToken.jwtToken);
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {

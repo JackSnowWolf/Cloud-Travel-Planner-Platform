@@ -11,7 +11,7 @@
       <el-row class="button">
         <el-col :span="24">
           <div>
-            <el-button @click="getPDF" type="success" icon="el-icon-download" plain>Create My PDF</el-button>
+            <el-button @click="getPDF" type="create" icon="el-icon-download" plain>Create My PDF</el-button>
           </div>
         </el-col>
       </el-row>
@@ -157,8 +157,10 @@
     width: 100%;
     height: 100%;
     top: 0px;
-    background: #abb8b5;
-    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
+    background-image: url("https://proj-for-attraction-photos.s3.amazonaws.com/trip-bg-2.jpeg");
+    background-size: cover;
+    /* background-color: #abb8b5;
+    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%); */
   }
   .main {
     position: absolute;
@@ -177,5 +179,15 @@
   }
   .button {
     margin-top: 20px;
+  }
+  .el-button--create {
+    background: #425d8a;
+    border-color: #425d8a;
+    color: #fff;
+  }
+  .el-button--create:hover {
+    background: #38576d;
+    border-color: #38576d;
+    color: #b58860;
   }
 </style>

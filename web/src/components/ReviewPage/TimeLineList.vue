@@ -3,7 +3,7 @@
     <el-timeline>
       <el-table
         style="width: 100%"
-        height="550"
+        height="600"
         :data="dayScheduleContents"
         :row-style="getRowClass"
         :header-row-style="getRowClass"
@@ -80,7 +80,7 @@
     /* 表格字体颜色 */
     color: #3c1507;
     /* 表格边框颜色 */
-    border: 5px solid #b99a6d;
+    border: 5px solid #425d8a;
     /* height: 500px; */
     background-color: #ebe7de;
   }

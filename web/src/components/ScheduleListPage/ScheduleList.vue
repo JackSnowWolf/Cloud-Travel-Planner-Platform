@@ -166,7 +166,7 @@
     /* 表格字体颜色 */
     color: #3c1507;
     /* 表格边框颜色 */
-    border: 5px solid #b99a6d;
+    border: 5px solid #425d8a;
     /* height: 500px; */
     background-color: #ebe7de;
   }
@@ -182,13 +182,13 @@
     background-color: rgba(148, 144, 144, 0.3);
   }
   .el-button--continue {
-    background: #20b2aa;
-    border-color: #20b2aa;
+    background: #1a968f;
+    border-color: #1a968f;
     color: #fff;
   }
   .el-button--continue:hover {
-    background: #8cd8da;
-    border-color: #8cd8da;
-    color: #fff;
+    background: #205355;
+    border-color: #205355;
+    color: #b58860;
   }
 </style>

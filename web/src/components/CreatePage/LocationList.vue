@@ -41,7 +41,7 @@
       //  modify the table header the background color
       tableHeaderColor({ rowIndex }) {
         if (rowIndex === 0) {
-          return "background-color: #5c6680; color: #debe90;font-weight: 600;";
+          return "background-color: #38576d; color: #debe90;font-weight: 600;";
         }
       },
       renderHeader() {
@@ -53,7 +53,7 @@
               </el-col>
               <el-col span={6} offset={2}>
                 <el-button size="small" on-click={() => this.elasticSearch()}>
-                  <span class="el-icon-upload2"></span> search
+                  <span class="el-icon-search"></span> search
                 </el-button>
               </el-col>
             </el-row>
@@ -75,6 +75,10 @@
           .catch((err) => {
             console.log(err);
             this.attractions = [];
+            this.$msg({
+              type: "info",
+              message: "No result find!",
+            });
           });
       },
       getItemAdded(item) {
@@ -95,9 +99,8 @@
       getLocationList() {
         // console.log("elsticsearch!");
         this.$axios.get("https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1/attraction/_search?q=*:*").then((response) => {
-          console.log("response", response.data.results);
+          // console.log("response", response.data.results);
           this.attractions = response.data.results;
-          console.log(this.attractions);
         });
       },
     },
@@ -116,12 +119,12 @@
     /* 表格边框颜色 */
     border: 0px solid #618cac;
     /* height: 500px; */
-    background-color: #90a8c0;
+    background-color: rgba(148, 144, 144, 0.3);
   }
   .el-table th,
   .el-table tr,
   .el-table td {
-    border: 10px;
+    border: 0px;
     background-color: transparent;
   }
   .el-table thead {

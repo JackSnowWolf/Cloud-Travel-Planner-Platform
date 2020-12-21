@@ -22,7 +22,7 @@
                 </span>
               </h3>
               <vs-row vs-align="flex-end" vs-type="flex" vs-justify="space-between" vs-w="12">
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="5">
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="6">
                   <div class="map">
                     <GmapMap
                       :center="{
@@ -49,16 +49,16 @@
                     </GmapMap>
                   </div>
                 </vs-col>
-                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="6">
+                <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="5">
                   <div>
                     <img :src="attraction.attractionImgUrls[0]" style="width: 300px; height: 300px" />
                   </div>
                 </vs-col>
               </vs-row>
-              <vs-row>
+              <!-- <vs-row>
                 <el-button @click="handleLike" type="success" icon="el-icon-plus" circle></el-button>
                 <el-button @click="handleDislike" type="info" icon="el-icon-minus" circle></el-button>
-              </vs-row>
+              </vs-row> -->
             </vs-popup>
             <vs-button @click="handleAdd" color="danger" type="gradient"><vs-icon icon="add_location"></vs-icon>Add</vs-button>
           </vs-row>

@@ -34,7 +34,7 @@
           </el-table>
           <div style="margin-top: 20px">
             <el-button @click="handleDelete" type="danger">Select Delete</el-button>
-            <el-button @click="dialogFormVisible = true" type="continue">Fininsh Selection</el-button>
+            <el-button v-if="showSubmit" @click="dialogFormVisible = true" type="continue">Fininsh Selection</el-button>
             <vs-popup title="Choose your trip mode" :active.sync="dialogFormVisible">
               <h4>
                 <span>We provide following trip mode for you, please select one as you wish </span>
@@ -75,13 +75,17 @@
         },
       },
       userId: String,
+      ownerView: Boolean,
     },
     data() {
       return {
         tableData: [],
         dialogFormVisible: false,
         scheduleId: "",
+        userIdValue: "",
         attracationIdList: [],
+        revisedTimeStamp: 0,
+        showSubmit: false,
         multipleSelection: [],
         dateNmuber: 3,
         select1: "BUSY",
@@ -100,6 +104,16 @@
       };
     },
     methods: {
+      PromiseInit() {
+        var user = Auth.currentAuthenticatedUser();
+        // user.then(this.userPromise).then(this.dataInit);
+        user.then(this.userPromise).then(() => this.initDataTable());
+      },
+      userPromise(user) {
+        this.user = user;
+        this.userIdValue = "user-" + user.username;
+        return this.userIdValue;
+      },
       setScheduleId() {
         this.scheduleId = this.$route.params.scheduleId;
       },
@@ -112,8 +126,6 @@
       async initDataTable() {
         console.log("init LocationTable", this.userId);
         const session = await Auth.currentSession();
-        this.tableData = [];
-        this.attracationIdList = [];
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
         var pathParams = {
@@ -127,7 +139,7 @@
             Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            userId: this.userId,
+            userId: this.userIdValue,
           },
         };
         var body = {};
@@ -135,6 +147,10 @@
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
             if (response.status === 200) {
+              console.log("timeStamp", response.data.revisedTimeStamp);
+              this.revisedTimeStamp = response.data.revisedTimeStamp;
+              this.tableData = [];
+              this.attracationIdList = [];
               var object = response.data.scheduleContent;
               for (var attracationId in object) {
                 this.attracationIdList.push(attracationId);
@@ -162,7 +178,7 @@
             Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            userId: this.userId,
+            userId: this.userIdValue,
             like: true,
           },
         };
@@ -197,13 +213,11 @@
             Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            userId: this.userId,
+            userId: this.userIdValue,
             like: false,
           },
         };
-        var body = {
-          //This is where you define the body of the request
-        };
+        var body = {};
         await apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
@@ -239,11 +253,6 @@
                 console.log(item);
                 promises.push(this.deleteSelection(item));
               });
-              // for (var index = 0; index < this.multipleSelection.length; index++) {
-              //   console.log("delete", this.multipleSelection[index]);
-              //   this.deleteSelection(this.multipleSelection[index]);
-              // }
-              // setTimeout(this.initDataTable(), 1000 * this.multipleSelection.length);
               return Promise.all(promises).then(() => {
                 console.log("test");
                 this.$msg({
@@ -312,7 +321,7 @@
             Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            userId: this.userId,
+            userId: this.userIdValue,
           },
         };
         var body = {
@@ -383,15 +392,24 @@
       attractionAdd() {
         // console.log(newAttraction);
         // this.$msg("Wait!!!");
-        setTimeout(this.initDataTable(), 5000 * 1);
+        this.initDataTable();
+        // setTimeout(this.initDataTable(), 5000 * 1);
+      },
+      ownerView(newVal) {
+        console.log("onwer", newVal);
+        this.showSubmit = newVal;
       },
     },
     created() {
       this.setScheduleId();
     },
     mounted() {
-      console.log(this.userId);
-      this.initDataTable();
+      this.PromiseInit();
+      setInterval(this.initDataTable, 10000);
+      this.$once("hook:beforeDestroy", () => {
+        console.log("clear!");
+        clearInterval();
+      });
     },
   };
 </script>
@@ -412,7 +430,7 @@
     margin-bottom: 10px;
   }
   .attraction-card {
-    background: #d0aaa3;
+    background: rgba(148, 144, 144, 0.3);
   }
   .el-table {
     /* 表格字体颜色 */
@@ -439,9 +457,9 @@
     color: #fff;
   }
   .el-button--continue:hover {
-    background: #639c9e;
-    border-color: #639c9e;
-    color: #fff;
+    background: #205355;
+    border-color: #205355;
+    color: #b58860;
   }
   .el-button--text {
     color: #1a968f;

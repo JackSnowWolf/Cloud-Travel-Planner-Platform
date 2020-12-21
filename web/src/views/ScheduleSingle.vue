@@ -199,13 +199,15 @@
     width: 100%;
     height: 100%;
     top: 0px;
-    background: #abb8b5;
-    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
+    background-image: url("https://proj-for-attraction-photos.s3.amazonaws.com/trip-bg-3.jpeg");
+    background-size: cover;
+    /* background-color: #abb8b5;
+    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%); */
   }
   /* 主区域 */
   .main {
     position: absolute;
-    top: 50px;
+    top: 65px;
     left: 230px;
     bottom: 0px;
     right: 0px; /* 距离右边0像素 */
@@ -225,8 +227,8 @@
     color: #fff;
   }
   .el-button--continue:hover {
-    background: #639c9e;
-    border-color: #639c9e;
-    color: #fff;
+    background: #205355;
+    border-color: #205355;
+    color: #b58860;
   }
 </style>

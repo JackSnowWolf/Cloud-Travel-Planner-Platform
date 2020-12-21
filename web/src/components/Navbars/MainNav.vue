@@ -13,14 +13,13 @@
       router
       class="el-menu"
       mode="horizontal"
-      background-color="#3d5a56"
-      text-color="#fff"
+      background-color="#38576d"
+      text-color="#b58860"
       active-text-color="#cab891"
       @select="handleSelect"
     >
       <el-menu-item index="/home">Home</el-menu-item>
       <el-menu-item index="/info">Info</el-menu-item>
-      <!-- <el-menu-item index="2" disabled>My account</el-menu-item> -->
       <el-submenu index="3">
         <template slot="title">My account</template>
         <el-menu-item index="/">Log Out</el-menu-item>

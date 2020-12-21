@@ -10,12 +10,12 @@
         </el-col>
         <el-col :span="14" class="select-bucket">
           <h3 class="select-bucket-title">Your selection bucket</h3>
-          <div v-if="ownerView">
-            <LocationTable :attractionAdd="add_attraction" :scheduleId="scheduleId" :userId="userId" v-if="userId" class="table" />
+          <div>
+            <LocationTable :attractionAdd="add_attraction" :scheduleId="scheduleId" :userId="userId" :ownerView="ownerView" class="table" />
           </div>
-          <div v-else>
+          <!-- <div v-else>
             You have no permission
-          </div>
+          </div> -->
         </el-col>
       </el-row>
     </div>
@@ -262,8 +262,10 @@
     width: 100%;
     height: 100%;
     top: 0px;
-    background: #abb8b5;
-    background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%);
+    background-image: url("https://proj-for-attraction-photos.s3.amazonaws.com/trip-bg-1.jpeg");
+    background-size: cover;
+    background-color: #abb8b5;
+    /* background: linear-gradient(0deg, #abb8b5 0%, #cab895 100%); */
   }
   .main {
     position: absolute;

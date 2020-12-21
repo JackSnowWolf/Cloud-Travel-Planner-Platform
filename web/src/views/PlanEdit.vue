@@ -90,8 +90,10 @@
 </script>
 <style scoped>
   .planedit {
-    background: rgb(34, 193, 195);
-    background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
+    background-image: url("https://proj-for-attraction-photos.s3.amazonaws.com/trip-bg-3.jpeg");
+    background-size: cover;
+    /* background: rgb(34, 193, 195);
+    background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%); */
   }
   /* 主区域 */
   .main {
