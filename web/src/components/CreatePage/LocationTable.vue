@@ -97,9 +97,12 @@
         select2: "nature",
         options2: [
           { text: "Nature", value: "nature" },
-          { text: "History", value: "history" },
-          { text: "Fashion", value: "fashion" },
+          { text: "Humantic", value: "humantic" },
           { text: "Art", value: "art" },
+          { text: "Outdoor", value: "nature" },
+          { text: "Indoor", value: "history" },
+          { text: "Iconic", value: "iconic" },
+          { text: "Science", value: "science" },
         ],
       };
     },
