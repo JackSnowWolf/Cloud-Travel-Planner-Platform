@@ -1,7 +1,9 @@
 <template>
-  <el-scrollbar wrap-style="max-height: 300px;">
+  <!-- <el-scrollbar wrap-style="max-height: 300px;"> -->
+  <div class="chatbot">
     <amplify-chatbot :chatbotConfig="chatbotConfig"></amplify-chatbot>
-  </el-scrollbar>
+    <!-- </el-scrollbar> -->
+  </div>
 </template>
 <script>
   // import { AmplifyEventBus } from "aws-amplify-vue";
@@ -41,6 +43,7 @@
 </script>
 <style scoped>
   .chatbot {
-    max-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
   }
 </style>

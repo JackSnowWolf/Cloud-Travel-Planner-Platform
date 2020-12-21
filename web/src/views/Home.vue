@@ -32,7 +32,7 @@
       <el-row>
         <el-col :span="24" class="select-chatbot">
           <h4 class="select-text">Try To Talk With Our Bot to Have Some Ideas</h4>
-          <Chatbot />
+          <Chatbot v-on:chatComplete="getslot" />
         </el-col>
       </el-row>
     </div>
@@ -88,6 +88,8 @@
           this.postNewSchedule(title).then((resp) => {
             if (resp) {
               console.log("post", resp.scheduleId);
+              sessionStorage.setItem("tripMode", slots.slots.Mode);
+              sessionStorage.setItem("AttractionType", slots.slots.AttractionType);
               setTimeout(this.$router.push("/createnew/" + resp.scheduleId), 5000);
             }
           });
@@ -162,47 +164,6 @@
             });
         });
       },
-
-      // async postNewSchedule(name) {
-      //   const session = await Auth.currentSession();
-      //   var config = {
-      //     invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1",
-      //   };
-      //   var apigClient = apigClientFactory.newClient(config);
-      //   var pathParams = {};
-      //   var pathTemplate = "/schedule/";
-      //   var method = "POST";
-      //   var additionalParams = {
-      //     //If there are query parameters or headers that need to be sent with the request you can add them here
-      //     headers: {
-      //       Authorization: session.idToken.jwtToken,
-      //     },
-      //     queryParams: {
-      //       scheduleTitle: name,
-      //       targetArea: this.targetArea,
-      //       userId: this.userId,
-      //     },
-      //   };
-      //   var body = {};
-      //   let isSuccess = false;
-      //   await apigClient
-      //     .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
-      //     .then((response) => {
-      //       if (response.status === 200) {
-      //         console.log("post resp", response);
-      //         this.newSchedule = response.data;
-      //         isSuccess = true;
-      //       }
-      //     })
-      //     .catch((err) => {
-      //       console.log(err);
-      //     });
-      //   if (isSuccess) {
-      //     return this.newSchedule;
-      //   } else {
-      //     return false;
-      //   }
-      // },
     },
     created() {
       this.PromiseInit();
@@ -233,10 +194,6 @@
   .createbn {
     margin-top: 40px;
     /* margin-bottom: 40px; */
-  }
-  .chatbot {
-    max-height: 200px;
-    margin-top: 20px;
   }
   .main {
     position: absolute;

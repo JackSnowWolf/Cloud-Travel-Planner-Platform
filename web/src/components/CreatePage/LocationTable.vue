@@ -404,6 +404,16 @@
       this.setScheduleId();
     },
     mounted() {
+      var tripMode = sessionStorage.getItem("tripMode");
+      if (tripMode.toUpperCase()) {
+        console.log("mode", tripMode.toUpperCase());
+        this.select1 = tripMode.toUpperCase();
+      }
+      var attractionType = sessionStorage.getItem("AttractionType");
+      if (attractionType) {
+        console.log("attractionType", attractionType);
+        this.select2 = attractionType;
+      }
       this.PromiseInit();
       setInterval(this.initDataTable, 10000);
       this.$once("hook:beforeDestroy", () => {
