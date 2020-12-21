@@ -1,7 +1,7 @@
 <template>
   <div class="attraction-container">
     <el-table style="width: 100%" height="550" :data="attractions" :header-cell-style="tableHeaderColor">
-      <el-table-column fixed label="Click view to see details">
+      <el-table-column fixed label="Click view to see details" :render-header="renderHeader">
         <template slot-scope="props">
           <p>
             <LocationSingleCard
@@ -34,6 +34,7 @@
         likeAttraction: "",
         attractions: [],
         attraction: {},
+        searchquery: "",
       };
     },
     methods: {
@@ -42,6 +43,39 @@
         if (rowIndex === 0) {
           return "background-color: #5c6680; color: #debe90;font-weight: 600;";
         }
+      },
+      renderHeader() {
+        return (
+          <div>
+            <el-row>
+              <el-col span={16}>
+                <el-input v-model={this.searchquery} size="mini" placeholder="enter key words to search" />
+              </el-col>
+              <el-col span={6} offset={2}>
+                <el-button size="small" on-click={() => this.elasticSearch()}>
+                  <span class="el-icon-upload2"></span> search
+                </el-button>
+              </el-col>
+            </el-row>
+          </div>
+        );
+      },
+      elasticSearch() {
+        var query = this.searchquery;
+        console.log(query);
+        this.$axios
+          .get("https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1/attraction/_search?", {
+            params: { q: JSON.stringify(query) },
+          })
+          .then((response) => {
+            console.log("response", response.data.results);
+            this.attractions = response.data.results;
+            console.log(this.attractions);
+          })
+          .catch((err) => {
+            console.log(err);
+            this.attractions = [];
+          });
       },
       getItemAdded(item) {
         this.addAttraction = item;
