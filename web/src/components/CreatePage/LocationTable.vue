@@ -123,11 +123,11 @@
 
       getlikeFlag(selectedUsers) {
         // console.log(selectedUsers.includes(this.userId));
-        return selectedUsers.includes(this.userId);
+        return selectedUsers.includes(this.userIdValue);
       },
 
       async initDataTable() {
-        console.log("init LocationTable", this.userId);
+        console.log("init LocationTable", this.userIdValue);
         const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
@@ -366,7 +366,7 @@
             Authorization: session.idToken.jwtToken,
           },
           queryParams: {
-            userId: this.userId,
+            userId: this.userIdValue,
           },
         };
         var body = {};
