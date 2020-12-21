@@ -1,0 +1,19 @@
+{
+  "function": {},
+  "auth": {
+    "travelplanner13a270ff": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
+  "api": {},
+  "interactions": {
+    "ScheduleBot1214": {
+      "service": "Lex",
+      "providerPlugin": "awscloudformation",
+      "build": true
+    }
+  }
+}

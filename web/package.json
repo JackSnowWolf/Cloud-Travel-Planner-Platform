@@ -10,17 +10,49 @@
   "dependencies": {
     "@aws-amplify/ui-vue": "^0.2.29",
     "aws-amplify": "^3.3.10",
+    "aws-amplify-vue": "^2.1.3",
+    "aws-api-gateway-client": "^0.3.5",
+    "axios": "^0.21.0",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "element-ui": "^2.14.1",
+    "js-file-download": "^0.4.12",
+    "material-icons": "^0.3.1",
+    "qs-stringify": "^1.2.1",
+    "router": "^1.3.5",
+    "vue": "^2.6.11",
+    "vue-axios": "^3.2.0",
+    "vue-infinite-scroll": "^2.0.2",
+    "vue-router": "^3.4.9",
+    "vue2-google-maps": "^0.10.7",
+    "vuedraggable": "^2.24.3",
+    "vuesax": "^3.12.2",
+    "vuex": "^3.6.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-component": "^1.1.1",
     "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.11"
+    "prettier": "^1.19.1",
+    "sass-loader": "^10.1.0",
+    "stylus": "^0.54.8",
+    "stylus-loader": "^4.3.0",
+    "vue-cli-plugin-yaml": "^1.0.2",
+    "vue-loader": "^15.9.5",
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-server": "^3.11.0"
   },
   "eslintConfig": {
     "root": true,
@@ -29,7 +61,8 @@
     },
     "extends": [
       "plugin:vue/essential",
-      "eslint:recommended"
+      "eslint:recommended",
+      "@vue/prettier"
     ],
     "parserOptions": {
       "parser": "babel-eslint"
