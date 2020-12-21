@@ -110,11 +110,13 @@
       PromiseInit() {
         var user = Auth.currentAuthenticatedUser();
         // user.then(this.userPromise).then(this.dataInit);
+        // console.log("user", user);
         user.then(this.userPromise).then(() => this.initDataTable());
       },
       userPromise(user) {
         this.user = user;
         this.userIdValue = "user-" + user.username;
+        // console.log("userid", this.userIdValue);
         return this.userIdValue;
       },
       setScheduleId() {
@@ -127,7 +129,7 @@
       },
 
       async initDataTable() {
-        console.log("init LocationTable", this.userId);
+        console.log("init LocationTable", this.userIdValue);
         const session = await Auth.currentSession();
         var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
         var apigClient = apigClientFactory.newClient(config);
@@ -407,6 +409,7 @@
       this.setScheduleId();
     },
     mounted() {
+      this.PromiseInit();
       var tripMode = sessionStorage.getItem("tripMode");
       if (tripMode.toUpperCase()) {
         console.log("mode", tripMode.toUpperCase());
@@ -417,7 +420,7 @@
         console.log("attractionType", attractionType);
         this.select2 = attractionType;
       }
-      this.PromiseInit();
+
       setInterval(this.initDataTable, 10000);
       this.$once("hook:beforeDestroy", () => {
         console.log("clear!");
