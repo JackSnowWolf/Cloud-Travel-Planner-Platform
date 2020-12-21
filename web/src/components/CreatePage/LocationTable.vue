@@ -110,11 +110,13 @@
       PromiseInit() {
         var user = Auth.currentAuthenticatedUser();
         // user.then(this.userPromise).then(this.dataInit);
+        // console.log("user", user);
         user.then(this.userPromise).then(() => this.initDataTable());
       },
       userPromise(user) {
         this.user = user;
         this.userIdValue = "user-" + user.username;
+        // console.log("userid", this.userIdValue);
         return this.userIdValue;
       },
       setScheduleId() {
@@ -407,6 +409,7 @@
       this.setScheduleId();
     },
     mounted() {
+      this.PromiseInit();
       var tripMode = sessionStorage.getItem("tripMode");
       if (tripMode.toUpperCase()) {
         console.log("mode", tripMode.toUpperCase());
@@ -417,7 +420,7 @@
         console.log("attractionType", attractionType);
         this.select2 = attractionType;
       }
-      this.PromiseInit();
+
       setInterval(this.initDataTable, 10000);
       this.$once("hook:beforeDestroy", () => {
         console.log("clear!");
