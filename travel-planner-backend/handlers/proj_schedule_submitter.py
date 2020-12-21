@@ -2,12 +2,18 @@ import json
 import logging
 
 import boto3
+import random
+import requests
+# from botocore.vendored import requests
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 user_table = boto3.resource('dynamodb').Table('userTable')
 schedule_table = boto3.resource('dynamodb').Table('scheduleTable')
+attraction_table = boto3.resource('dynamodb').Table('attractionTable')
+
+ATTRACTION_ELASTICSEARCH_BASE_URL = 'https://search-proj-for-attractions-um6r2mitevcydyzporkglj72ea.us-east-1.es.amazonaws.com/attractions/_search'
 
 
 def get_target_schedule(schedule_id):
@@ -19,7 +25,7 @@ def get_target_schedule(schedule_id):
         )
 
         if "Item" in response and len(response["Item"]) != 0:
-            logger.debug(json.dumps(response, indent=2))
+            # logger.debug(json.dumps(response, indent=2))
             return True, response
         return False, {
             'statusCode': 400,
@@ -52,11 +58,20 @@ def update_schedule(schedule):
         }
 
 
-def sumbit_schedule(user_id, schedule_id):
-    succ, response = get_target_schedule(schedule_id)
+def extract_item(item):
+    object_key = item["_source"]["objectKey"]
+    attractionName = item["_source"]["attractionName"]
+    return {
+        "object_key": object_key,
+        "attractionName": attractionName
+    }
+
+
+def submit_schedule(user_id, schedule_id):
+    succ, response_schedule = get_target_schedule(schedule_id)
     if not succ:
-        return response
-    target_schedule = response["Item"]
+        return response_schedule
+    target_schedule = response_schedule["Item"]
     if target_schedule["scheduleType"].upper() != "PRESELECT":
         return {
             'statusCode': 400,
@@ -76,7 +91,192 @@ def sumbit_schedule(user_id, schedule_id):
 
     # TODO: arrange schedule
 
-    return {}
+    schedule_content = {
+        "metaData": "dummy"
+    }
+    dayschedule_contents = []
+    dayone = {
+        "NumDate": "day1"
+    }
+    daytwo = {
+        "NumDate": "day2"
+    }
+    preselect_attr_list = list(target_schedule["scheduleContent"].keys())
+    preselect_attr_first = str(preselect_attr_list[0])
+    response_list = attraction_table.scan(ProjectionExpression="attractionId,score")
+    attr_score_item_list = response_list["Items"]
+    attr_score_item_list.sort(key=lambda a: -a["score"])
+    pop_attr_list_db = list(map(lambda a: str(a["attractionId"]), attr_score_item_list))
+    pop_attr_list_db.insert(0, preselect_attr_first)
+    pop_attr_list = list(dict.fromkeys(pop_attr_list_db))
+
+    # By default: 2 day and 6 attractions max
+    if len(pop_attr_list) <= 0:
+        return {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "No attraction"
+            })
+        }
+    elif len(pop_attr_list) <= 3:
+        dayone.update({
+            "Details": pop_attr_list
+        })
+        dayschedule_contents.append(dayone)
+    elif len(pop_attr_list) <= 6:
+        dayone.update({
+            "Details": pop_attr_list[0:3]
+        })
+        daytwo.update({
+            "Details": pop_attr_list[3:]
+        })
+        dayschedule_contents.append(dayone)
+        dayschedule_contents.append(daytwo)
+    else:
+        dayone.update({
+            "Details": pop_attr_list[0:3]
+        })
+        daytwo.update({
+            "Details": pop_attr_list[3:6]
+        })
+        dayschedule_contents.append(dayone)
+        dayschedule_contents.append(daytwo)
+
+    schedule_content.update({
+        "dayScheduleContents": dayschedule_contents
+    })
+    target_schedule.update({
+        "scheduleType": "EDITING",
+        "scheduleContent": schedule_content
+    })
+    # print(target_schedule)
+    update_schedule(target_schedule)
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            "code": 200,
+            "msg": "Submit successfully"
+        })
+    }
+
+
+def submit_post_schedule(user_id, schedule_id, submit_detail):
+    succ, response_schedule = get_target_schedule(schedule_id)
+    if not succ:
+        return response_schedule
+    target_schedule = response_schedule["Item"]
+    if target_schedule["scheduleType"].upper() != "PRESELECT":
+        return {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "Can not submit schedule with non-PRESELECT type"
+            })
+        }
+    if user_id != target_schedule["ownerId"]:
+        return {
+            'statusCode': 403,
+            'body': json.dumps({
+                "code": 403,
+                "msg": "Permission Denied"
+            })
+        }
+
+    mode_list = ["BUSY", "MEDIUM", "RELAX"]
+    mode_dict = {
+        "BUSY": 3,
+        "MEDIUM": 2,
+        "RELAX": 1
+    }
+    if "mode" not in list(submit_detail.keys()) or "day" not in list(submit_detail.keys()):
+        return submit_schedule(user_id, schedule_id)
+    if submit_detail["mode"].upper() not in mode_list:
+        return submit_schedule(user_id, schedule_id)
+    view_mode = submit_detail["mode"].upper()
+    num_attr_oneday = mode_dict[view_mode]
+    try:
+        num_day = int(submit_detail["day"])
+        if num_day >= 7:
+            return {
+                'statusCode': 403,
+                'body': json.dumps({
+                    "code": 403,
+                    "msg": "Days error"
+                })
+            }
+    except Exception as e:
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": str(e)
+            })
+        }
+    schedule_content = {
+        "metaData": "dummy"
+    }
+    dayschedule_contents = [{"NumDate": "day" + str(i + 1)} for i in range(num_day)]
+
+    preselect_attr_list = list(target_schedule["scheduleContent"].keys())
+    preselect_attr_first = str(preselect_attr_list[0])
+    response_list = attraction_table.scan(ProjectionExpression="attractionId,score")
+    attr_score_item_list = response_list["Items"]
+    attr_score_item_list.sort(key=lambda a: -a["score"])
+    pop_attr_list_db = list(map(lambda a: str(a["attractionId"]), attr_score_item_list))
+    pop_attr_list_db.insert(0, preselect_attr_first)
+
+    # Art, Outdoor, Indoor, Iconic, Humantic, Nature
+    try:
+        if "typePreference" in list(submit_detail.keys()):
+            query = submit_detail["typePreference"]
+            url = ATTRACTION_ELASTICSEARCH_BASE_URL + "?q=%s" % query
+            es_response = requests.get(url).json()
+            if "hits" in es_response and "hits" in es_response["hits"]:
+                attr_list = list(map(extract_item, es_response["hits"]["hits"]))
+                prefered_type_attr_one = random.choice(attr_list)
+                pop_attr_list_db.insert(1, prefered_type_attr_one["object_key"])
+    except Exception as e:
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "Hit type reference fail"
+            })
+        }
+
+    pop_attr_list = list(dict.fromkeys(pop_attr_list_db))
+    try:
+        start_day = 0
+        for i in range(num_day):
+            dayschedule_contents[i].update({
+                "Details": pop_attr_list[start_day:start_day + num_attr_oneday]
+            })
+            start_day = start_day + num_attr_oneday
+    except Exception as e:
+        return False, {
+            'statusCode': 400,
+            'body': json.dumps({
+                "code": 400,
+                "msg": "Attractions are not enough"
+            })
+        }
+    schedule_content.update({
+        "dayScheduleContents": dayschedule_contents
+    })
+    target_schedule.update({
+        "scheduleType": "EDITING",
+        "scheduleContent": schedule_content
+    })
+    # print(target_schedule)
+    update_schedule(target_schedule)
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            "code": 200,
+            "msg": "Submit successfully"
+        })
+    }
 
 
 def lambda_handler(event, context):
@@ -114,7 +314,9 @@ def lambda_handler(event, context):
             schedule_id = event["pathParameters"]["scheduleId"]
 
         if event["httpMethod"].upper() == "GET":
-            response.update(sumbit_schedule(user_id, schedule_id))
+            response.update(submit_schedule(user_id, schedule_id))
+        elif event["httpMethod"].upper() == "POST":
+            response.update(submit_post_schedule(user_id, schedule_id, json.loads(event["body"])))
         else:
             response.update({
                 'statusCode': 400,

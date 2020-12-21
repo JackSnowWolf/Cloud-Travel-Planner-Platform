@@ -45,7 +45,6 @@ def search_attractions_on_es(query, page_size=10, page_no=0):
             "from": page_no * page_size,
             "size": page_size
         }
-        params = urllib.parse.urlencode(params, quote_via=urllib.parse.quote)
         es_response = requests.get(url, params=params).json()
 
         logger.debug(json.dumps(es_response, indent=2))

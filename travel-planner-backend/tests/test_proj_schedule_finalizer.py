@@ -23,11 +23,20 @@ class ScheduleFinalizerTestCase(unittest.TestCase):
             "scheduleContent": {
                 "metaData": "dummy",
                 "dayScheduleContents": [
-                    [
-                        "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2",
-                        "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2"
-                    ],
-                    ["attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2"]
+                    {
+                        "NumDate": "day1",
+                        "Details": [
+                            "attr-ca428d3e-308c-11eb-9017-54e1ad16ceb2",
+                            "attr-2f6c194e-3094-11eb-9017-54e1ad16ceb2"
+                        ]
+                    },
+                    {
+                        "NumDate": "day2",
+                        "Details": [
+                            "attr-ba428d3e-308c-11eb-9017-54e1ad16ceb2",
+                            "attr-3f6c194e-3094-11eb-9017-54e1ad16ceb2"
+                        ]
+                    }
                 ]
             },
             "scheduleType": "EDITING",

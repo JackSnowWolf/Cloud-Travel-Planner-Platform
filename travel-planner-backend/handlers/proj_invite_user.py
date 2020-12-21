@@ -10,10 +10,10 @@ sqsClient = boto3.resource('sqs')
 queue = sqsClient.get_queue_by_name(QueueName='travel-invitation-mq')
 
 
-def send_to_sqs(owner_user_id, invited_user_id, schedule_id):
+def send_to_sqs(owner_user_id, invited_user_email, schedule_id):
     inviteQuery = {
         "ownerUserId": owner_user_id,
-        "invitedUserId": invited_user_id,
+        "invitedUserEmail": invited_user_email,
         "scheduleId": schedule_id
     }
     try:
@@ -34,9 +34,9 @@ def lambda_handler(event, context):
     # TODO implement
     try:
         owner_user_id = event["pathParameters"]["userId"]
-        invited_user_id = event["queryStringParameters"]["userId"]
+        invited_user_email = event["queryStringParameters"]["userEmail"]
         schedule_id = event["queryStringParameters"]["scheduleId"]
-        send_to_sqs(owner_user_id, invited_user_id, schedule_id)
+        send_to_sqs(owner_user_id, invited_user_email, schedule_id)
     except Exception as e:
         return {
             'statusCode': 400,

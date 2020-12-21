@@ -24,71 +24,71 @@ basePath: /v1
 produces:
   - application/json
 paths:
-  /login:
-    get:
-      summary: login in
-      description: login in travel planner platform
-      operationId: login
-      tags:
-        - "user"
-      parameters:
-        - in: query
-          name: userId
-          type: string
-        - in: query
-          name: pwd
-          type: string
-      produces:
-        - "application/json"
-      responses:
-        200:
-          description: "Successful operation."
-          schema:
-            $ref: '#/definitions/Response'
-        400:
-          description: "Bad request."
-          schema:
-            $ref: '#/definitions/Error'
-        403:
-          description: "Not Authorized."
-          schema:
-            $ref: '#/definitions/Error'
-  /register:
-    post:
-      summary: register
-      description: register a new user
-      operationId: register
-      tags:
-        - "user"
-      parameters:
-        - in: body
-          name: request
-          schema:
-            type: object
-            properties:
-              userName:
-                type: string
-              pwd:
-                type: string
-              userEmail:
-                type: string
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      responses:
-        200:
-          description: "Successful operation."
-          schema:
-            $ref: '#/definitions/Response'
-        400:
-          description: "Bad request."
-          schema:
-            $ref: '#/definitions/Error'
-        403:
-          description: "Not Authorized."
-          schema:
-            $ref: '#/definitions/Error'
+#  /login:
+#    get:
+#      summary: login in
+#      description: login in travel planner platform
+#      operationId: login
+#      tags:
+#        - "user"
+#      parameters:
+#        - in: query
+#          name: userId
+#          type: string
+#        - in: query
+#          name: pwd
+#          type: string
+#      produces:
+#        - "application/json"
+#      responses:
+#        200:
+#          description: "Successful operation."
+#          schema:
+#            $ref: '#/definitions/Response'
+#        400:
+#          description: "Bad request."
+#          schema:
+#            $ref: '#/definitions/Error'
+#        403:
+#          description: "Not Authorized."
+#          schema:
+#            $ref: '#/definitions/Error'
+#  /register:
+#    post:
+#      summary: register
+#      description: register a new user
+#      operationId: register
+#      tags:
+#        - "user"
+#      parameters:
+#        - in: body
+#          name: request
+#          schema:
+#            type: object
+#            properties:
+#              userName:
+#                type: string
+#              pwd:
+#                type: string
+#              userEmail:
+#                type: string
+#      consumes:
+#        - "application/json"
+#      produces:
+#        - "application/json"
+#      responses:
+#        200:
+#          description: "Successful operation."
+#          schema:
+#            $ref: '#/definitions/Response'
+#        400:
+#          description: "Bad request."
+#          schema:
+#            $ref: '#/definitions/Error'
+#        403:
+#          description: "Not Authorized."
+#          schema:
+#            $ref: '#/definitions/Error'
   /invite/{userId}:
     get:
       summary: invite user
@@ -441,8 +441,8 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     post:
-      summary: add one like to attraction
-      description: add one like attraction in preselect schedule
+      summary: add/remove one like to attraction
+      description: add/remove one like attraction in preselect schedule
       operationId: likeAttractionInPreselectSchedule
       tags:
         - "preselect-schedule"
@@ -454,6 +454,10 @@ paths:
         - in: path
           name: attractionId
           type: string
+          required: true
+        - in: query
+          name: like
+          type: boolean
           required: true
       produces:
         - "application/json"
@@ -469,9 +473,9 @@ paths:
           schema:
             $ref: '#/definitions/Error'
     delete:
-      summary: withdraw one like to attraction
-      description: withdraw one like attraction in preselect schedule
-      operationId: unlikeAttractionInPreselectSchedule
+      summary: remove an attraction
+      description: withdraw one attraction in preselect schedule
+      operationId: removeAttractionInPreselectSchedule
       tags:
         - "preselect-schedule"
       parameters:
