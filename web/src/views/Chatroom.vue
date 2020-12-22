@@ -1,37 +1,44 @@
 <template>
-  <div>
-    <beautiful-chat
-      :participants="participants"
-      :titleImageUrl="titleImageUrl"
-      :onMessageWasSent="onMessageWasSent"
-      :messageList="messageList"
-      :newMessagesCount="newMessagesCount"
-      :isOpen="isChatOpen"
-      :close="closeChat"
-      :open="openChat"
-      :showEmoji="false"
-      :showFile="false"
-      :showEdition="true"
-      :showDeletion="true"
-      :showTypingIndicator="showTypingIndicator"
-      :showLauncher="true"
-      :showCloseButton="true"
-      :colors="colors"
-      :alwaysScrollToBottom="alwaysScrollToBottom"
-      :messageStyling="messageStyling"
-      @onType="handleOnType"
-      @edit="editMessage"
-    />
+  <div class="PreselectPage">
+    <MainNav />
+    <!-- <Slider /> -->
+    <div class="main">
+      <beautiful-chat
+        :participants="participants"
+        :titleImageUrl="titleImageUrl"
+        :onMessageWasSent="onMessageWasSent"
+        :messageList="messageList"
+        :newMessagesCount="newMessagesCount"
+        :isOpen="isChatOpen"
+        :close="closeChat"
+        :open="openChat"
+        :showEmoji="false"
+        :showFile="false"
+        :showEdition="true"
+        :showDeletion="true"
+        :showTypingIndicator="showTypingIndicator"
+        :showLauncher="true"
+        :showCloseButton="true"
+        :colors="colors"
+        :alwaysScrollToBottom="alwaysScrollToBottom"
+        :messageStyling="messageStyling"
+        @onType="handleOnType"
+        @edit="editMessage"
+      />
+    </div>
   </div>
 </template>
 <script>
   import { API } from "aws-amplify";
   import { Auth } from "aws-amplify";
+  // import Slider from "../components/Navbars/Slider";
+  import MainNav from "../components/Navbars/MainNav";
   import * as queries from "@/graphql/queries";
   import * as subscriptions from "@/graphql/subscriptions";
   import * as mutations from "@/graphql/mutations";
   export default {
     name: "app",
+    components: { MainNav },
     data() {
       return {
         uuid: "",
