@@ -1,0 +1,18 @@
+projects:
+  proj-chat-appsync:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - proj-chat-1
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: src/graphql
+        region: us-east-1
+        apiId: g3wmivmupbf23lmuib5ajczple
+        maxDepth: 2
+extensions:
+  amplify:
+    version: 3
