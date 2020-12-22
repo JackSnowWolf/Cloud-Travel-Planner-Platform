@@ -50,7 +50,12 @@
                 </vs-select>
               </vs-row>
               <vs-row>
-                <vs-input :warning="true" warning-text="The entered data could not be verified" placeholder="Input number of days" v-model="dateNmuber" />
+                <vs-input
+                  :warning="true"
+                  warning-text="The entered data could not be verified if not a number"
+                  placeholder="Input number of days"
+                  v-model="dateNmuber"
+                />
               </vs-row>
               <vs-row>
                 <vs-button @click="handleSubmit" color="success" type="filled">Next step</vs-button>
