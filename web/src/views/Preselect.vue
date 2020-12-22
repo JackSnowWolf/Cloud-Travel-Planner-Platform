@@ -18,6 +18,11 @@
           </div> -->
         </el-col>
       </el-row>
+      <!-- <el-row>
+        <el-col :span="4" offset="20">
+          <ChatRoom />
+        </el-col>
+      </el-row> -->
     </div>
   </div>
 </template>
@@ -28,6 +33,7 @@
   import Slider from "../components/Navbars/Slider";
   import MainNav from "../components/Navbars/MainNav";
   import { Auth } from "aws-amplify";
+  // import ChatRoom from "./Chatroom";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "preselect",
@@ -36,6 +42,7 @@
       LocationList,
       Slider,
       MainNav,
+      // ChatRoom,
     },
     data() {
       return {

@@ -6,6 +6,7 @@
       class="el-menu-vertical"
       @open="handleOpen"
       @close="handleClose"
+      @select="selectMenu"
       :collapse="isCollapse"
       background-color="#ccc"
       text-color="#b58860"
@@ -28,20 +29,10 @@
         <vs-icon icon="account_circle" size="small"></vs-icon>
         <span slot="title">Log out</span>
       </el-menu-item>
-      <el-submenu index="1" disabled>
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span slot="title">Navigator One</span>
-        </template>
-        <el-menu-item-group>
-          <span slot="title">Group One</span>
-          <el-menu-item index="/createnew">Create New</el-menu-item>
-          <el-menu-item index="/planedit">Plan Edit</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="Group Two">
-          <el-menu-item index="1-3">item three</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu>
+      <el-menu-item index="#chatroom">
+        <vs-icon icon="add_comment" size="small"></vs-icon>
+        <span slot="title">Chat</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -78,6 +69,14 @@
       this.pathReview = this.pathfunction();
     },
     methods: {
+      selectMenu(indexPath) {
+        if (indexPath === "#chatroom") {
+          let routeData = this.$router.resolve({
+            path: "/chatroom",
+          });
+          window.open(routeData.href, "-blank");
+        }
+      },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
       },

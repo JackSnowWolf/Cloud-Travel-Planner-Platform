@@ -36,6 +36,11 @@ import infiniteScroll from "vue-infinite-scroll";
 Vue.use(infiniteScroll);
 
 // Vue.use(Loading)
+
+import Chat from 'vue-beautiful-chat'
+Vue.use(Chat)
+
+
 Vue.prototype.$axios = axios //全局注册，使用方法为:this.$axios          
 Vue.component(Button.name, Button);
 Vue.component(Select.name, Select);
