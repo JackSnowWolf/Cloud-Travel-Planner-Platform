@@ -48,7 +48,7 @@
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
             if (response.status === 200) {
-              console.log(response.data);
+              console.log(response.data, this.editorId);
               if (response.data.schedule_type === "PRESELECT") {
                 setTimeout(this.$router.push("/createnew/" + this.scheduleId), 1000);
               } else if (response.data.schedule_type === "EDITING") {

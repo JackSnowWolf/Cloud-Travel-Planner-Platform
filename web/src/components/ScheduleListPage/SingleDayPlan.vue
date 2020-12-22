@@ -6,7 +6,9 @@
           <h3>{{ schedule.NumDate }}</h3>
         </div>
         <draggable class="list-group" :list="schedule.Details" group="people" @change="log">
-          <div class="list-group-item" v-for="(element, index) in schedule.Details" :key="element.attractionId">{{ element.attractionName }} {{ index }}</div>
+          <div class="list-group-item" v-for="(element, index) in schedule.Details" :key="element.attractionId" disabled>
+            {{ element.attractionName }} {{ index }}
+          </div>
         </draggable>
         <div slot="footer">
           <vs-row vs-justify="flex-end">

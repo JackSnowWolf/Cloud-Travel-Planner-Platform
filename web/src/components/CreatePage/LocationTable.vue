@@ -87,6 +87,7 @@
         revisedTimeStamp: 0,
         showSubmit: false,
         multipleSelection: [],
+        timer: "",
         dateNmuber: 3,
         select1: "BUSY",
         options1: [
@@ -112,6 +113,16 @@
         // user.then(this.userPromise).then(this.dataInit);
         // console.log("user", user);
         user.then(this.userPromise).then(() => this.initDataTable());
+        var tripMode = sessionStorage.getItem("tripMode");
+        if (tripMode.toUpperCase()) {
+          console.log("mode", tripMode.toUpperCase());
+          this.select1 = tripMode.toUpperCase();
+        }
+        var attractionType = sessionStorage.getItem("AttractionType");
+        if (attractionType) {
+          console.log("attractionType", attractionType);
+          this.select2 = attractionType;
+        }
       },
       userPromise(user) {
         this.user = user;
@@ -152,7 +163,7 @@
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
             if (response.status === 200) {
-              console.log("timeStamp", response.data.revisedTimeStamp);
+              // console.log("timeStamp", response.data.revisedTimeStamp);
               this.revisedTimeStamp = response.data.revisedTimeStamp;
               this.tableData = [];
               this.attracationIdList = [];
@@ -407,25 +418,28 @@
     },
     created() {
       this.setScheduleId();
+      this.PromiseInit();
     },
     mounted() {
-      this.PromiseInit();
-      var tripMode = sessionStorage.getItem("tripMode");
-      if (tripMode.toUpperCase()) {
-        console.log("mode", tripMode.toUpperCase());
-        this.select1 = tripMode.toUpperCase();
-      }
-      var attractionType = sessionStorage.getItem("AttractionType");
-      if (attractionType) {
-        console.log("attractionType", attractionType);
-        this.select2 = attractionType;
-      }
-
-      setInterval(this.initDataTable, 10000);
-      this.$once("hook:beforeDestroy", () => {
-        console.log("clear!");
-        clearInterval();
-      });
+      this.timer = setInterval(() => {
+        this.initDataTable();
+      }, 10000);
+      // setInterval(this.initDataTable, 10000);
+      // this.$once("hook:beforeDestroy", () => {
+      //   console.log("clear!");
+      //   clearInterval();
+      // });
+    },
+    beforeDestroy() {
+      clearInterval(this.timer);
+      this.timer = null;
+      console.log("beforedestroy");
+    },
+    destroyed() {
+      // clearInterval(this.timer);
+      // this.timer = null;
+      console.log("destroyed");
+      // this.timer = null;
     },
   };
 </script>
