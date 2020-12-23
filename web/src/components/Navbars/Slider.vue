@@ -142,7 +142,7 @@
           .then(({ value }) => {
             this.$msg({
               type: "success",
-              message: "Your email is:" + value,
+              message: "Your friend email is:" + value,
             });
             this.sendInvitation(value);
           })

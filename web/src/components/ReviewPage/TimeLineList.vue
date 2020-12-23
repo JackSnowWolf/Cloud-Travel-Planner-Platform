@@ -32,7 +32,7 @@
                     </div>
                   </el-col>
                 </el-row>
-                <p>Some Text</p>
+                <p>Thanks for using our website, enjoy your trip!</p>
               </el-card>
             </el-timeline-item>
             <!-- </div> -->
