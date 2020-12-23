@@ -59,11 +59,6 @@ Vue.use(vsPopup).use(vsCard).use(vsRow).use(vsCol).use(vsIcon).use(vsInput)
 Amplify.configure(awsconfig)
 // >>New - Configuring Auth Module
 Auth.configure(awsconfig);
-Amplify.configure({
-  API:{
-    graphql_endpoint: 'https://af6b2umixffa5funcg2gfpl5ka.appsync-api.us-east-1.amazonaws.com/graphql',
-  }
-})
 
 Vue.use(AmplifyPlugin, AmplifyModules)
 Vue.use(AmplifyEventBus)
