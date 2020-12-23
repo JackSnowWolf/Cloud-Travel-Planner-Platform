@@ -1,13 +1,25 @@
 <template>
   <el-container>
     <el-main>
-      <el-button @click="acceptInvitation" type="success" plain>Accept</el-button>
+      <el-row>
+        <h3>
+          Please Sign In to Accept an Invitation from Your Friend
+        </h3>
+      </el-row>
+      <el-row style="margin-top:20px">
+        <amplify-authenticator> </amplify-authenticator>
+        <amplify-sign-out></amplify-sign-out>
+      </el-row>
+      <el-row>
+        <el-button @click="acceptInvitation" type="success" plain>Accept</el-button>
+      </el-row>
     </el-main>
   </el-container>
 </template>
 
 <script>
   // @ is an alias to /src
+  import { AmplifyEventBus } from "aws-amplify-vue";
   import { Auth } from "aws-amplify";
   var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
@@ -15,9 +27,18 @@
       return {
         scheduleId: String,
         editorId: String,
+        authStatus: "",
       };
     },
     methods: {
+      async authCheck() {
+        await AmplifyEventBus.$on("authState", (info) => {
+          console.log("info", info);
+          window.sessionStorage.setItem("authState", info);
+          console.log("auth", window.sessionStorage.getItem("authState"));
+          this.authStatus = window.sessionStorage.getItem("authState");
+        });
+      },
       async acceptInvitation(e) {
         e.preventDefault();
         const session = await Auth.currentSession();
@@ -68,11 +89,13 @@
       },
     },
     mounted() {
-      this.editorId = this.$route.query.editorId;
-      this.scheduleId = this.$route.query.scheduleId;
+      this.authCheck();
       // console.log(this.$route.query);
     },
-    created() {},
+    created() {
+      this.editorId = this.$route.query.editorId;
+      this.scheduleId = this.$route.query.scheduleId;
+    },
     name: "accpect",
   };
 </script>
