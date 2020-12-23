@@ -63,7 +63,7 @@
       },
 
       dataInit(user) {
-        console.log("test", user);
+        // console.log("test", user);
         this.initDataTable(this.scheduleId, user).then(this.ParseData);
       },
 
@@ -157,7 +157,7 @@
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
             if (response.status === 200) {
-              console.log("post resp", response);
+              // console.log("post resp", response);
               this.$msg({
                 type: "success",
                 message: response.data.msg,
@@ -243,7 +243,7 @@
             .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
             .then((response) => {
               if (response.status === 200) {
-                console.log("Get resp", response.data.ownerId);
+                // console.log("Get resp", response.data.ownerId);
                 resolve(response.data.ownerId);
               }
             })

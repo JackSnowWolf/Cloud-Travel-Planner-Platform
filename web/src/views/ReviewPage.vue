@@ -48,7 +48,7 @@
       },
 
       dataInit(user) {
-        console.log("test", user);
+        // console.log("test", user);
         this.initDataTable(this.scheduleId, user).then(this.ParseData);
       },
 
@@ -97,7 +97,7 @@
             .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
             .then((response) => {
               if (response.status === 200) {
-                console.log("Get resp init", response.data.scheduleContent.dayScheduleContents);
+                // console.log("Get resp init", response.data.scheduleContent.dayScheduleContents);
                 // this.dayScheduleContents = response.data.scheduleContent.dayScheduleContents;
                 resolve(response.data.scheduleContent.dayScheduleContents);
               }

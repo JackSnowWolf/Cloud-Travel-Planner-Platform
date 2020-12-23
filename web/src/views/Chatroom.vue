@@ -157,9 +157,9 @@
       subscribe() {
         API.graphql({ query: subscriptions.subscribeToNewMessage, variables: { conversationId: this.scheduleId } }).subscribe({
           next: (eventData) => {
-            console.log(eventData);
+            // console.log(eventData);
             let newMessage = eventData.value.data.subscribeToNewMessage;
-            console.log(newMessage);
+            // console.log(newMessage);
             let message = this.praseSubmsgToMsg(newMessage);
             this.messageList = [...this.messageList, message];
           },
@@ -173,7 +173,7 @@
         }).then(() => {});
       },
       async createUserConversation() {
-        console.log("create converstaion!", this.uuid);
+        // console.log("create converstaion!", this.uuid);
         await API.graphql({
           query: mutations.createUserConversations,
           variables: { conversationId: this.scheduleId, userId: this.uuid },
@@ -193,7 +193,7 @@
       },
 
       ParseData(data) {
-        console.log("table", data);
+        // console.log("table", data);
         var existuserIds = [];
         existuserIds = [...existuserIds, data.ownerId];
         for (var i = 0; i < data.editorIds.length; i++) {
@@ -214,13 +214,13 @@
           query: queries.allUser,
         })
           .then((resp) => {
-            console.log("user", resp);
+            console.log("", resp);
           })
           .catch((err) => {
             console.log(err);
             var allUser = err.data.allUser;
-            console.log(this.participants);
-            console.log("allUser", allUser);
+            // console.log(this.participants);
+            // console.log("allUser", allUser);
             for (var i = 0; i < allUser.length; i++) {
               var getParticipant = this.ParseParticipant(allUser[i]);
               if (getParticipant.id) {
@@ -265,7 +265,7 @@
             .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
             .then((response) => {
               if (response.status === 200) {
-                console.log("Get resp", response.data);
+                // console.log("Get resp", response.data);
                 resolve(response.data);
               }
             })

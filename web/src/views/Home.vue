@@ -89,7 +89,7 @@
         if (this.targetArea) {
           this.postNewSchedule(title).then((resp) => {
             if (resp) {
-              console.log("post", resp.scheduleId);
+              // console.log("post", resp.scheduleId);
               sessionStorage.setItem("tripMode", slots.slots.Mode);
               sessionStorage.setItem("AttractionType", slots.slots.AttractionType);
               setTimeout(this.$router.push("/createnew/" + resp.scheduleId), 5000);
@@ -113,7 +113,7 @@
             });
             this.postNewSchedule(value).then((resp) => {
               if (resp) {
-                console.log("async", resp.scheduleId);
+                // console.log("async", resp.scheduleId);
                 this.createConversation(resp.scheduleId);
                 this.$router.push("/createnew/" + resp.scheduleId);
               }
@@ -157,7 +157,7 @@
             .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
             .then((response) => {
               if (response.status === 200) {
-                console.log("post resp", response);
+                // console.log("post resp", response);
                 resolve(response.data);
               }
             })

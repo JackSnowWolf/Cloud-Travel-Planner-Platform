@@ -98,7 +98,7 @@
           },
         };
         var body = { NumDate: item.NumDate, Details: item.Details };
-        console.log("patchbody", body);
+        // console.log("patchbody", body);
         apigClient
           .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
           .then((response) => {
@@ -171,7 +171,7 @@
           apigClient
             .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
             .then((response) => {
-              console.log(response);
+              // console.log(response);
               if (response.status === 200) {
                 resolve(response);
               }
