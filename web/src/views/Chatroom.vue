@@ -36,13 +36,16 @@
   import * as queries from "@/graphql/queries";
   import * as subscriptions from "@/graphql/subscriptions";
   import * as mutations from "@/graphql/mutations";
+  var apigClientFactory = require("aws-api-gateway-client").default;
   export default {
     name: "app",
     components: { MainNav },
     data() {
       return {
         uuid: "",
+        userId: "",
         scheduleId: "",
+        existuserIds: "",
         icons: {
           open: {
             // img: OpenIcon,
@@ -69,12 +72,12 @@
           // },
           {
             id: "user2",
-            name: "Your Friends",
-            imageUrl: "https://avatars3.githubusercontent.com/u/37018832?s=200&v=4",
+            name: "Helper",
+            imageUrl: "https://proj-for-attraction-photos.s3.amazonaws.com/avator-info.png",
           },
         ], // the list of all the participant of the conversation. `name` is the user name, `id` is used to establish the author of a message, `imageUrl` is supposed to be the user avatar.
         titleImageUrl: "https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png",
-        messageList: [{ type: "text", author: `user2`, data: { text: `Let's chat!` } }], // the list of the messages to show, can be paginated and adjusted dynamically
+        messageList: [{ type: "text", author: `user2`, data: { text: `Welcome to the online chat page!` } }], // the list of the messages to show, can be paginated and adjusted dynamically
         newMessagesCount: 0,
         isChatOpen: false, // to determine whether the chat window should be open or closed
         showTypingIndicator: "", // when set to a value matching the participant.id it shows the typing indicator for the specific user
@@ -169,13 +172,42 @@
           variables: { conversationId: this.scheduleId, id: "11122", createdAt: new Date(), content: message },
         }).then(() => {});
       },
+      async createUserConversation() {
+        console.log("create converstaion!", this.uuid);
+        await API.graphql({
+          query: mutations.createUserConversations,
+          variables: { conversationId: this.scheduleId, userId: this.uuid },
+        }).then(() => {});
+      },
+      userPromise(user) {
+        this.uuid = user.username;
+        this.user = user;
+        this.userId = "user-" + user.username;
+        this.createUserConversation();
+        return this.userId;
+      },
+      dataInit(user) {
+        this.initDataTable(this.scheduleId, user)
+          .then(this.ParseData)
+          .then(this.PromiseParticipants);
+      },
+
+      ParseData(data) {
+        console.log("table", data);
+        var existuserIds = [];
+        existuserIds = [...existuserIds, data.ownerId];
+        for (var i = 0; i < data.editorIds.length; i++) {
+          existuserIds = [...existuserIds, data.editorIds[i]];
+        }
+        this.existuserIds = existuserIds;
+        console.log(existuserIds);
+      },
+
       PromiseInit() {
         this.scheduleId = this.$route.params.scheduleId;
         console.log("schedule", this.scheduleId);
-        Auth.currentAuthenticatedUser().then((user) => {
-          this.uuid = user.username;
-          console.log(this.uuid);
-        });
+        var user = Auth.currentAuthenticatedUser();
+        user.then(this.userPromise).then(this.dataInit);
       },
       async PromiseParticipants() {
         await API.graphql({
@@ -186,17 +218,72 @@
           })
           .catch((err) => {
             console.log(err);
+            var allUser = err.data.allUser;
+            console.log(this.participants);
+            console.log("allUser", allUser);
+            for (var i = 0; i < allUser.length; i++) {
+              var getParticipant = this.ParseParticipant(allUser[i]);
+              if (getParticipant.id) {
+                this.participants = [...this.participants, getParticipant];
+              }
+            }
           });
         // console.log("user", data.data);
       },
+      ParseParticipant(newParticipant) {
+        var participant = {};
+        if (this.existuserIds.includes("user-" + newParticipant.id)) {
+          participant = { id: newParticipant.id, name: newParticipant.username };
+        }
+        return participant;
+      },
+      async initDataTable(scheduleId, userId) {
+        console.log("init Preselect table", this.scheduleId, this.userId);
+        const session = await Auth.currentSession();
+        this.tableData = [];
+        this.attracationIdList = [];
+        var config = { invokeUrl: "https://n248ztw82a.execute-api.us-east-1.amazonaws.com/v1" };
+        var apigClient = apigClientFactory.newClient(config);
+        var pathParams = {
+          scheduleId: scheduleId,
+        };
+        var pathTemplate = "/schedule/{scheduleId}";
+        var method = "GET";
+        var additionalParams = {
+          //If there are query parameters or headers that need to be sent with the request you can add them here
+          headers: {
+            Authorization: session.idToken.jwtToken,
+          },
+          queryParams: {
+            userId: userId,
+          },
+        };
+        var body = {};
+
+        return new Promise(function(resolve, reject) {
+          apigClient
+            .invokeApi(pathParams, pathTemplate, method, additionalParams, body)
+            .then((response) => {
+              if (response.status === 200) {
+                console.log("Get resp", response.data);
+                resolve(response.data);
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              reject(err);
+            });
+        });
+      },
     },
     mounted() {
-      this.PromiseParticipants();
+      // this.PromiseParticipants();
     },
 
     created() {
       this.PromiseInit();
       this.subscribe();
+      // this.createUserConversation();
     },
   };
 </script>
