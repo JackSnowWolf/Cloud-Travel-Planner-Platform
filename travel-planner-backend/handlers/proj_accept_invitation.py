@@ -17,10 +17,8 @@ def get_target_schedule(schedule_id):
                 "scheduleId": schedule_id
             }
         )
-
         if "Item" in response and len(response["Item"]) != 0:
             if response["Item"]["scheduleType"].upper() != "COMPLETED":
-                logger.debug(json.dumps(response, indent=2))
                 return True, response
         return False, {
             'statusCode': 400,
