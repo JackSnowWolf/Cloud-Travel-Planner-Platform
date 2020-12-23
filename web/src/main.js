@@ -59,6 +59,20 @@ Vue.use(vsPopup).use(vsCard).use(vsRow).use(vsCol).use(vsIcon).use(vsInput)
 Amplify.configure(awsconfig)
 // >>New - Configuring Auth Module
 Auth.configure(awsconfig);
+Amplify.configure({
+  Auth: {
+    identityPoolId: 'us-east-1:d79261ef-2fab-45a6-88b0-dceebf263b86',
+    region: 'us-east-1',
+    userPoolId: 'us-east-1_0tXcPh433',
+    userPoolWebClientId: '3orsernu0eco43nfb9r38nejtm',
+},
+API: {
+    aws_appsync_graphqlEndpoint: 'https://af6b2umixffa5funcg2gfpl5ka.appsync-api.us-east-1.amazonaws.com/graphql',
+    aws_appsync_region: 'us-east-1',
+    aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+    aws_appsync_apiKey: 'null',
+},
+})
 
 Vue.use(AmplifyPlugin, AmplifyModules)
 Vue.use(AmplifyEventBus)
