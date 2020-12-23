@@ -43,6 +43,8 @@
   import UserPerference from "../components/CustomlizePage/UserPerference";
   import Chatbot from "../components/Chatbot/Chatbot";
   import { Auth } from "aws-amplify";
+  import { API } from "aws-amplify";
+  import * as mutations from "@/graphql/mutations";
   var apigClientFactory = require("aws-api-gateway-client").default;
 
   export default {
@@ -112,7 +114,8 @@
             this.postNewSchedule(value).then((resp) => {
               if (resp) {
                 console.log("async", resp.scheduleId);
-                setTimeout(this.$router.push("/createnew/" + resp.scheduleId), 1000);
+                this.createConversation(resp.scheduleId);
+                this.$router.push("/createnew/" + resp.scheduleId);
               }
             });
           })
@@ -163,6 +166,13 @@
               reject(err);
             });
         });
+      },
+      async createConversation(schduleId) {
+        console.log("create");
+        await API.graphql({
+          query: mutations.createConversation,
+          variables: { id: schduleId, name: schduleId, createdAt: new Date() },
+        }).then(() => {});
       },
     },
     created() {

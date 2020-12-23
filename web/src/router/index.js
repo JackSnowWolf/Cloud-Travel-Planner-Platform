@@ -76,7 +76,7 @@ const routes = [
         component: () => import("../views/Info.vue"),
       },
       {
-        path:"/chatroom",
+        path:"/chatroom/schedule/:scheduleId",
         name:"chatroom",
         component: () => import("../views/Chatroom.vue"),
       }

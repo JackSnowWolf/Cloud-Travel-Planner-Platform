@@ -42,6 +42,7 @@
     data() {
       return {
         uuid: "",
+        scheduleId: "",
         icons: {
           open: {
             // img: OpenIcon,
@@ -151,7 +152,7 @@
         return message;
       },
       subscribe() {
-        API.graphql({ query: subscriptions.subscribeToNewMessage, variables: { conversationId: "1234" } }).subscribe({
+        API.graphql({ query: subscriptions.subscribeToNewMessage, variables: { conversationId: this.scheduleId } }).subscribe({
           next: (eventData) => {
             console.log(eventData);
             let newMessage = eventData.value.data.subscribeToNewMessage;
@@ -165,10 +166,12 @@
         console.log("create");
         await API.graphql({
           query: mutations.createMessage,
-          variables: { conversationId: "1234", id: "11122", createdAt: new Date(), content: message },
+          variables: { conversationId: this.scheduleId, id: "11122", createdAt: new Date(), content: message },
         }).then(() => {});
       },
       PromiseInit() {
+        this.scheduleId = this.$route.params.scheduleId;
+        console.log("schedule", this.scheduleId);
         Auth.currentAuthenticatedUser().then((user) => {
           this.uuid = user.username;
           console.log(this.uuid);

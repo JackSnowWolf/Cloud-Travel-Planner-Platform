@@ -72,7 +72,7 @@
       selectMenu(indexPath) {
         if (indexPath === "#chatroom") {
           let routeData = this.$router.resolve({
-            path: "/chatroom",
+            path: "/chatroom/schedule/" + this.$route.params.scheduleId,
           });
           window.open(routeData.href, "-blank");
         }
