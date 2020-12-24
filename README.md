@@ -44,7 +44,7 @@ All backend logic is implemented in the AWS Lambda and other AWS cloud services.
 
 - Final Report: [report pdf](docs/Report.pdf)
 - Presentation Slides: [presentation slides pdf](docs/Presentation.pdf)
-- Demo Video: [Demo Video](https://youtu.be/vPvBxfRCgwo)
+- Demo Video: [Demo Video](https://youtu.be/UDTuzFKmVWk)
 
 ## [Contribution](CONTRIBUTING.md)
 
