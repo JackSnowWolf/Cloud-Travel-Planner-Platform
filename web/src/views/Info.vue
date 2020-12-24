@@ -11,14 +11,13 @@
         <h1>Last call for your holiday trips!</h1>
       </el-row>
       <el-row>
-        <el-col :span="24">
-          <!-- <div class="con-example-images">
+        <iframe src="https://proj-attr-info.s3.amazonaws.com/city-guide-new-york.pdf" width="100%" height="600px" frameborder="1"> </iframe>
+        <!-- <div class="con-example-images">
             <vs-images>
               <vs-image :key="index" :src="`https://picsum.photos/400/400?image=2${index}`" v-for="(image, index) in 9" />
               <vs-image :key="index" :src="`https://picsum.photos/400/400?image=1${index}`" v-for="(image, index) in 7" />
             </vs-images>
           </div> -->
-        </el-col>
       </el-row>
     </div>
   </div>
@@ -38,9 +37,9 @@
     width: 100%;
     height: 100%;
     top: 0px;
-    color: #000000;
-    background: #abb8b5;
-    background: linear-gradient(180deg, #abb8b5 0%, #cab895 100%);
+    background-image: url("https://proj-for-attraction-photos.s3.amazonaws.com/trip-bg-1.jpeg");
+    background-size: cover;
+    background-color: #abb8b5;
   }
   .main {
     position: absolute;

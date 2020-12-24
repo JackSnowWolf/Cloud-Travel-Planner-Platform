@@ -9,7 +9,7 @@
         </div>
         <div>
           <h3>{{ attraction.attractionDescription }}</h3>
-          <h4>Estimate Veiw Time: {{ attraction.estimateViewTime }}</h4>
+          <h4>Estimate View Time: {{ attraction.estimateViewTime }} seconds</h4>
           <h4>Score: {{ attraction.score }}</h4>
         </div>
         <div slot="footer">

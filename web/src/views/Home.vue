@@ -11,7 +11,7 @@
       <el-row class="select">
         <el-col :span="24">
           <h4 class="select-text">Please Select Your Main Destination</h4>
-          <UserPerference class="select-destination" />
+          <UserPerference class="select-destination" v-on:pickArea="pickArea" />
         </el-col>
       </el-row>
       <el-row class="select">
